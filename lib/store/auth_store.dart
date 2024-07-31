@@ -22,25 +22,18 @@ abstract class _AuthStore with Store {
   String password = '';
 
   @action
-  getUserCredential() {
-    return userCredential;
-  }
+  getUserCredential() => userCredential;
 
   @action
-  void setEmail(String value) {
-    email = value;
-  }
+  void setEmail(String value) => email = value;
 
   @action
-  void setPassword(String value) {
-    password = value;
-  }
+  void setPassword(String value) => password = value;
 
   @action
   Future<void> loginWithEmailAndPassword(Function onSuccess) async {
     try {
-      userCredential =
-          await _firebaseAuth.signInWithEmailAndPassword(
+      final userCredential = await _firebaseAuth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -50,13 +43,21 @@ abstract class _AuthStore with Store {
         email: userCredential.user?.email,
       );
 
-      if (userCredential.user?.uid != null) {
-        print('Usuario: ${userCredential.user?.uid}');
+      // Verifica se a conta tem acesso ao web
+      final hasWebAccess = await checkWebAccountAccess(user?.userId);
+      if (hasWebAccess) {
+        print('Usuario: ${user?.userId}');
         onSuccess();
+      } else {
+        print('Acesso web não permitido para o usuário: ${user?.email}');
       }
     } catch (e) {
       print('Error logging in with email and password: $e');
     }
+  }
+
+  Future<bool> checkWebAccountAccess(String? uid) async {
+    return false;
   }
 
   @action
