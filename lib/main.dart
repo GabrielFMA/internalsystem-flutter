@@ -2,11 +2,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:internalsystem/const/const.dart';
+import 'package:internalsystem/screens/login_screen.dart';
+import 'package:internalsystem/screens/main_screen.dart';
 import 'package:internalsystem/store/auth_store.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(const MyApp());
 }
@@ -34,8 +35,8 @@ class MyApp extends StatelessWidget {
             ),
           ),
           routes: {
-            '/login': (_) => const MainScreen(),
-            '/Home': (_) => const testScreen(),
+            '/login': (_) => const LoginScreen(),
+            '/home': (_) => const MainScreen(),
           },
           home: const AuthChecker(),
         ));
