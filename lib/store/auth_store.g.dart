@@ -12,13 +12,13 @@ mixin _$AuthStore on _AuthStore, Store {
   late final _$userAtom = Atom(name: '_AuthStore.user', context: context);
 
   @override
-  get user {
+  AuthModel? get user {
     _$userAtom.reportRead();
     return super.user;
   }
 
   @override
-  set user(value) {
+  set user(AuthModel? value) {
     _$userAtom.reportWrite(value, super.user, () {
       super.user = value;
     });
@@ -59,9 +59,9 @@ mixin _$AuthStore on _AuthStore, Store {
       AsyncAction('_AuthStore.loginWithEmailAndPassword', context: context);
 
   @override
-  Future<void> loginWithEmailAndPassword() {
+  Future<void> loginWithEmailAndPassword(Function onSuccess) {
     return _$loginWithEmailAndPasswordAsyncAction
-        .run(() => super.loginWithEmailAndPassword());
+        .run(() => super.loginWithEmailAndPassword(onSuccess));
   }
 
   late final _$logoutAsyncAction =

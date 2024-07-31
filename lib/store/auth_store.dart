@@ -13,10 +13,18 @@ abstract class _AuthStore with Store {
   AuthModel? user;
 
   @observable
+  late UserCredential userCredential;
+
+  @observable
   String email = '';
 
   @observable
   String password = '';
+
+  @action
+  getUserCredential() {
+    return userCredential;
+  }
 
   @action
   void setEmail(String value) {
@@ -29,9 +37,9 @@ abstract class _AuthStore with Store {
   }
 
   @action
-  Future<void> loginWithEmailAndPassword() async {
+  Future<void> loginWithEmailAndPassword(Function onSuccess) async {
     try {
-      final UserCredential userCredential =
+      userCredential =
           await _firebaseAuth.signInWithEmailAndPassword(
         email: email,
         password: password,
@@ -41,6 +49,11 @@ abstract class _AuthStore with Store {
         displayName: userCredential.user?.displayName,
         email: userCredential.user?.email,
       );
+
+      if (userCredential.user?.uid != null) {
+        print('Usuario: ${userCredential.user?.uid}');
+        onSuccess();
+      }
     } catch (e) {
       print('Error logging in with email and password: $e');
     }

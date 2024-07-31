@@ -51,7 +51,7 @@ class AuthChecker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final authStore = Provider.of<AuthStore>(context);
+    //final store = Provider.of<AuthStore>(context);
     return FutureBuilder<User?>(
       future: _getCurrentUser(),
       builder: (context, snapshot) {
@@ -64,7 +64,7 @@ class AuthChecker extends StatelessWidget {
         } else {
           if (snapshot.hasData && snapshot.data != null) {
             final currentUser = snapshot.data!;
-            //authStore.recoveryData(currentUser.uid);
+            //store.recoveryData(currentUser.uid);
             print('Usuário logado: ${currentUser.uid}');
             WidgetsBinding.instance.addPostFrameCallback((_) {
               Navigator.of(context).pushReplacementNamed('/home');

@@ -1,9 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:internalsystem/components/textfieldstring.dart';
 import 'package:internalsystem/components/textfieldstring_password.dart';
 import 'package:internalsystem/const/const.dart';
+import 'package:internalsystem/store/auth_store.dart';
 import 'package:internalsystem/util/responsive.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:provider/provider.dart';
 
 class LoginWidget extends StatefulWidget {
   const LoginWidget({super.key});
@@ -22,10 +25,13 @@ class _LoginWidgetState extends State<LoginWidget> {
     double width = MediaQuery.of(context).size.width;
     final isDesktop = Responsive.isDesktop(context);
 
+    final store = Provider.of<AuthStore>(context);
+
     return SizedBox.expand(
       child: Container(
         color: backgroundColor,
-        padding: isDesktop ? const EdgeInsets.all(40) : const EdgeInsets.all(20),
+        padding:
+            isDesktop ? const EdgeInsets.all(40) : const EdgeInsets.all(20),
         child: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints viewportConstraints) {
             return SingleChildScrollView(
@@ -56,10 +62,13 @@ class _LoginWidgetState extends State<LoginWidget> {
                           if (text!.isEmpty) {
                             return "Digite um e-mail";
                           }
+                          store.setEmail(text);
                           return null;
                         },
                       ),
-                      const SizedBox(height: 10,),
+                      const SizedBox(
+                        height: 10,
+                      ),
                       TextFieldStringPassword(
                         icon: MdiIcons.lockOutline,
                         iconVisibility: MdiIcons.eyeOutline,
@@ -71,6 +80,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                           if (text!.isEmpty) {
                             return "Digite uma senha";
                           }
+                          store.setPassword(text);
                           return null;
                         },
                       ),
@@ -95,10 +105,12 @@ class _LoginWidgetState extends State<LoginWidget> {
                               width: width, // Define a largura do botão
                               height: 55, // Define a altura do botão
                               child: TextButton(
-                                onPressed: () {
+                                onPressed: () async {
                                   if (_formKey.currentState!.validate()) {
-                                    // Adicione a ação desejada aqui após a validação bem-sucedida
-                                    print("Formulário válido");
+                                    await store.loginWithEmailAndPassword(() {
+                                      Navigator.of(context)
+                                          .pushReplacementNamed('/home');
+                                    });
                                   }
                                 },
                                 style: TextButton.styleFrom(
@@ -107,9 +119,10 @@ class _LoginWidgetState extends State<LoginWidget> {
                                   side: BorderSide(
                                     color: Colors.transparent,
                                   ), // Remove a borda
-                                  padding: EdgeInsets.zero, // Remove o padding interno
-                                  backgroundColor:
-                                      Colors.transparent, // Torna o fundo do botão transparente
+                                  padding: EdgeInsets
+                                      .zero, // Remove o padding interno
+                                  backgroundColor: Colors
+                                      .transparent, // Torna o fundo do botão transparente
                                   textStyle: const TextStyle(fontSize: 16),
                                 ),
                                 child: const Text(
