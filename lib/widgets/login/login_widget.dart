@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:internalsystem/components/textfieldstring.dart';
+import 'package:internalsystem/components/textfieldstring_password.dart';
 import 'package:internalsystem/const/const.dart';
 import 'package:internalsystem/util/responsive.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -59,8 +60,10 @@ class _LoginWidgetState extends State<LoginWidget> {
                         },
                       ),
                       const SizedBox(height: 10,),
-                      TextFieldString(
-                        icon: Icon(MdiIcons.lockOutline),
+                      TextFieldStringPassword(
+                        icon: MdiIcons.lockOutline,
+                        iconVisibility: MdiIcons.eyeOutline,
+                        iconNotVisibility: MdiIcons.eyeOffOutline,
                         hintText: "Digite sua senha",
                         text: _passwordController.text,
                         shouldValidate: true,

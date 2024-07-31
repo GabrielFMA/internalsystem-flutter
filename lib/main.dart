@@ -2,20 +2,23 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:internalsystem/const/const.dart';
+import 'package:internalsystem/firebase_options.dart';
 import 'package:internalsystem/screens/login_screen.dart';
 import 'package:internalsystem/screens/main_screen.dart';
 import 'package:internalsystem/store/auth_store.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
-  await Firebase.initializeApp();
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
