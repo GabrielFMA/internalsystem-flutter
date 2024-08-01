@@ -9,49 +9,49 @@ part of 'auth_store.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$AuthStore on _AuthStore, Store {
-  late final _$userAtom = Atom(name: '_AuthStore.user', context: context);
+  late final _$_userAtom = Atom(name: '_AuthStore._user', context: context);
 
   @override
-  AuthModel? get user {
-    _$userAtom.reportRead();
-    return super.user;
+  AuthModel? get _user {
+    _$_userAtom.reportRead();
+    return super._user;
   }
 
   @override
-  set user(AuthModel? value) {
-    _$userAtom.reportWrite(value, super.user, () {
-      super.user = value;
+  set _user(AuthModel? value) {
+    _$_userAtom.reportWrite(value, super._user, () {
+      super._user = value;
     });
   }
 
-  late final _$emailAtom = Atom(name: '_AuthStore.email', context: context);
+  late final _$_emailAtom = Atom(name: '_AuthStore._email', context: context);
 
   @override
-  String get email {
-    _$emailAtom.reportRead();
-    return super.email;
+  String get _email {
+    _$_emailAtom.reportRead();
+    return super._email;
   }
 
   @override
-  set email(String value) {
-    _$emailAtom.reportWrite(value, super.email, () {
-      super.email = value;
+  set _email(String value) {
+    _$_emailAtom.reportWrite(value, super._email, () {
+      super._email = value;
     });
   }
 
-  late final _$passwordAtom =
-      Atom(name: '_AuthStore.password', context: context);
+  late final _$_passwordAtom =
+      Atom(name: '_AuthStore._password', context: context);
 
   @override
-  String get password {
-    _$passwordAtom.reportRead();
-    return super.password;
+  String get _password {
+    _$_passwordAtom.reportRead();
+    return super._password;
   }
 
   @override
-  set password(String value) {
-    _$passwordAtom.reportWrite(value, super.password, () {
-      super.password = value;
+  set _password(String value) {
+    _$_passwordAtom.reportWrite(value, super._password, () {
+      super._password = value;
     });
   }
 
@@ -100,9 +100,7 @@ mixin _$AuthStore on _AuthStore, Store {
   @override
   String toString() {
     return '''
-user: ${user},
-email: ${email},
-password: ${password}
+
     ''';
   }
 }

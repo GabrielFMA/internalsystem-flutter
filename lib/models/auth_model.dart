@@ -1,7 +1,6 @@
 class AuthModel {
-  final String? userId;
-  final String? displayName;
+  final String? name;
   final String? email;
 
-  AuthModel({this.userId, this.displayName, this.email});
+  AuthModel({this.name, this.email});
 }

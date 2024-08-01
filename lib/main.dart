@@ -7,8 +7,10 @@ import 'package:internalsystem/screens/login_screen.dart';
 import 'package:internalsystem/screens/main_screen.dart';
 import 'package:internalsystem/store/auth_store.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
 void main() async {
+  setUrlStrategy(PathUrlStrategy());
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -46,44 +48,63 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class AuthChecker extends StatelessWidget {
+class AuthChecker extends StatefulWidget {
   const AuthChecker({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    //final store = Provider.of<AuthStore>(context);
-    return FutureBuilder<User?>(
-      future: _getCurrentUser(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Scaffold(
-            body: Center(
-              child: CircularProgressIndicator(),
-            ),
-          );
-        } else {
-          if (snapshot.hasData && snapshot.data != null) {
-            final currentUser = snapshot.data!;
-            //store.recoveryData(currentUser.uid);
-            print('Usuário logado: ${currentUser.uid}');
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              Navigator.of(context).pushReplacementNamed('/home');
-            });
-            return Container();
-          } else {
-            print('Sem usuário');
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              Navigator.of(context).pushReplacementNamed('/login');
-            });
-            return Container();
-          }
-        }
-      },
-    );
+  _AuthCheckerState createState() => _AuthCheckerState();
+}
+
+class _AuthCheckerState extends State<AuthChecker> {
+  User? _user;
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkAuthStatus();
+  }
+
+  Future<void> _checkAuthStatus() async {
+    final user = await _getCurrentUser();
+    setState(() {
+      _user = user;
+      _isLoading = false;
+    });
+
+    await _handleNavigation();
   }
 
   Future<User?> _getCurrentUser() async {
-    final user = FirebaseAuth.instance.currentUser;
-    return user;
+    return FirebaseAuth.instance.currentUser;
+  }
+
+  Future<void> _handleNavigation() async {
+    if (await Provider.of<AuthStore>(context, listen: false)
+        .checkWebAccountAccess(_user?.uid)) {
+      navigateTo('/home', context);
+    } else {
+      navigateTo('/login', context);
+      FirebaseAuth.instance.signOut();
+    }
+  }
+
+  Widget _buildLoadingScreen() {
+    return const Scaffold(
+      body: Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_isLoading) {
+      return _buildLoadingScreen();
+    } else {
+      // Não há necessidade de retornar nada aqui,
+      // a navegação já foi tratada no método _handleNavigation
+      return Container();
+    }
   }
 }

@@ -1,6 +1,7 @@
 import 'package:mobx/mobx.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../models/auth_model.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 part 'auth_store.g.dart';
 
@@ -10,46 +11,37 @@ abstract class _AuthStore with Store {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   @observable
-  AuthModel? user;
+  AuthModel? _user;
 
   @observable
-  late UserCredential userCredential;
+  String _email = '';
 
   @observable
-  String email = '';
-
-  @observable
-  String password = '';
+  String _password = '';
 
   @action
-  getUserCredential() => userCredential;
+  void setEmail(String value) => _email = value;
 
   @action
-  void setEmail(String value) => email = value;
-
-  @action
-  void setPassword(String value) => password = value;
+  void setPassword(String value) => _password = value;
 
   @action
   Future<void> loginWithEmailAndPassword(Function onSuccess) async {
     try {
       final userCredential = await _firebaseAuth.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-      user = AuthModel(
-        userId: userCredential.user?.uid,
-        displayName: userCredential.user?.displayName,
-        email: userCredential.user?.email,
+        email: _email,
+        password: _password,
       );
 
-      // Verifica se a conta tem acesso ao web
-      final hasWebAccess = await checkWebAccountAccess(user?.userId);
-      if (hasWebAccess) {
-        print('Usuario: ${user?.userId}');
+      if (await checkWebAccountAccess(userCredential.user?.uid)) {
+        print('Usuario: ${userCredential.user?.uid}');
+        print(_user?.name);
+        print(_user?.email);
         onSuccess();
       } else {
-        print('Acesso web não permitido para o usuário: ${user?.email}');
+        logout();
+        print(
+            'Acesso web não permitido para o usuário: ${userCredential.user?.uid}');
       }
     } catch (e) {
       print('Error logging in with email and password: $e');
@@ -57,6 +49,26 @@ abstract class _AuthStore with Store {
   }
 
   Future<bool> checkWebAccountAccess(String? uid) async {
+    try {
+      final docSnapshot = await FirebaseFirestore.instance
+          .collection('Users')
+          .doc(uid)
+          .get();
+
+      if (docSnapshot.exists) {
+        final data = docSnapshot.data();
+        if (data != null && data['isAdmin']) {
+          _user = AuthModel(
+            name: data['Name'],
+            email: data['Email'],
+          );
+          return true;
+        }
+      }
+    } catch (e) {
+      print('Erro ao acessar o Firestore: $e');
+      return false;
+    }
     return false;
   }
 
@@ -64,7 +76,7 @@ abstract class _AuthStore with Store {
   Future<void> logout() async {
     try {
       await _firebaseAuth.signOut();
-      user = null;
+      _user = null;
     } catch (e) {
       print('Error logging out: $e');
     }

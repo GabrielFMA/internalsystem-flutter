@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:internalsystem/components/textfieldstring.dart';
 import 'package:internalsystem/components/textfieldstring_password.dart';
@@ -117,7 +116,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                                 style: TextButton.styleFrom(
                                   shadowColor:
                                       Colors.transparent, // Remove a sombra
-                                  side: BorderSide(
+                                  side: const BorderSide(
                                     color: Colors.transparent,
                                   ), // Remove a borda
                                   padding: EdgeInsets
