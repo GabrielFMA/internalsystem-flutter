@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:internalsystem/models/menu_model.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class SideMenuData {
-  final menu = const <MenuModel>[
-    MenuModel(icon: Icons.home_outlined, title: "Home"),
-    MenuModel(icon: Icons.person_outline, title: "Profile"),
-    MenuModel(icon: Icons.settings_outlined, title: "Settings"),
+  final menu = <MenuModel>[
+    MenuModel(icon: MdiIcons.homeOutline, title: "Home", route: "/home"),
+    MenuModel(icon: MdiIcons.accountOutline, title: "Register", route: "/register"),
+    MenuModel(icon: MdiIcons.cogOutline, title: "Settings", route: "/settings"),
   ];
 }

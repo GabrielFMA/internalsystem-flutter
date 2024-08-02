@@ -51,6 +51,14 @@ class MyApp extends StatelessWidget {
                   child: const MainScreen(),
                   isAuthenticated: (user) => user != null,
                 ),
+            '/register': (_) => RouteGuard(
+                  child: const MainScreen(),
+                  isAuthenticated: (user) => user != null,
+                ),
+            '/settings': (_) => RouteGuard(
+                  child: const MainScreen(),
+                  isAuthenticated: (user) => user != null,
+                ),
           },
           home: const AuthChecker(),
         ));
@@ -74,19 +82,25 @@ class _AuthCheckerState extends State<AuthChecker> {
   Future<void> _checkAuthStatus() async {
     final user = FirebaseAuth.instance.currentUser;
 
-    if (await Provider.of<AuthStore>(context, listen: false).checkWebAccountAccess(user?.uid)) {
+    if (await Provider.of<AuthStore>(context, listen: false)
+        .checkWebAccountAccess(user?.uid)) {
+      setState(() {
         print('Usuário logado: ${user?.uid}');
-      navigateTo('/home', context);
+        navigateTo('/home', context);
+      });
+      
     } else {
       FirebaseAuth.instance.signOut();
+      setState(() {
         print('Nenhum usuário logado: ${user?.uid}');
-      navigateTo('/login', context);
+        navigateTo('/login', context);
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return buildLoadingScreen();
   }
 }
 
@@ -108,6 +122,12 @@ class RouteGuard extends StatelessWidget {
 
     if (redirectIfAuthenticated && isAuthenticated(user)) {
       navigateTo('/home', context);
+      return buildLoadingScreen();
+    } else if (redirectIfAuthenticated && isAuthenticated(user)) {
+      navigateTo('/register', context);
+      return buildLoadingScreen();
+    } else if (redirectIfAuthenticated && isAuthenticated(user)) {
+      navigateTo('/settings', context);
       return buildLoadingScreen();
     } else if (!redirectIfAuthenticated && !isAuthenticated(user)) {
       navigateTo('/login', context);

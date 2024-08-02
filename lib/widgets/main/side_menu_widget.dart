@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:internalsystem/const/const.dart';
 import 'package:internalsystem/data/side_menu_data.dart';
 import 'package:internalsystem/store/auth_store.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SideMenuWidget extends StatefulWidget {
   const SideMenuWidget({super.key});
@@ -15,6 +17,27 @@ class _SideMenuWidgetState extends State<SideMenuWidget> {
   int selectedIndex = 0;
 
   @override
+  void initState() {
+    super.initState();
+    _loadSelectedIndex();
+  }
+
+  Future<void> _loadSelectedIndex() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      selectedIndex = prefs.getInt('selectedIndex') ?? 0;
+    });
+  }
+
+  Future<void> _setSelectedIndex(int index) async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      selectedIndex = index;
+      prefs.setInt('selectedIndex', index);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     final data = SideMenuData();
 
@@ -22,37 +45,20 @@ class _SideMenuWidgetState extends State<SideMenuWidget> {
       color: menuColor,
       child: Column(
         children: [
-          // Adicione qualquer widget acima dos botões aqui
-          const Padding(
-            padding: EdgeInsets.symmetric(vertical: 40),
-            child: Column(
-              children: [
-                Text(
-                  "STORE",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 25,
-                    fontWeight: FontWeight.w100,
-                    height: 0.8,
-                  ),
-                ),
-                Text(
-                  "CAR",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 30,
-                    fontWeight: FontWeight.w800,
-                    height: 0.8,
-                  ),
-                ),
-              ],
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 10),
+            child: Center(
+              child: Image.asset(
+                'assets/images/logo.png',
+                width: 120,
+                height: 120,
+              ),
             ),
           ),
           const Divider(
             color: Colors.grey,
             height: 1,
           ),
-          // Expanded para permitir que o ListView.builder use o espaço restante
           Expanded(
             child: ListView.builder(
               itemCount: data.menu.length,
@@ -61,15 +67,36 @@ class _SideMenuWidgetState extends State<SideMenuWidget> {
             ),
           ),
           Container(
-            padding: const EdgeInsets.all(16.0),
-            child: TextButton(
-              child: Text("Logout"),
-              onPressed: () async {
-                await Provider.of<AuthStore>(context, listen: false).logout();
-                navigateTo('/login', context);
-              },
+            padding: const EdgeInsets.all(20.0),
+            child: SizedBox(
+              width: double.infinity,
+              height: 40,
+              child: TextButton(
+                style: TextButton.styleFrom(
+                  backgroundColor: Colors.transparent,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  textStyle: const TextStyle(
+                    fontSize: 15,
+                  ),
+                ),
+                onPressed: () async {
+                  await Provider.of<AuthStore>(context, listen: false).logout();
+                  Navigator.pushNamed(context, '/login');
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    SizedBox(width: 5),
+                    Icon(MdiIcons.logout, color: Colors.white, size: 20),
+                    SizedBox(width: 15), // Espaçamento entre o ícone e o texto
+                    Text("Sair", style: TextStyle(color: Colors.white, fontSize: 16)),
+                  ],
+                ),
+              ),
             ),
-          ),
+          )
         ],
       ),
     );
@@ -85,9 +112,10 @@ class _SideMenuWidgetState extends State<SideMenuWidget> {
         color: isSelected ? selectionColor : Colors.transparent,
       ),
       child: InkWell(
-        onTap: () => setState(() {
-          selectedIndex = index;
-        }),
+        onTap: () {
+          _setSelectedIndex(index);
+          Navigator.pushNamed(context, data.menu[index].route);
+        },
         child: Row(
           children: [
             Padding(

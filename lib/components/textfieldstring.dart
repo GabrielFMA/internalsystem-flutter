@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:internalsystem/const/const.dart';
 
-class TextFieldString extends StatelessWidget {
+class TextFieldString extends StatefulWidget {
   final String text;
   final String hintText;
   final Icon icon;
@@ -24,37 +24,59 @@ class TextFieldString extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    TextEditingController _textController = TextEditingController(text: text);
+  _TextFieldStringState createState() => _TextFieldStringState();
+}
 
+class _TextFieldStringState extends State<TextFieldString> {
+  late TextEditingController _textController;
+
+  @override
+  void initState() {
+    super.initState();
+    _textController = TextEditingController(text: widget.text);
+    _textController.addListener(() {
+      if (widget.onChanged != null) {
+        widget.onChanged!(_textController.text);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _textController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return TextFormField(
       controller: _textController,
-      onChanged: onChanged,
-      enabled: enabled,
-      validator: shouldValidate ? validator : null,
+      onChanged: widget.onChanged,
+      enabled: widget.enabled,
+      validator: widget.shouldValidate ? widget.validator : null,
       decoration: InputDecoration(
         prefixIcon: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20), // Adiciona padding ao ícone
-          child: icon,
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: widget.icon,
         ),
-        suffixIcon: suffixIcon,
+        suffixIcon: widget.suffixIcon,
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(45), // Manter a borda arredondada
-          borderSide: const BorderSide(color: textFieldColor, width: 1.5), // Adicionar a borda com cor e largura
+          borderRadius: BorderRadius.circular(45),
+          borderSide: const BorderSide(color: textFieldColor, width: 1.5),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(45), // Manter a borda arredondada
-          borderSide: const BorderSide(color: textFieldColor, width: 1.5), // Adicionar a borda com cor e largura
+          borderRadius: BorderRadius.circular(45),
+          borderSide: const BorderSide(color: textFieldColor, width: 1.5),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(45), // Manter a borda arredondada
-          borderSide: const BorderSide(color: Colors.white38, width: 2), // Adicionar a borda com cor e largura
+          borderRadius: BorderRadius.circular(45),
+          borderSide: const BorderSide(color: Colors.white38, width: 2),
         ),
-        hintText: hintText,
+        hintText: widget.hintText,
         hintStyle: TextStyle(color: Colors.grey[600]),
-        filled: true, // Permite preencher o fundo
-        fillColor: Colors.transparent, // Fundo transparente
-        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20), // Padding interno
+        filled: true,
+        fillColor: Colors.transparent,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       ),
       style: TextStyle(color: textFieldColor),
     );

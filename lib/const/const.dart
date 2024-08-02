@@ -20,7 +20,11 @@ void navigateTo(route, BuildContext context) {
 Widget buildLoadingScreen() {
   return const Scaffold(
     body: Center(
-      child: CircularProgressIndicator(),
+      child: CircularProgressIndicator(
+        backgroundColor: backgroundColor,
+        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+      ),
     ),
   );
 }
+
