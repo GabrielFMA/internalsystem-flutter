@@ -50,10 +50,8 @@ abstract class _AuthStore with Store {
 
   Future<bool> checkWebAccountAccess(String? uid) async {
     try {
-      final docSnapshot = await FirebaseFirestore.instance
-          .collection('Users')
-          .doc(uid)
-          .get();
+      final docSnapshot =
+          await FirebaseFirestore.instance.collection('Users').doc(uid).get();
 
       if (docSnapshot.exists) {
         final data = docSnapshot.data();

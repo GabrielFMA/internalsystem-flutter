@@ -14,12 +14,11 @@ class LoginWidget extends StatefulWidget {
   State<LoginWidget> createState() => _LoginWidgetState();
 }
 
-
 class _LoginWidgetState extends State<LoginWidget> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -106,12 +105,18 @@ class _LoginWidgetState extends State<LoginWidget> {
                               height: 55, // Define a altura do botão
                               child: TextButton(
                                 onPressed: () async {
-                                  if (_formKey.currentState!.validate()) {
+                                  bool isProcessing = false;
+                                  if (_formKey.currentState!.validate() &&
+                                      !isProcessing) {
+                                    isProcessing = true;
+
                                     await store.loginWithEmailAndPassword(() {
-                                      Navigator.of(context)
-                                          .pushReplacementNamed('/home');
+                                      navigateTo('/home', context);
                                     });
+
+                                    isProcessing = false;
                                   }
+                                  return;
                                 },
                                 style: TextButton.styleFrom(
                                   shadowColor:

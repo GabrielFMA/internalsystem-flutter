@@ -65,10 +65,9 @@ class _SideMenuWidgetState extends State<SideMenuWidget> {
             child: TextButton(
               child: Text("Logout"),
               onPressed: () async {
-                    await Provider.of<AuthStore>(context, listen: false)
-                        .logout();
-                    navigateTo('/login', context);
-                  },
+                await Provider.of<AuthStore>(context, listen: false).logout();
+                navigateTo('/login', context);
+              },
             ),
           ),
         ],

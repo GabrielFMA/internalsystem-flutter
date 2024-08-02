@@ -6,6 +6,7 @@ import 'package:internalsystem/firebase_options.dart';
 import 'package:internalsystem/screens/login_screen.dart';
 import 'package:internalsystem/screens/main_screen.dart';
 import 'package:internalsystem/store/auth_store.dart';
+import 'package:internalsystem/store/register_store.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
         providers: [
           Provider<AuthStore>(create: (_) => AuthStore()),
+          Provider<RegisterStore>(create: (_) => RegisterStore()),
         ],
         child: MaterialApp(
           title: "Web system study",
@@ -40,8 +42,15 @@ class MyApp extends StatelessWidget {
             ),
           ),
           routes: {
-            '/login': (_) => const LoginScreen(),
-            '/home': (_) => const MainScreen(),
+            '/login': (context) => RouteGuard(
+                  isAuthenticated: (user) => user != null,
+                  redirectIfAuthenticated: true,
+                  child: const LoginScreen(),
+                ),
+            '/home': (_) => RouteGuard(
+                  child: const MainScreen(),
+                  isAuthenticated: (user) => user != null,
+                ),
           },
           home: const AuthChecker(),
         ));
@@ -56,9 +65,6 @@ class AuthChecker extends StatefulWidget {
 }
 
 class _AuthCheckerState extends State<AuthChecker> {
-  User? _user;
-  bool _isLoading = true;
-
   @override
   void initState() {
     super.initState();
@@ -66,45 +72,48 @@ class _AuthCheckerState extends State<AuthChecker> {
   }
 
   Future<void> _checkAuthStatus() async {
-    final user = await _getCurrentUser();
-    setState(() {
-      _user = user;
-      _isLoading = false;
-    });
+    final user = FirebaseAuth.instance.currentUser;
 
-    await _handleNavigation();
-  }
-
-  Future<User?> _getCurrentUser() async {
-    return FirebaseAuth.instance.currentUser;
-  }
-
-  Future<void> _handleNavigation() async {
-    if (await Provider.of<AuthStore>(context, listen: false)
-        .checkWebAccountAccess(_user?.uid)) {
+    if (await Provider.of<AuthStore>(context, listen: false).checkWebAccountAccess(user?.uid)) {
+        print('Usuário logado: ${user?.uid}');
       navigateTo('/home', context);
     } else {
-      navigateTo('/login', context);
       FirebaseAuth.instance.signOut();
+        print('Nenhum usuário logado: ${user?.uid}');
+      navigateTo('/login', context);
     }
-  }
-
-  Widget _buildLoadingScreen() {
-    return const Scaffold(
-      body: Center(
-        child: CircularProgressIndicator(),
-      ),
-    );
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_isLoading) {
-      return _buildLoadingScreen();
+    return Container();
+  }
+}
+
+class RouteGuard extends StatelessWidget {
+  final Widget child;
+  final bool Function(User?) isAuthenticated;
+  final bool redirectIfAuthenticated;
+
+  const RouteGuard({
+    super.key,
+    required this.child,
+    required this.isAuthenticated,
+    this.redirectIfAuthenticated = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (redirectIfAuthenticated && isAuthenticated(user)) {
+      navigateTo('/home', context);
+      return buildLoadingScreen();
+    } else if (!redirectIfAuthenticated && !isAuthenticated(user)) {
+      navigateTo('/login', context);
+      return buildLoadingScreen();
     } else {
-      // Não há necessidade de retornar nada aqui,
-      // a navegação já foi tratada no método _handleNavigation
-      return Container();
+      return child;
     }
   }
 }

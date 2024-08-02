@@ -1,6 +1,4 @@
-import 'dart:ui';
-
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 
 const backgroundColor = Color(0xFF202020);
 const menuColor = Color(0xFF242424);
@@ -17,4 +15,12 @@ void navigateTo(route, BuildContext context) {
   WidgetsBinding.instance.addPostFrameCallback((_) {
     Navigator.of(context).pushReplacementNamed(route);
   });
+}
+
+Widget buildLoadingScreen() {
+  return const Scaffold(
+    body: Center(
+      child: CircularProgressIndicator(),
+    ),
+  );
 }
