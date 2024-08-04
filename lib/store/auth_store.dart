@@ -48,17 +48,17 @@ abstract class _AuthStore with Store {
     }
   }
 
-  Future<bool> checkWebAccountAccess(String? uid) async {
+  Future<bool> checkWebAccountAccess(String? document) async {
     try {
-      final docSnapshot =
-          await FirebaseFirestore.instance.collection('Users').doc(uid).get();
+      final documentSnapshot =
+          await FirebaseFirestore.instance.collection('users').doc(document).get();
 
-      if (docSnapshot.exists) {
-        final data = docSnapshot.data();
+      if (documentSnapshot.exists) {
+        final data = documentSnapshot.data();
         if (data != null && data['isAdmin']) {
           _user = AuthModel(
-            name: data['Name'],
-            email: data['Email'],
+            name: data['name'],
+            email: data['email'],
           );
           return true;
         }

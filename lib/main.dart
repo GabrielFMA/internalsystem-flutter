@@ -7,6 +7,7 @@ import 'package:internalsystem/screens/login_screen.dart';
 import 'package:internalsystem/screens/main_screen.dart';
 import 'package:internalsystem/store/auth_store.dart';
 import 'package:internalsystem/store/register_store.dart';
+import 'package:internalsystem/store/request_store.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
@@ -28,6 +29,7 @@ class MyApp extends StatelessWidget {
         providers: [
           Provider<AuthStore>(create: (_) => AuthStore()),
           Provider<RegisterStore>(create: (_) => RegisterStore()),
+          Provider<RequestStore>(create: (_) => RequestStore()),
         ],
         child: MaterialApp(
           title: "Web system study",

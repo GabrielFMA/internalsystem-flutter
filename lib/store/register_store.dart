@@ -14,53 +14,72 @@ abstract class _RegisterStore with Store {
       'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyAE8KFKXcg1ATVd6l-G9P7BHKrfXt--QZ8';
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  @observable
-  RegisterModel? _data;
-
-  @observable
-  String _email = '';
-
-  @observable
-  String _password = '';
-
   @action
-  void setEmail(String value) => _email = value;
-
-  @action
-  void setPassword(String value) => _password = value;
-
-  @action
-  Future<void> signUpWithEmailAndPassword(RegisterModel data) async {
+  Future<void> signUpWithEmailAndPassword(
+      RegisterModel data, Function onSuccess) async {
     try {
       final response = await http.post(
         Uri.parse(_url),
         body: jsonEncode({
-          'email': _email,
-          'password': _password,
+          'email': data.email,
+          'password': data.password,
           'returnSecureToken': true,
         }),
       );
-      if (jsonDecode(response.body).containsKey('idToken')) {
-        _data = data;
-        await registerUserData(jsonDecode(response.body)['localId']);
-      }
 
-      print("Novo usuário registrado com sucesso.");
+      if (jsonDecode(response.body).containsKey('idToken')) {
+        await duplicityCheck(data, () async {
+          await registerUserData(
+              'users', jsonDecode(response.body)['localId'], data);
+          onSuccess();
+          print("Novo usuário registrado com sucesso.");
+        });
+      } else {
+        print("Token de autenticação não encontrado.");
+      }
     } catch (e) {
       print("Erro ao registrar usuário: $e");
     }
   }
 
   @action
-  Future<void> registerUserData(String id) async {
+  Future<void> registerUserData(
+      String collection, String document, RegisterModel data) async {
     try {
-      await _firestore.collection('Users').doc(id).set(_data!.toMap());
-      print('Id: $id');
-      print('Email: ${_data!.email}');
-      print('Cargo: ${_data!.role}');
-      print('Acesso web: ${_data!.isAdmin}');
+      await _firestore.collection(collection).doc(document).set(data.toMap());
+      print('Id: $document');
+      print('Email: ${data.email}');
+      print('Cargo: ${data.role}');
+      print('Acesso web: ${data.isAdmin}');
     } catch (e) {
       print("Erro ao registrar dados do usuário: $e");
+    }
+  }
+
+  @action
+  Future<void> duplicityCheck(RegisterModel data, Function onSuccess) async {
+    try {
+      final fieldsToCheck = {
+        'name': data.name?.toLowerCase(),
+        'email': data.email?.toLowerCase(),
+      };
+
+      for (final entry in fieldsToCheck.entries) {
+        if (entry.value == null) continue;
+
+        final querySnapshot = await FirebaseFirestore.instance
+            .collection('users')
+            .where(entry.key, isEqualTo: entry.value)
+            .get();
+
+        if (querySnapshot.docs.isNotEmpty) {
+          print('Duplicidade encontrada para o campo ${entry.key}.');
+          return;
+        }
+      }
+      onSuccess();
+    } catch (e) {
+      print('Erro ao verificar duplicidade: $e');
     }
   }
 }

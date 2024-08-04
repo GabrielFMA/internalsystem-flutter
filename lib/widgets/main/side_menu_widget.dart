@@ -90,8 +90,9 @@ class _SideMenuWidgetState extends State<SideMenuWidget> {
                   children: [
                     SizedBox(width: 5),
                     Icon(MdiIcons.logout, color: Colors.white, size: 20),
-                    SizedBox(width: 15), // Espaçamento entre o ícone e o texto
-                    Text("Sair", style: TextStyle(color: Colors.white, fontSize: 16)),
+                    SizedBox(width: 15),
+                    Text("Sair",
+                        style: TextStyle(color: Colors.white, fontSize: 16)),
                   ],
                 ),
               ),
