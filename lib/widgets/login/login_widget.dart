@@ -114,7 +114,9 @@ class _LoginWidgetState extends State<LoginWidget> {
                                       navigateTo('/home', context);
                                     });
 
-                                    isProcessing = false;
+                                    setState(() {
+                                      isProcessing = false;
+                                    });
                                   }
                                   return;
                                 },

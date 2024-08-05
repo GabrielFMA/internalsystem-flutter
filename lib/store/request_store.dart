@@ -39,4 +39,25 @@ abstract class _RequestStore with Store {
 
     return RequestModel.fromMap(docSnapshot.data() ?? {});
   }
+
+  @action
+  Future<RequestModel> fetchSecondaryData(
+    String collection,
+    String secondCollection,
+    String document,
+    String secondDocument,
+  ) async {
+    final docSnapshot = await _firebaseFirestore
+        .collection(collection)
+        .doc(document)
+        .collection(secondCollection)
+        .doc(secondDocument)
+        .get();
+
+    return RequestModel(
+      permissions: secondDocument == 'permissions'
+          ? docSnapshot.data()!['permissions']
+          : TemplateRequestModel().permissions,
+    );
+  }
 }

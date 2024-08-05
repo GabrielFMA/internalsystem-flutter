@@ -8,6 +8,7 @@ import 'package:internalsystem/screens/main_screen.dart';
 import 'package:internalsystem/store/auth_store.dart';
 import 'package:internalsystem/store/register_store.dart';
 import 'package:internalsystem/store/request_store.dart';
+import 'package:internalsystem/store/update_store.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
@@ -26,44 +27,56 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-        providers: [
-          Provider<AuthStore>(create: (_) => AuthStore()),
-          Provider<RegisterStore>(create: (_) => RegisterStore()),
-          Provider<RequestStore>(create: (_) => RequestStore()),
-        ],
-        child: MaterialApp(
-          title: "Web system study",
-          debugShowCheckedModeBanner: false,
-          theme: ThemeData(
-            scaffoldBackgroundColor: backgroundColor,
-            brightness: Brightness.dark,
-            textSelectionTheme: const TextSelectionThemeData(
-              cursorColor: selectionTextColor,
-              selectionColor: selectionTextColor,
-              selectionHandleColor: selectionTextColor,
-            ),
+      providers: [
+        Provider<AuthStore>(create: (_) => AuthStore()),
+        Provider<RegisterStore>(create: (_) => RegisterStore()),
+        Provider<RequestStore>(create: (_) => RequestStore()),
+        Provider<UpdateStore>(create: (_) => UpdateStore()),
+      ],
+      child: MaterialApp(
+        title: "Web system study",
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          scaffoldBackgroundColor: backgroundColor,
+          brightness: Brightness.dark,
+          textSelectionTheme: const TextSelectionThemeData(
+            cursorColor: selectionTextColor,
+            selectionColor: selectionTextColor,
+            selectionHandleColor: selectionTextColor,
           ),
-          routes: {
-            '/login': (context) => RouteGuard(
-                  isAuthenticated: (user) => user != null,
-                  redirectIfAuthenticated: true,
-                  child: const LoginScreen(),
-                ),
-            '/home': (_) => RouteGuard(
-                  child: const MainScreen(),
-                  isAuthenticated: (user) => user != null,
-                ),
-            '/register': (_) => RouteGuard(
-                  child: const MainScreen(),
-                  isAuthenticated: (user) => user != null,
-                ),
-            '/settings': (_) => RouteGuard(
-                  child: const MainScreen(),
-                  isAuthenticated: (user) => user != null,
-                ),
-          },
-          home: const AuthChecker(),
-        ));
+          pageTransitionsTheme: PageTransitionsTheme(
+            builders: {
+              TargetPlatform.android: NoTransitionPageTransitionsBuilder(),
+              TargetPlatform.iOS: NoTransitionPageTransitionsBuilder(),
+              TargetPlatform.macOS: NoTransitionPageTransitionsBuilder(),
+              TargetPlatform.windows: NoTransitionPageTransitionsBuilder(),
+              TargetPlatform.fuchsia: NoTransitionPageTransitionsBuilder(),
+              TargetPlatform.linux: NoTransitionPageTransitionsBuilder(),
+            },
+          ),
+        ),
+        routes: {
+          '/login': (context) => RouteGuard(
+                isAuthenticated: (user) => user != null,
+                redirectIfAuthenticated: true,
+                child: const LoginScreen(),
+              ),
+          '/home': (_) => RouteGuard(
+                child: const MainScreen(),
+                isAuthenticated: (user) => user != null,
+              ),
+          '/register': (_) => RouteGuard(
+                child: const MainScreen(),
+                isAuthenticated: (user) => user != null,
+              ),
+          '/settings': (_) => RouteGuard(
+                child: const MainScreen(),
+                isAuthenticated: (user) => user != null,
+              ),
+        },
+        home: const AuthChecker(),
+      ),
+    );
   }
 }
 
@@ -86,17 +99,12 @@ class _AuthCheckerState extends State<AuthChecker> {
 
     if (await Provider.of<AuthStore>(context, listen: false)
         .checkWebAccountAccess(user?.uid)) {
-      setState(() {
-        print('Usuário logado: ${user?.uid}');
-        navigateTo('/home', context);
-      });
-      
+      print('Usuário logado: ${user?.uid}');
+      navigateTo('/home', context);
     } else {
       FirebaseAuth.instance.signOut();
-      setState(() {
-        print('Nenhum usuário logado: ${user?.uid}');
-        navigateTo('/login', context);
-      });
+      print('Nenhum usuário logado: ${user?.uid}');
+      navigateTo('/login', context);
     }
   }
 
@@ -137,5 +145,18 @@ class RouteGuard extends StatelessWidget {
     } else {
       return child;
     }
+  }
+}
+
+class NoTransitionPageTransitionsBuilder extends PageTransitionsBuilder {
+  @override
+  Widget buildTransitions<T>(
+    PageRoute<T> route,
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    Widget child,
+  ) {
+    return child;
   }
 }

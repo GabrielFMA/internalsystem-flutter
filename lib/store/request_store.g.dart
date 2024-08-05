@@ -18,6 +18,16 @@ mixin _$RequestStore on _RequestStore, Store {
         .run(() => super.fetchData(collection, document));
   }
 
+  late final _$fetchSecondaryDataAsyncAction =
+      AsyncAction('_RequestStore.fetchSecondaryData', context: context);
+
+  @override
+  Future<RequestModel> fetchSecondaryData(String collection,
+      String secondCollection, String document, String secondDocument) {
+    return _$fetchSecondaryDataAsyncAction.run(() => super.fetchSecondaryData(
+        collection, secondCollection, document, secondDocument));
+  }
+
   @override
   String toString() {
     return '''

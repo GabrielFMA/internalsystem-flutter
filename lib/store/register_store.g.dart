@@ -20,14 +20,47 @@ mixin _$RegisterStore on _RegisterStore, Store {
         .run(() => super.signUpWithEmailAndPassword(data, onSuccess));
   }
 
-  late final _$registerUserDataAsyncAction =
-      AsyncAction('_RegisterStore.registerUserData', context: context);
+  late final _$registerDataAsyncAction =
+      AsyncAction('_RegisterStore.registerData', context: context);
 
   @override
-  Future<void> registerUserData(
-      String collection, String document, RegisterModel data) {
-    return _$registerUserDataAsyncAction
-        .run(() => super.registerUserData(collection, document, data));
+  Future<void> registerData(String collection, String document,
+      RegisterModel data, Function onSuccess) {
+    return _$registerDataAsyncAction
+        .run(() => super.registerData(collection, document, data, onSuccess));
+  }
+
+  late final _$registerSecondaryDataAsyncAction =
+      AsyncAction('_RegisterStore.registerSecondaryData', context: context);
+
+  @override
+  Future<void> registerSecondaryData(
+      String collection,
+      String secondaryCollection,
+      String document,
+      String secondaryDocument,
+      RegisterModel data) {
+    return _$registerSecondaryDataAsyncAction.run(() => super
+        .registerSecondaryData(collection, secondaryCollection, document,
+            secondaryDocument, data));
+  }
+
+  late final _$duplicityCheckAsyncAction =
+      AsyncAction('_RegisterStore.duplicityCheck', context: context);
+
+  @override
+  Future<void> duplicityCheck(RegisterModel data, Function onSuccess) {
+    return _$duplicityCheckAsyncAction
+        .run(() => super.duplicityCheck(data, onSuccess));
+  }
+
+  late final _$zipCodeVerificationAsyncAction =
+      AsyncAction('_RegisterStore.zipCodeVerification', context: context);
+
+  @override
+  Future<void> zipCodeVerification(RegisterModel data, Function onSuccess) {
+    return _$zipCodeVerificationAsyncAction
+        .run(() => super.zipCodeVerification(data, onSuccess));
   }
 
   @override

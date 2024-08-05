@@ -30,9 +30,12 @@ abstract class _RegisterStore with Store {
       if (jsonDecode(response.body).containsKey('idToken')) {
         await zipCodeVerification(data, () async {
           duplicityCheck(data, () async {
-            await registerUserData(
-                'users', jsonDecode(response.body)['localId'], data);
-            onSuccess();
+            await registerData(
+                'users', jsonDecode(response.body)['localId'], data, () async {
+              await registerSecondaryData('users', jsonDecode(response.body)['localId'],
+                  'permissions', 'internalSystem', data);
+              onSuccess();
+            });
             print("Novo usuário registrado com sucesso.");
           });
         });
@@ -45,14 +48,39 @@ abstract class _RegisterStore with Store {
   }
 
   @action
-  Future<void> registerUserData(
-      String collection, String document, RegisterModel data) async {
+  Future<void> registerData(
+    String collection,
+    String document,
+    RegisterModel data,
+    Function onSuccess,
+  ) async {
     try {
       await _firestore.collection(collection).doc(document).set(data.toMap());
+      onSuccess();
       print('Id: $document');
       print('Email: ${data.email}');
       print('Cargo: ${data.role}');
       print('Acesso web: ${data.isAdmin}');
+    } catch (e) {
+      print("Erro ao registrar dados do usuário: $e");
+    }
+  }
+
+  @action
+  Future<void> registerSecondaryData(
+    String collection,
+    String secondaryCollection,
+    String document,
+    String secondaryDocument,
+    RegisterModel data,
+  ) async {
+    try {
+      await _firestore
+          .collection(collection)
+          .doc(document)
+          .collection(secondaryCollection)
+          .doc(secondaryDocument)
+          .set(data.permissions ?? {});
     } catch (e) {
       print("Erro ao registrar dados do usuário: $e");
     }
@@ -90,14 +118,15 @@ abstract class _RegisterStore with Store {
       RegisterModel data, Function onSuccess) async {
     try {
       //Temporario
-      if (data.address?['zipCode'] == null || data.address?['zipCode'].isEmpty) {
+      if (data.address?['zipCode'] == null ||
+          data.address?['zipCode'].isEmpty) {
         print('Nenhum CEP foi fornecido!');
         onSuccess();
       }
       //Temporario
 
-      final rsp =
-          await http.get(Uri.parse("https://viacep.com.br/ws/${data.address?['zipCode']}/json/"));
+      final rsp = await http.get(Uri.parse(
+          "https://viacep.com.br/ws/${data.address?['zipCode']}/json/"));
 
       if (rsp.body.isEmpty) {
         print('Nenhuma informação foi encontrada!');
