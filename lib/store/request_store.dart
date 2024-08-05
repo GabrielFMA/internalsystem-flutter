@@ -10,7 +10,10 @@ abstract class _RequestStore with Store {
   final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
 
   Future<List<Map<String, dynamic>>> collectionRecovery(
-      collection, primaryInformation, secondInformation) async {
+    String collection,
+    String primaryInformation,
+    String secondInformation,
+  ) async {
     final collectionSnapshot =
         await _firebaseFirestore.collection(collection).get();
 

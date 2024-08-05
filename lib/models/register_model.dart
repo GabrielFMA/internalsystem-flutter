@@ -4,6 +4,7 @@ class RegisterModel {
   final String? password;
   final String? role;
   final bool? isAdmin;
+  final Map<String, dynamic>? address;
 
   RegisterModel({
     this.name,
@@ -11,6 +12,7 @@ class RegisterModel {
     this.password,
     this.role,
     this.isAdmin,
+    this.address,
   });
 
   Map<String, dynamic> toMap() {
@@ -19,6 +21,7 @@ class RegisterModel {
       'email': email,
       'role': role,
       'isAdmin': isAdmin,
+      'address': address,
     };
   }
 }

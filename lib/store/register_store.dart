@@ -28,11 +28,13 @@ abstract class _RegisterStore with Store {
       );
 
       if (jsonDecode(response.body).containsKey('idToken')) {
-        await duplicityCheck(data, () async {
-          await registerUserData(
-              'users', jsonDecode(response.body)['localId'], data);
-          onSuccess();
-          print("Novo usuário registrado com sucesso.");
+        await zipCodeVerification(data, () async {
+          duplicityCheck(data, () async {
+            await registerUserData(
+                'users', jsonDecode(response.body)['localId'], data);
+            onSuccess();
+            print("Novo usuário registrado com sucesso.");
+          });
         });
       } else {
         print("Token de autenticação não encontrado.");
@@ -80,6 +82,47 @@ abstract class _RegisterStore with Store {
       onSuccess();
     } catch (e) {
       print('Erro ao verificar duplicidade: $e');
+    }
+  }
+
+  @action
+  Future<void> zipCodeVerification(
+      RegisterModel data, Function onSuccess) async {
+    try {
+      //Temporario
+      if (data.address?['zipCode'] == null || data.address?['zipCode'].isEmpty) {
+        print('Nenhum CEP foi fornecido!');
+        onSuccess();
+      }
+      //Temporario
+
+      final rsp =
+          await http.get(Uri.parse("https://viacep.com.br/ws/${data.address?['zipCode']}/json/"));
+
+      if (rsp.body.isEmpty) {
+        print('Nenhuma informação foi encontrada!');
+        return;
+      }
+
+      if (rsp.body.contains('"erro": true')) {
+        print('CEP não encontrado!');
+        return;
+      }
+
+      final responseData = json.decode(rsp.body);
+      data = RegisterModel(
+        address: {
+          'zipCode': responseData['cep'],
+          'street': responseData['logradouro'],
+          'district': responseData['bairro'],
+          'city': responseData['localidade'],
+          'state': responseData['uf'],
+        },
+      );
+
+      onSuccess();
+    } catch (error) {
+      print('Erro ao buscar CEP: $error');
     }
   }
 }
