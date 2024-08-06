@@ -36,34 +36,30 @@ abstract class _RequestStore with Store {
   ) async {
     final docSnapshot =
         await _firebaseFirestore.collection(collection).doc(document).get();
-
     return RequestModel.fromMap(docSnapshot.data() ?? {});
   }
 
   @action
-  Future<RequestModel> fetchSecondaryData(
+  Future<List<Map<String, dynamic>>> fetchSecondaryData(
     String collection,
     String secondCollection,
     String document,
-    String secondDocument,
   ) async {
-    try {
-      // Obtém o documento do Firestore
-      final docSnapshot = await _firebaseFirestore
-          .collection(collection)
-          .doc(document)
-          .collection(secondCollection)
-          .doc(secondDocument)
-          .get();
+    final secondCollectionSnapshot = await _firebaseFirestore
+        .collection(collection)
+        .doc(document)
+        .collection(secondCollection)
+        .get();
 
-      final permissionsData = secondCollection == 'permissions'
-          ? docSnapshot.data() ?? {}
-          : TemplateRequestModel().permissions;
-
-      return RequestModel(permissions: permissionsData);
-    } catch (e) {
-      print('Erro ao buscar: $e');
-      return RequestModel();
+    List<Map<String, dynamic>> secondaryList = [];
+    for (var doc in secondCollectionSnapshot.docs) {
+      final data = doc.data();
+      secondaryList.add({
+        "id": doc.id,
+        secondCollection: {data},
+      });
     }
+
+    return secondaryList;
   }
 }

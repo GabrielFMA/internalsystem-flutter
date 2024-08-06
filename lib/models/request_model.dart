@@ -8,12 +8,13 @@ class TemplateRequestModel {
 }
 
 class RequestModel {
-  final String? name;
-  final String? email;
-  final String? role;
-  final bool? isAdmin;
-  final Map<String, dynamic>? address;
-  final Map<String, dynamic>? permissions;
+  String? name;
+  String? email;
+  String? role;
+  bool? isAdmin;
+  Map<String, dynamic>? address;
+  List<Map<String, dynamic>> permissions = [];
+  List<Map<String, dynamic>> sales = [];
 
   RequestModel({
     this.name,
@@ -21,7 +22,6 @@ class RequestModel {
     this.role,
     this.isAdmin,
     this.address,
-    this.permissions,
   });
 
   factory RequestModel.fromMap(Map<String, dynamic> data) {

@@ -1,11 +1,11 @@
 class RegisterModel {
-  final String? name;
-  final String? email;
-  final String? password;
-  final String? role;
-  final bool? isAdmin;
-  final Map<String, dynamic>? address;
-  final Map<String, dynamic>? permissions;
+  String? name;
+  String? email;
+  String? password;
+  String? role;
+  bool? isAdmin;
+  Map<String, dynamic>? address;
+  Map<String, dynamic>? permissions;
 
   RegisterModel({
     this.name,

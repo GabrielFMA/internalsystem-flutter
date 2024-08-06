@@ -22,10 +22,10 @@ mixin _$RequestStore on _RequestStore, Store {
       AsyncAction('_RequestStore.fetchSecondaryData', context: context);
 
   @override
-  Future<RequestModel> fetchSecondaryData(String collection,
-      String secondCollection, String document, String secondDocument) {
-    return _$fetchSecondaryDataAsyncAction.run(() => super.fetchSecondaryData(
-        collection, secondCollection, document, secondDocument));
+  Future<List<Map<String, dynamic>>> fetchSecondaryData(
+      String collection, String secondCollection, String document) {
+    return _$fetchSecondaryDataAsyncAction.run(
+        () => super.fetchSecondaryData(collection, secondCollection, document));
   }
 
   @override

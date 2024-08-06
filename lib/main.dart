@@ -10,7 +10,7 @@ import 'package:internalsystem/store/register_store.dart';
 import 'package:internalsystem/store/request_store.dart';
 import 'package:internalsystem/store/update_store.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_web_plugins/flutter_web_plugins.dart';
+import 'package:flutter_web_plugins/flutter_web_plugins.dart';  
 
 void main() async {
   setUrlStrategy(PathUrlStrategy());
