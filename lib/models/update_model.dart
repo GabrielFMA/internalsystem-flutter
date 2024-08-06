@@ -1,16 +1,14 @@
-class RegisterModel {
+class UpdateModel {
   final String? name;
   final String? email;
-  final String? password;
   final String? role;
   final bool? isAdmin;
   final Map<String, dynamic>? address;
   final Map<String, dynamic>? permissions;
 
-  RegisterModel({
+  UpdateModel({
     this.name,
     this.email,
-    this.password,
     this.role,
     this.isAdmin,
     this.address,

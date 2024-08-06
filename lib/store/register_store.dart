@@ -32,8 +32,8 @@ abstract class _RegisterStore with Store {
           duplicityCheck(data, () async {
             await registerData(
                 'users', jsonDecode(response.body)['localId'], data, () async {
-              await registerSecondaryData('users', jsonDecode(response.body)['localId'],
-                  'permissions', 'internalSystem', data);
+              await registerSecondaryData('users', 'permissions', jsonDecode(response.body)['localId'],
+                  'internalSystem', data);
               onSuccess();
             });
             print("Novo usuário registrado com sucesso.");
@@ -122,6 +122,7 @@ abstract class _RegisterStore with Store {
           data.address?['zipCode'].isEmpty) {
         print('Nenhum CEP foi fornecido!');
         onSuccess();
+        return;
       }
       //Temporario
 

@@ -78,7 +78,7 @@ class _TextFieldStringState extends State<TextFieldString> {
         fillColor: Colors.transparent,
         contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       ),
-      style: TextStyle(color: textFieldColor),
+      style: const TextStyle(color: textFieldColor),
     );
   }
 }

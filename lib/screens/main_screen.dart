@@ -25,7 +25,7 @@ class MainScreen extends StatelessWidget {
         child: Row(
           children: [
             if (isDesktop)
-              Expanded(
+              const Expanded(
                 flex: 2,
                 child: SizedBox(
                   child: SideMenuWidget(),
@@ -34,7 +34,7 @@ class MainScreen extends StatelessWidget {
             Expanded(
               flex: 10,
               child: Container(
-                child: ScreenWidget()
+                child: const ScreenWidget()
               ),
               
             ),

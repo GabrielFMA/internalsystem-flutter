@@ -17,7 +17,7 @@ class HeaderWidget extends StatelessWidget {
             InkWell(
               onTap: () => Scaffold.of(context).openDrawer(),
               child: const Padding(
-                padding: const EdgeInsets.all(20.0),
+                padding: EdgeInsets.all(20.0),
                 child: Icon(
                   Icons.menu,
                   color: Colors.grey,

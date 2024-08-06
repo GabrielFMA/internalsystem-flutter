@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:internalsystem/const/const.dart';
 import 'package:internalsystem/data/side_menu_data.dart';
+import 'package:internalsystem/models/request_model.dart';
 import 'package:internalsystem/store/auth_store.dart';
+import 'package:internalsystem/store/request_store.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -46,7 +48,7 @@ class _SideMenuWidgetState extends State<SideMenuWidget> {
       child: Column(
         children: [
           Padding(
-            padding: EdgeInsets.symmetric(vertical: 10),
+            padding: const EdgeInsets.symmetric(vertical: 10),
             child: Center(
               child: Image.asset(
                 'assets/images/logo.png',
@@ -88,10 +90,10 @@ class _SideMenuWidgetState extends State<SideMenuWidget> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    SizedBox(width: 5),
+                    const SizedBox(width: 5),
                     Icon(MdiIcons.logout, color: Colors.white, size: 20),
-                    SizedBox(width: 15),
-                    Text("Sair",
+                    const SizedBox(width: 15),
+                    const Text("Sair",
                         style: TextStyle(color: Colors.white, fontSize: 16)),
                   ],
                 ),

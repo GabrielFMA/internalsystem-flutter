@@ -18,14 +18,14 @@ abstract class _RequestStore with Store {
         await _firebaseFirestore.collection(collection).get();
 
     List<Map<String, dynamic>> dataList = [];
-    collectionSnapshot.docs.forEach((doc) {
+    for (var doc in collectionSnapshot.docs) {
       final data = doc.data();
       dataList.add({
         "id": doc.id,
         primaryInformation: data[primaryInformation],
         secondInformation: data[secondInformation],
       });
-    });
+    }
     return dataList;
   }
 
@@ -47,17 +47,23 @@ abstract class _RequestStore with Store {
     String document,
     String secondDocument,
   ) async {
-    final docSnapshot = await _firebaseFirestore
-        .collection(collection)
-        .doc(document)
-        .collection(secondCollection)
-        .doc(secondDocument)
-        .get();
+    try {
+      // Obtém o documento do Firestore
+      final docSnapshot = await _firebaseFirestore
+          .collection(collection)
+          .doc(document)
+          .collection(secondCollection)
+          .doc(secondDocument)
+          .get();
 
-    return RequestModel(
-      permissions: secondDocument == 'permissions'
-          ? docSnapshot.data()!['permissions']
-          : TemplateRequestModel().permissions,
-    );
+      final permissionsData = secondCollection == 'permissions'
+          ? docSnapshot.data() ?? {}
+          : TemplateRequestModel().permissions;
+
+      return RequestModel(permissions: permissionsData);
+    } catch (e) {
+      print('Erro ao buscar: $e');
+      return RequestModel();
+    }
   }
 }
