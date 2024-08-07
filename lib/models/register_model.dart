@@ -21,8 +21,8 @@ class RegisterModel {
     final Map<String, dynamic> result = {};
 
     final entries = [
-      MapEntry('name', name),
-      MapEntry('email', email),
+      MapEntry('name', name?.toLowerCase()),
+      MapEntry('email', email?.toLowerCase()),
       MapEntry('role', role),
       MapEntry('isAdmin', isAdmin),
       MapEntry('address', address),

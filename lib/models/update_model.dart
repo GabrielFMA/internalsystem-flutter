@@ -1,10 +1,9 @@
 class UpdateModel {
-  final String? name;
-  final String? email;
-  final String? role;
-  final bool? isAdmin;
-  final Map<String, dynamic>? address;
-  final Map<String, dynamic>? permissions;
+  String? name;
+  String? email;
+  String? role;
+  bool? isAdmin;
+  Map<String, dynamic>? address;
 
   UpdateModel({
     this.name,
@@ -12,19 +11,17 @@ class UpdateModel {
     this.role,
     this.isAdmin,
     this.address,
-    this.permissions,
   });
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> result = {};
 
     final entries = [
-      MapEntry('name', name),
-      MapEntry('email', email),
+      MapEntry('name', name?.toLowerCase()),
+      MapEntry('email', email?.toLowerCase()),
       MapEntry('role', role),
       MapEntry('isAdmin', isAdmin),
       MapEntry('address', address),
-      MapEntry('permissions', permissions),
     ];
 
     for (var entry in entries) {

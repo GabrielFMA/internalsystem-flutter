@@ -1,4 +1,3 @@
-import 'package:internalsystem/models/request_model.dart';
 import 'package:mobx/mobx.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -29,14 +28,54 @@ abstract class _RequestStore with Store {
     return dataList;
   }
 
-  @action
-  Future<RequestModel> fetchData(
+  Future<String?> fetchId(
     String collection,
-    String document,
+    String field,
+    String value,
   ) async {
-    final docSnapshot =
-        await _firebaseFirestore.collection(collection).doc(document).get();
-    return RequestModel.fromMap(docSnapshot.data() ?? {});
+    try {
+      final collectionSnapshot = await _firebaseFirestore
+          .collection(collection)
+          .where(field, isEqualTo: value.toLowerCase())
+          .get();
+
+      if (collectionSnapshot.docs.isNotEmpty) {
+        return collectionSnapshot.docs[0].id;
+      } else {
+        print("Nenhum documento encontrado com $field igual a $value.");
+        return null;
+      }
+    } catch (e) {
+      print("Erro ao buscar o documento: $e");
+      return null;
+    }
+  }
+
+  Future<String?> fetchSecondaryId(
+    String collection,
+    String secondCollection,
+    String document,
+    String field,
+    String value,
+  ) async {
+    try {
+      final collectionSnapshot = await _firebaseFirestore
+          .collection(collection)
+          .doc(document)
+          .collection(secondCollection)
+          .where(field, isEqualTo: value.toLowerCase())
+          .get();
+
+      if (collectionSnapshot.docs.isNotEmpty) {
+        return collectionSnapshot.docs[0].id;
+      } else {
+        print("Nenhum documento encontrado com $field igual a $value.");
+        return null;
+      }
+    } catch (e) {
+      print("Erro ao buscar o documento: $e");
+      return null;
+    }
   }
 
   @action
