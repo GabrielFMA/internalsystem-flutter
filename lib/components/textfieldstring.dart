@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:internalsystem/const/const.dart';
 
 class TextFieldString extends StatefulWidget {
-  final String text;
+  final TextEditingController? controller;
   final String hintText;
   final Icon icon;
   final bool shouldValidate;
@@ -13,9 +13,9 @@ class TextFieldString extends StatefulWidget {
 
   const TextFieldString({
     super.key,
+    this.controller,
     required this.icon,
     required this.hintText,
-    required this.text,
     required this.shouldValidate,
     required this.validator,
     this.onChanged,
@@ -33,7 +33,12 @@ class _TextFieldStringState extends State<TextFieldString> {
   @override
   void initState() {
     super.initState();
-    _textController = TextEditingController(text: widget.text);
+    if (widget.controller != null) {
+      _textController = widget.controller!;
+    } else {
+      _textController = TextEditingController();
+    }
+
     _textController.addListener(() {
       if (widget.onChanged != null) {
         widget.onChanged!(_textController.text);
@@ -43,7 +48,9 @@ class _TextFieldStringState extends State<TextFieldString> {
 
   @override
   void dispose() {
-    _textController.dispose();
+    if (widget.controller == null) {
+      _textController.dispose();
+    }
     super.dispose();
   }
 
@@ -57,7 +64,11 @@ class _TextFieldStringState extends State<TextFieldString> {
       decoration: InputDecoration(
         prefixIcon: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: widget.icon,
+          child: IconTheme(
+            data: const IconThemeData(
+                color: Colors.white),
+            child: widget.icon,
+          ),
         ),
         suffixIcon: widget.suffixIcon,
         border: OutlineInputBorder(

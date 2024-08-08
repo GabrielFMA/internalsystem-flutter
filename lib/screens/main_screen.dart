@@ -4,6 +4,20 @@ import 'package:internalsystem/util/responsive.dart';
 import 'package:internalsystem/widgets/main/screen_widget.dart';
 import 'package:internalsystem/widgets/main/side_menu_widget.dart';
 
+class LoadingScreen extends StatelessWidget {
+  const LoadingScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.green[200],
+      body: const Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
+  }
+}
+
 class MainScreen extends StatelessWidget {
   const MainScreen({super.key});
 
@@ -16,7 +30,7 @@ class MainScreen extends StatelessWidget {
       drawer: !isDesktop 
         ? Drawer(
             child: Container(
-              color: menuColor, // Defina a cor de fundo do Drawer aqui
+              color: menuColor,
               child: const SideMenuWidget(),
             ),
           )
@@ -43,4 +57,5 @@ class MainScreen extends StatelessWidget {
       ),
     );
   }
+  
 }

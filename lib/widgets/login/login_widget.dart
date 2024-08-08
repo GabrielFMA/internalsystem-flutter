@@ -8,16 +8,22 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:provider/provider.dart';
 
 class LoginWidget extends StatefulWidget {
-  const LoginWidget({super.key});
+  final TextEditingController emailController;
+  final TextEditingController passwordController;
+
+  const LoginWidget({
+    Key? key,
+    required this.emailController,
+    required this.passwordController,
+  }) : super(key: key);
 
   @override
   State<LoginWidget> createState() => _LoginWidgetState();
 }
 
 class _LoginWidgetState extends State<LoginWidget> {
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  bool _isProcessing = false;
 
   @override
   Widget build(BuildContext context) {
@@ -29,8 +35,7 @@ class _LoginWidgetState extends State<LoginWidget> {
     return SizedBox.expand(
       child: Container(
         color: backgroundColor,
-        padding:
-            isDesktop ? const EdgeInsets.all(40) : const EdgeInsets.all(20),
+        padding: isDesktop ? const EdgeInsets.all(40) : const EdgeInsets.all(20),
         child: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints viewportConstraints) {
             return SingleChildScrollView(
@@ -43,6 +48,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+                      const SizedBox(height: 40),
                       if (!isDesktop)
                         Center(
                           child: Image.asset(
@@ -55,31 +61,33 @@ class _LoginWidgetState extends State<LoginWidget> {
                       TextFieldString(
                         icon: Icon(MdiIcons.emailOutline),
                         hintText: "Digite seu email",
-                        text: _emailController.text,
+                        controller: widget.emailController,
                         shouldValidate: true,
+                        onChanged: (value) {
+                          store.setEmail(value);
+                        },
                         validator: (text) {
                           if (text!.isEmpty) {
                             return "Digite um e-mail";
                           }
-                          store.setEmail(text);
                           return null;
                         },
                       ),
-                      const SizedBox(
-                        height: 10,
-                      ),
+                      const SizedBox(height: 10),
                       TextFieldStringPassword(
                         icon: MdiIcons.lockOutline,
                         iconVisibility: MdiIcons.eyeOutline,
                         iconNotVisibility: MdiIcons.eyeOffOutline,
                         hintText: "Digite sua senha",
-                        text: _passwordController.text,
+                        controller: widget.passwordController,
                         shouldValidate: true,
+                        onChanged: (value) {
+                          store.setPassword(value);
+                        },
                         validator: (text) {
                           if (text!.isEmpty) {
                             return "Digite uma senha";
                           }
-                          store.setPassword(text);
                           return null;
                         },
                       ),
@@ -101,39 +109,33 @@ class _LoginWidgetState extends State<LoginWidget> {
                           ),
                           Center(
                             child: SizedBox(
-                              width: width, // Define a largura do botão
-                              height: 55, // Define a altura do botão
+                              width: width,
+                              height: 55,
                               child: TextButton(
                                 onPressed: () async {
-                                  bool isProcessing = false;
-                                  if (_formKey.currentState!.validate() &&
-                                      !isProcessing) {
-                                    isProcessing = true;
-
-                                    await navigateToSomeBuilder(
-                                        buildLoadingScreen(), context, 1000);
+                                  if (_formKey.currentState!.validate() && !_isProcessing) {
+                                    setState(() {
+                                      _isProcessing = true;
+                                    });
+                                    await Future.delayed(const Duration(milliseconds: 1000));
 
                                     await store.loginWithEmailAndPassword(() {
                                       navigateTo('/home', context);
                                     });
 
-                                    navigateTo('/login', context);
                                     setState(() {
-                                      isProcessing = false;
+                                      _isProcessing = false;
                                     });
                                   }
                                   return;
                                 },
                                 style: TextButton.styleFrom(
-                                  shadowColor:
-                                      Colors.transparent, // Remove a sombra
+                                  shadowColor: Colors.transparent,
                                   side: const BorderSide(
                                     color: Colors.transparent,
-                                  ), // Remove a borda
-                                  padding: EdgeInsets
-                                      .zero, // Remove o padding interno
-                                  backgroundColor: Colors
-                                      .transparent, // Torna o fundo do botão transparente
+                                  ),
+                                  padding: EdgeInsets.zero,
+                                  backgroundColor: Colors.transparent,
                                   textStyle: const TextStyle(fontSize: 16),
                                 ),
                                 child: const Text(
@@ -144,6 +146,24 @@ class _LoginWidgetState extends State<LoginWidget> {
                             ),
                           ),
                         ],
+                      ),
+                      const SizedBox(height: 20),
+                      Container(
+                        height: 40,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            _isProcessing
+                                ? const CircularProgressIndicator(
+                                    backgroundColor: Colors.transparent,
+                                    color: colorOneGradient,
+                                  )
+                                : Text(
+                                    "Error here",
+                                    style: TextStyle(color: Colors.red),
+                                  )
+                          ],
+                        ),
                       ),
                     ],
                   ),

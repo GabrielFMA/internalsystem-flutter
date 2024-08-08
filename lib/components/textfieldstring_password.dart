@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:internalsystem/const/const.dart';
 
 class TextFieldStringPassword extends StatefulWidget {
-  final String text;
+  final TextEditingController? controller;
   final String hintText;
   final IconData icon;
   final IconData iconVisibility;
@@ -14,11 +14,11 @@ class TextFieldStringPassword extends StatefulWidget {
 
   const TextFieldStringPassword({
     super.key,
+    this.controller,
     required this.icon,
     required this.iconVisibility,
     required this.iconNotVisibility,
     required this.hintText,
-    required this.text,
     required this.shouldValidate,
     required this.validator,
     this.onChanged,
@@ -36,12 +36,18 @@ class _TextFieldStringPasswordState extends State<TextFieldStringPassword> {
   @override
   void initState() {
     super.initState();
-    _textController = TextEditingController(text: widget.text);
+    if (widget.controller != null) {
+      _textController = widget.controller!;
+    } else {
+      _textController = TextEditingController();
+    }
   }
 
   @override
   void dispose() {
-    _textController.dispose();
+    if (widget.controller == null) {
+      _textController.dispose();
+    }
     super.dispose();
   }
 
@@ -59,7 +65,7 @@ class _TextFieldStringPasswordState extends State<TextFieldStringPassword> {
           child: Icon(widget.icon, color: textFieldColor),
         ),
         suffixIcon: Padding(
-          padding: const EdgeInsets.only(right: 14), // Adiciona padding à direita do ícone
+          padding: const EdgeInsets.only(right: 14),
           child: IconButton(
             icon: Icon(
               _isObscure ? widget.iconVisibility : widget.iconNotVisibility,
