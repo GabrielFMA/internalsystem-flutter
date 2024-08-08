@@ -110,10 +110,14 @@ class _LoginWidgetState extends State<LoginWidget> {
                                       !isProcessing) {
                                     isProcessing = true;
 
+                                    await navigateToSomeBuilder(
+                                        buildLoadingScreen(), context, 1000);
+
                                     await store.loginWithEmailAndPassword(() {
                                       navigateTo('/home', context);
                                     });
 
+                                    navigateTo('/login', context);
                                     setState(() {
                                       isProcessing = false;
                                     });

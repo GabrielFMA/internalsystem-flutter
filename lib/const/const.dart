@@ -17,6 +17,18 @@ void navigateTo(route, BuildContext context) {
   });
 }
 
+Future<void> navigateToSomeBuilder(Widget pageBuilder, BuildContext context, int time) async {
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    Navigator.of(context).push(
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) => pageBuilder,
+        opaque: false,
+      ),
+    );
+  });
+  await Future.delayed(Duration(milliseconds: time));
+}
+
 Widget buildLoadingScreen() {
   return const Scaffold(
     body: Center(
@@ -27,4 +39,3 @@ Widget buildLoadingScreen() {
     ),
   );
 }
-

@@ -82,6 +82,7 @@ class _SideMenuWidgetState extends State<SideMenuWidget> {
                   ),
                 ),
                 onPressed: () async {
+                  await navigateToSomeBuilder(buildLoadingScreen(), context, 1000);
                   await Provider.of<AuthStore>(context, listen: false).logout();
                   Navigator.pushNamed(context, '/login');
                 },
