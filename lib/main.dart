@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
         Provider<UpdateStore>(create: (_) => UpdateStore()),
       ],
       child: MaterialApp(
-        title: "Web system study",
+        title: "StoreCar",
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           scaffoldBackgroundColor: backgroundColor,
