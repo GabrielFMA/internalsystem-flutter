@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:internalsystem/const/const.dart';
+import 'package:internalsystem/constants/constants.dart';
 
 class TextFieldStringPassword extends StatefulWidget {
   final TextEditingController? controller;

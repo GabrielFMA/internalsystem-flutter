@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:internalsystem/components/textfieldstring.dart';
 import 'package:internalsystem/components/textfieldstring_password.dart';
-import 'package:internalsystem/const/const.dart';
-import 'package:internalsystem/store/auth_store.dart';
-import 'package:internalsystem/util/responsive.dart';
+import 'package:internalsystem/constants/constants.dart';
+import 'package:internalsystem/models/text_error_model.dart';
+import 'package:internalsystem/stores/auth_store.dart';
+import 'package:internalsystem/utils/navigation_utils.dart';
+import 'package:internalsystem/utils/responsive.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -24,6 +26,7 @@ class LoginWidget extends StatefulWidget {
 class _LoginWidgetState extends State<LoginWidget> {
   final _formKey = GlobalKey<FormState>();
   bool _isProcessing = false;
+  TextErrorModel textError = TextErrorModel(error: '');
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +38,8 @@ class _LoginWidgetState extends State<LoginWidget> {
     return SizedBox.expand(
       child: Container(
         color: backgroundColor,
-        padding: isDesktop ? const EdgeInsets.all(40) : const EdgeInsets.all(20),
+        padding:
+            isDesktop ? const EdgeInsets.all(40) : const EdgeInsets.all(20),
         child: LayoutBuilder(
           builder: (BuildContext context, BoxConstraints viewportConstraints) {
             return SingleChildScrollView(
@@ -113,13 +117,16 @@ class _LoginWidgetState extends State<LoginWidget> {
                               height: 55,
                               child: TextButton(
                                 onPressed: () async {
-                                  if (_formKey.currentState!.validate() && !_isProcessing) {
+                                  if (_formKey.currentState!.validate() &&
+                                      !_isProcessing) {
                                     setState(() {
                                       _isProcessing = true;
+                                      textError = TextErrorModel(error: '');
                                     });
-                                    await Future.delayed(const Duration(milliseconds: 1000));
+                                    await Future.delayed(
+                                        const Duration(milliseconds: 1000));
 
-                                    await store.loginWithEmailAndPassword(() {
+                                    await store.loginWithEmailAndPassword(textError, () {
                                       navigateTo('/home', context);
                                     });
 
@@ -159,7 +166,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                                     color: colorOneGradient,
                                   )
                                 : Text(
-                                    "Error here",
+                                    textError.error,
                                     style: TextStyle(color: Colors.red),
                                   )
                           ],

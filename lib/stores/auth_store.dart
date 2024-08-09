@@ -1,3 +1,5 @@
+import 'package:internalsystem/models/text_error_model.dart';
+import 'package:internalsystem/utils/error_messages.dart';
 import 'package:mobx/mobx.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../models/auth_model.dart';
@@ -26,7 +28,8 @@ abstract class _AuthStore with Store {
   void setPassword(String value) => _password = value;
 
   @action
-  Future<void> loginWithEmailAndPassword(Function onSuccess) async {
+  Future<void> loginWithEmailAndPassword(
+      TextErrorModel textError, Function onSuccess) async {
     try {
       final userCredential = await _firebaseAuth.signInWithEmailAndPassword(
         email: _email,
@@ -40,18 +43,23 @@ abstract class _AuthStore with Store {
         onSuccess();
       } else {
         logout();
-        print(
-            'Acesso web não permitido para o usuário: ${userCredential.user?.uid}');
+        textError.error =
+            ErrorMessages.getErrorMessage('user-without-permission');
       }
+    } on FirebaseAuthException catch (e) {
+      print(e.code);
+      textError.error = ErrorMessages.getErrorMessage(e.code);
     } catch (e) {
-      print('Error logging in with email and password: $e');
+      textError.error = 'Ocorreu um erro inesperado: ${e.toString()}';
     }
   }
 
   Future<bool> checkWebAccountAccess(String? document) async {
     try {
-      final documentSnapshot =
-          await FirebaseFirestore.instance.collection('users').doc(document).get();
+      final documentSnapshot = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(document)
+          .get();
 
       if (documentSnapshot.exists) {
         final data = documentSnapshot.data();

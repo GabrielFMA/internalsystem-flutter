@@ -1,14 +1,16 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:internalsystem/const/const.dart';
+import 'package:internalsystem/constants/constants.dart';
 import 'package:internalsystem/firebase_options.dart';
 import 'package:internalsystem/screens/login_screen.dart';
 import 'package:internalsystem/screens/main_screen.dart';
-import 'package:internalsystem/store/auth_store.dart';
-import 'package:internalsystem/store/register_store.dart';
-import 'package:internalsystem/store/request_store.dart';
-import 'package:internalsystem/store/update_store.dart';
+import 'package:internalsystem/stores/auth_store.dart';
+import 'package:internalsystem/stores/register_store.dart';
+import 'package:internalsystem/stores/request_store.dart';
+import 'package:internalsystem/stores/update_store.dart';
+import 'package:internalsystem/utils/navigation_utils.dart';
+import 'package:internalsystem/widgets/loading_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';  
 

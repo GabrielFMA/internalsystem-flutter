@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:internalsystem/util/responsive.dart';
+import 'package:internalsystem/utils/responsive.dart';
 import 'package:internalsystem/widgets/login/login_widget.dart';
 
 class LoginScreen extends StatefulWidget {
