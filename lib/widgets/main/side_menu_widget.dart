@@ -65,7 +65,6 @@ class _SideMenuWidgetState extends State<SideMenuWidget> {
             height: 1,
           ),
           SizedBox(height: 20),
-
           buttonDefault(
             text: 'Home',
             icon: MdiIcons.home,
@@ -73,15 +72,6 @@ class _SideMenuWidgetState extends State<SideMenuWidget> {
             currentRoute: currentRoute,
             onClick: () {
               navigateTo("/home", context);
-            },
-          ),
-          buttonDefault(
-            text: 'Account',
-            icon: MdiIcons.account,
-            route: '/account',
-            currentRoute: currentRoute,
-            onClick: () {
-              navigateTo("/account", context);
             },
           ),
           buttonDefault(
@@ -93,9 +83,16 @@ class _SideMenuWidgetState extends State<SideMenuWidget> {
               navigateTo("/register", context);
             },
           ),
-
           const Spacer(),
-
+          buttonDefault(
+            text: 'Settings',
+            icon: MdiIcons.cog,
+            route: '/settings',
+            currentRoute: currentRoute,
+            onClick: () {
+              navigateTo("/settings", context);
+            },
+          ),
           buttonDefault(
             text: "Sair",
             icon: MdiIcons.logout,
@@ -130,6 +127,7 @@ class _SideMenuWidgetState extends State<SideMenuWidget> {
         child: TextButton(
           style: TextButton.styleFrom(
             backgroundColor: isSelected ? Colors.white : Colors.transparent,
+            overlayColor: Colors.white,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
             ),
@@ -143,9 +141,17 @@ class _SideMenuWidgetState extends State<SideMenuWidget> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               const SizedBox(width: 5),
-              Icon(icon, color: isSelected ? Colors.black : Colors.white, size: 20),
+              Icon(icon,
+                  color: isSelected ? Colors.black : Colors.white, size: 20),
               const SizedBox(width: 15),
-              Text(text, style: TextStyle(color: isSelected ? Colors.black : Colors.white, fontSize: 16)),
+              Text(
+                text,
+                style: TextStyle(
+                  color: isSelected ? Colors.black : Colors.white,
+                  fontSize: 16,
+                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                ),
+              )
             ],
           ),
         ),
