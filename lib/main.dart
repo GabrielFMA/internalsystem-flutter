@@ -5,6 +5,7 @@ import 'package:internalsystem/constants/constants.dart';
 import 'package:internalsystem/firebase_options.dart';
 import 'package:internalsystem/screens/login_screen.dart';
 import 'package:internalsystem/screens/main_screen.dart';
+import 'package:internalsystem/screens/register_screen.dart';
 import 'package:internalsystem/stores/auth_store.dart';
 import 'package:internalsystem/stores/register_store.dart';
 import 'package:internalsystem/stores/request_store.dart';
@@ -68,7 +69,7 @@ class MyApp extends StatelessWidget {
                 isAuthenticated: (user) => user != null,
               ),
           '/register': (_) => RouteGuard(
-                child: const MainScreen(),
+                child: const RegisterScreen(),
                 isAuthenticated: (user) => user != null,
               ),
           '/settings': (_) => RouteGuard(

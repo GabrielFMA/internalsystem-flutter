@@ -61,83 +61,70 @@ class _SideMenuWidgetState extends State<SideMenuWidget> {
             color: Colors.grey,
             height: 1,
           ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: data.menu.length,
-              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-              itemBuilder: (context, index) => buildMenuEntry(data, index),
-            ),
+          SizedBox(height: 20),
+          
+          buttonDefault(
+            text: 'Home',
+            icon: MdiIcons.home,
+            onClick: () {},
           ),
-          Container(
-            padding: const EdgeInsets.all(20.0),
-            child: SizedBox(
-              width: double.infinity,
-              height: 40,
-              child: TextButton(
-                style: TextButton.styleFrom(
-                  backgroundColor: Colors.transparent,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  textStyle: const TextStyle(
-                    fontSize: 15,
-                  ),
-                ),
-                onPressed: () async {
-                  await navigateToSomeBuilder(buildLoadingScreen(), context, 1000);
-                  await Provider.of<AuthStore>(context, listen: false).logout();
-                  Navigator.pushNamed(context, '/login');
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    const SizedBox(width: 5),
-                    Icon(MdiIcons.logout, color: Colors.white, size: 20),
-                    const SizedBox(width: 15),
-                    const Text("Sair",
-                        style: TextStyle(color: Colors.white, fontSize: 16)),
-                  ],
-                ),
-              ),
-            ),
-          )
+          buttonDefault(
+            text: 'Account',
+            icon: MdiIcons.account,
+            onClick: () {},
+          ),
+          buttonDefault(
+            text: 'Register',
+            icon: MdiIcons.accountSupervisor,
+            onClick: () {
+              navigateTo("/register", context);
+            },
+          ),
+
+          const Spacer(),
+
+          buttonDefault(
+            text: "Sair",
+            icon: MdiIcons.logout,
+            onClick: () async {
+              await navigateToSomeBuilder(buildLoadingScreen(), context, 1000);
+              await Provider.of<AuthStore>(context, listen: false).logout();
+              Navigator.pushNamed(context, '/login');
+            },
+          ),
+          const SizedBox(height: 5),
         ],
       ),
     );
   }
 
-  Widget buildMenuEntry(SideMenuData data, int index) {
-    final isSelected = selectedIndex == index;
-
+  Widget buttonDefault(
+      {required String text, required IconData icon, VoidCallback? onClick}) {
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 5),
-      decoration: BoxDecoration(
-        borderRadius: const BorderRadius.all(Radius.circular(6.0)),
-        color: isSelected ? selectionColor : Colors.transparent,
-      ),
-      child: InkWell(
-        onTap: () {
-          _setSelectedIndex(index);
-          Navigator.pushNamed(context, data.menu[index].route);
-        },
-        child: Row(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 7),
-              child: Icon(
-                data.menu[index].icon,
-                color: isSelected ? iconSelectionColor : Colors.white,
-              ),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      child: SizedBox(
+        width: double.infinity,
+        height: 40,
+        child: TextButton(
+          style: TextButton.styleFrom(
+            backgroundColor: Colors.transparent,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
             ),
-            Text(
-              data.menu[index].title,
-              style: TextStyle(
-                fontSize: 16,
-                color: isSelected ? iconSelectionColor : Colors.white,
-                fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-              ),
+            textStyle: const TextStyle(
+              fontSize: 15,
             ),
-          ],
+          ),
+          onPressed: onClick,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              const SizedBox(width: 5),
+              Icon(icon, color: Colors.white, size: 20),
+              const SizedBox(width: 15),
+              Text(text, style: TextStyle(color: Colors.white, fontSize: 16)),
+            ],
+          ),
         ),
       ),
     );

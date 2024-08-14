@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 class MenuModel {
@@ -11,5 +10,4 @@ class MenuModel {
     required this.title,
     required this.route,
   });
-
 }
