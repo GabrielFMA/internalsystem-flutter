@@ -5,15 +5,16 @@ import 'package:internalsystem/constants/constants.dart';
 import 'package:internalsystem/firebase_options.dart';
 import 'package:internalsystem/screens/login_screen.dart';
 import 'package:internalsystem/screens/main_screen.dart';
-import 'package:internalsystem/screens/register_screen.dart';
 import 'package:internalsystem/stores/auth_store.dart';
 import 'package:internalsystem/stores/register_store.dart';
 import 'package:internalsystem/stores/request_store.dart';
 import 'package:internalsystem/stores/update_store.dart';
 import 'package:internalsystem/utils/navigation_utils.dart';
 import 'package:internalsystem/widgets/loading_screen.dart';
+import 'package:internalsystem/widgets/main/register_widget.dart';
+import 'package:internalsystem/widgets/main/screen_widget.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_web_plugins/flutter_web_plugins.dart';  
+import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
 void main() async {
   setUrlStrategy(PathUrlStrategy());
@@ -65,15 +66,15 @@ class MyApp extends StatelessWidget {
                 child: const LoginScreen(),
               ),
           '/home': (_) => RouteGuard(
-                child: const MainScreen(),
+                child: MainScreen(screen: ScreenWidget()),
                 isAuthenticated: (user) => user != null,
               ),
           '/register': (_) => RouteGuard(
-                child: const RegisterScreen(),
+                child: MainScreen(screen: RegisterWidget()),
                 isAuthenticated: (user) => user != null,
               ),
           '/settings': (_) => RouteGuard(
-                child: const MainScreen(),
+                child: MainScreen(screen: ScreenWidget()),
                 isAuthenticated: (user) => user != null,
               ),
         },

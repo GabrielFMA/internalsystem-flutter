@@ -8,6 +8,8 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+final noPerm = false;
+
 class SideMenuWidget extends StatefulWidget {
   const SideMenuWidget({super.key});
 
@@ -42,6 +44,7 @@ class _SideMenuWidgetState extends State<SideMenuWidget> {
   @override
   Widget build(BuildContext context) {
     final data = SideMenuData();
+    final currentRoute = ModalRoute.of(context)?.settings.name;
 
     return Container(
       color: menuColor,
@@ -62,20 +65,30 @@ class _SideMenuWidgetState extends State<SideMenuWidget> {
             height: 1,
           ),
           SizedBox(height: 20),
-          
+
           buttonDefault(
             text: 'Home',
             icon: MdiIcons.home,
-            onClick: () {},
+            route: '/home',
+            currentRoute: currentRoute,
+            onClick: () {
+              navigateTo("/home", context);
+            },
           ),
           buttonDefault(
             text: 'Account',
             icon: MdiIcons.account,
-            onClick: () {},
+            route: '/account',
+            currentRoute: currentRoute,
+            onClick: () {
+              navigateTo("/account", context);
+            },
           ),
           buttonDefault(
             text: 'Register',
             icon: MdiIcons.accountSupervisor,
+            route: '/register',
+            currentRoute: currentRoute,
             onClick: () {
               navigateTo("/register", context);
             },
@@ -86,6 +99,8 @@ class _SideMenuWidgetState extends State<SideMenuWidget> {
           buttonDefault(
             text: "Sair",
             icon: MdiIcons.logout,
+            route: '/login',
+            currentRoute: currentRoute,
             onClick: () async {
               await navigateToSomeBuilder(buildLoadingScreen(), context, 1000);
               await Provider.of<AuthStore>(context, listen: false).logout();
@@ -98,8 +113,15 @@ class _SideMenuWidgetState extends State<SideMenuWidget> {
     );
   }
 
-  Widget buttonDefault(
-      {required String text, required IconData icon, VoidCallback? onClick}) {
+  Widget buttonDefault({
+    required String text,
+    required IconData icon,
+    required String route,
+    required String? currentRoute,
+    VoidCallback? onClick,
+  }) {
+    final isSelected = route == currentRoute;
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       child: SizedBox(
@@ -107,12 +129,13 @@ class _SideMenuWidgetState extends State<SideMenuWidget> {
         height: 40,
         child: TextButton(
           style: TextButton.styleFrom(
-            backgroundColor: Colors.transparent,
+            backgroundColor: isSelected ? Colors.white : Colors.transparent,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
             ),
-            textStyle: const TextStyle(
+            textStyle: TextStyle(
               fontSize: 15,
+              color: isSelected ? Colors.black : Colors.white,
             ),
           ),
           onPressed: onClick,
@@ -120,9 +143,9 @@ class _SideMenuWidgetState extends State<SideMenuWidget> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               const SizedBox(width: 5),
-              Icon(icon, color: Colors.white, size: 20),
+              Icon(icon, color: isSelected ? Colors.black : Colors.white, size: 20),
               const SizedBox(width: 15),
-              Text(text, style: TextStyle(color: Colors.white, fontSize: 16)),
+              Text(text, style: TextStyle(color: isSelected ? Colors.black : Colors.white, fontSize: 16)),
             ],
           ),
         ),
