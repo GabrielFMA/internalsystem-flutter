@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:internalsystem/components/textfieldstring.dart';
 import 'package:internalsystem/components/textfieldstring_password.dart';
 import 'package:internalsystem/constants/constants.dart';
@@ -14,10 +15,10 @@ class LoginWidget extends StatefulWidget {
   final TextEditingController passwordController;
 
   const LoginWidget({
-    Key? key,
+    super.key,
     required this.emailController,
     required this.passwordController,
-  }) : super(key: key);
+  });
 
   @override
   State<LoginWidget> createState() => _LoginWidgetState();
@@ -28,156 +29,169 @@ class _LoginWidgetState extends State<LoginWidget> {
   bool _isProcessing = false;
   TextErrorModel textError = TextErrorModel(error: '');
 
+  void _onButtonPressed() async {
+    if (_formKey.currentState!.validate() && !_isProcessing) {
+      setState(() {
+        _isProcessing = true;
+        textError = TextErrorModel(error: '');
+      });
+      await Future.delayed(const Duration(milliseconds: 1000));
+      final store = Provider.of<AuthStore>(context, listen: false);
+      await store.loginWithEmailAndPassword(textError, () {
+        navigateTo('/home', context);
+      });
+
+      setState(() {
+        _isProcessing = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     final isDesktop = Responsive.isDesktop(context);
 
-    final store = Provider.of<AuthStore>(context);
-
-    return SizedBox.expand(
-      child: Container(
-        color: backgroundColor,
-        padding:
-            isDesktop ? const EdgeInsets.all(40) : const EdgeInsets.all(20),
-        child: LayoutBuilder(
-          builder: (BuildContext context, BoxConstraints viewportConstraints) {
-            return SingleChildScrollView(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  minHeight: viewportConstraints.maxHeight,
-                ),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const SizedBox(height: 40),
-                      if (!isDesktop)
-                        Center(
-                          child: Image.asset(
-                            'assets/images/logo.png',
-                            width: 150,
-                            height: 150,
-                          ),
-                        ),
-                      const SizedBox(height: 20),
-                      TextFieldString(
-                        icon: Icon(MdiIcons.emailOutline),
-                        hintText: "Digite seu email",
-                        controller: widget.emailController,
-                        shouldValidate: true,
-                        onChanged: (value) {
-                          store.setEmail(value);
-                        },
-                        validator: (text) {
-                          if (text!.isEmpty) {
-                            return "Digite um e-mail";
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 10),
-                      TextFieldStringPassword(
-                        icon: MdiIcons.lockOutline,
-                        iconVisibility: MdiIcons.eyeOutline,
-                        iconNotVisibility: MdiIcons.eyeOffOutline,
-                        hintText: "Digite sua senha",
-                        controller: widget.passwordController,
-                        shouldValidate: true,
-                        onChanged: (value) {
-                          store.setPassword(value);
-                        },
-                        validator: (text) {
-                          if (text!.isEmpty) {
-                            return "Digite uma senha";
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(height: 20),
-                      Stack(
-                        children: <Widget>[
-                          Positioned.fill(
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(45),
-                                gradient: const LinearGradient(
-                                  colors: <Color>[
-                                    colorOneGradient,
-                                    colorTwoGradient,
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
+    return RawKeyboardListener(
+      focusNode: FocusNode(),
+      onKey: (event) {
+        if (event is RawKeyDownEvent &&
+            event.logicalKey == LogicalKeyboardKey.enter) {
+          _onButtonPressed();
+        }
+      },
+      child: SizedBox.expand(
+        child: Container(
+          color: backgroundColor,
+          padding:
+              isDesktop ? const EdgeInsets.all(40) : const EdgeInsets.all(20),
+          child: LayoutBuilder(
+            builder:
+                (BuildContext context, BoxConstraints viewportConstraints) {
+              return SingleChildScrollView(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minHeight: viewportConstraints.maxHeight,
+                  ),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const SizedBox(height: 40),
+                        if (!isDesktop)
                           Center(
-                            child: SizedBox(
-                              width: width,
-                              height: 55,
-                              child: TextButton(
-                                onPressed: () async {
-                                  if (_formKey.currentState!.validate() &&
-                                      !_isProcessing) {
-                                    setState(() {
-                                      _isProcessing = true;
-                                      textError = TextErrorModel(error: '');
-                                    });
-                                    await Future.delayed(
-                                        const Duration(milliseconds: 1000));
-
-                                    await store.loginWithEmailAndPassword(textError, () {
-                                      navigateTo('/home', context);
-                                    });
-
-                                    setState(() {
-                                      _isProcessing = false;
-                                    });
-                                  }
-                                  return;
-                                },
-                                style: TextButton.styleFrom(
-                                  shadowColor: Colors.transparent,
-                                  side: const BorderSide(
-                                    color: Colors.transparent,
+                            child: Image.asset(
+                              'assets/images/logo.png',
+                              width: 150,
+                              height: 150,
+                            ),
+                          ),
+                        const SizedBox(height: 20),
+                        TextFieldString(
+                          icon: Icon(MdiIcons.emailOutline),
+                          hintText: "Digite seu email",
+                          controller: widget.emailController,
+                          shouldValidate: true,
+                          textInputAction: TextInputAction.next,
+                          onChanged: (value) {
+                            final store =
+                                Provider.of<AuthStore>(context, listen: false);
+                            store.setEmail(value);
+                          },
+                          validator: (text) {
+                            if (text!.isEmpty) {
+                              return "Digite um e-mail";
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 10),
+                        TextFieldStringPassword(
+                          icon: MdiIcons.lockOutline,
+                          iconVisibility: MdiIcons.eyeOutline,
+                          iconNotVisibility: MdiIcons.eyeOffOutline,
+                          hintText: "Digite sua senha",
+                          controller: widget.passwordController,
+                          shouldValidate: true,
+                          textInputAction: TextInputAction.done,
+                          onChanged: (value) {
+                            final store =
+                                Provider.of<AuthStore>(context, listen: false);
+                            store.setPassword(value);
+                          },
+                          validator: (text) {
+                            if (text!.isEmpty) {
+                              return "Digite uma senha";
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 20),
+                        Stack(
+                          children: <Widget>[
+                            Positioned.fill(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(45),
+                                  gradient: const LinearGradient(
+                                    colors: <Color>[
+                                      colorOneGradient,
+                                      colorTwoGradient,
+                                    ],
                                   ),
-                                  padding: EdgeInsets.zero,
-                                  backgroundColor: Colors.transparent,
-                                  textStyle: const TextStyle(fontSize: 16),
-                                ),
-                                child: const Text(
-                                  "LOGIN",
-                                  style: TextStyle(color: Colors.white),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 20),
-                      Container(
-                        height: 40,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            _isProcessing
-                                ? const CircularProgressIndicator(
+                            Center(
+                              child: SizedBox(
+                                width: width,
+                                height: 55,
+                                child: TextButton(
+                                  onPressed: _onButtonPressed,
+                                  style: TextButton.styleFrom(
+                                    shadowColor: Colors.transparent,
+                                    side: const BorderSide(
+                                      color: Colors.transparent,
+                                    ),
+                                    padding: EdgeInsets.zero,
                                     backgroundColor: Colors.transparent,
-                                    color: colorOneGradient,
-                                  )
-                                : Text(
-                                    textError.error,
-                                    style: TextStyle(color: Colors.red),
-                                  )
+                                    textStyle: const TextStyle(fontSize: 16),
+                                  ),
+                                  child: const Text(
+                                    "LOGIN",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                            ),
                           ],
                         ),
-                      ),
-                    ],
+                        const SizedBox(height: 20),
+                        SizedBox(
+                          height: 40,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              _isProcessing
+                                  ? const CircularProgressIndicator(
+                                      backgroundColor: Colors.transparent,
+                                      color: colorOneGradient,
+                                    )
+                                  : Text(
+                                      textError.error,
+                                      style: const TextStyle(color: Colors.red),
+                                    )
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         ),
       ),
     );

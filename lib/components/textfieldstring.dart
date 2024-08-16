@@ -21,6 +21,8 @@ class TextFieldString extends StatefulWidget {
     this.onChanged,
     this.suffixIcon,
     this.enabled,
+    textInputAction, 
+    onSubmitted,
   });
 
   @override

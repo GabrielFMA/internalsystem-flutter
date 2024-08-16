@@ -17,165 +17,258 @@ class _RegisterWidgetState extends State<RegisterWidget> {
   @override
   Widget build(BuildContext context) {
     final isDesktop = Responsive.isDesktop(context);
+    final isDesktopLow = Responsive.isDesktopLow(context);
+    final size = MediaQuery.of(context).size;
 
-    return Stack(
+    return Column(
       children: [
-        SingleChildScrollView(
-            child: Padding(
-            padding: EdgeInsets.only(top: !isDesktop ? 80 : 0), // Espaço para o header
-            child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 20),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                    children: [
-                    const SizedBox(height: 20),
-                    const Text(
-                      "Registrar novo usuário",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 35,
-                        fontWeight: FontWeight.bold,
-                      ),
+        const HeaderWidget(),
+        Expanded(
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Form(
+                  key: _formKey,
+                  child: Container(
+                    padding: isDesktop
+                        ? EdgeInsets.symmetric(
+                            horizontal: isDesktopLow
+                                ? size.width * 0.07
+                                : size.width * 0.13,
+                            vertical: 0)
+                        : const EdgeInsets.symmetric(horizontal: 20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 20),
+                        const Center(
+                          child: Text(
+                            "Registrar novo usuário",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 35,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        const Center(
+                          child: Text(
+                            "Faça o registro de um novo usuário para utilizar o sistema.",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 15,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 30),
+                        const Text(
+                          "Dados Pessoais",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+
+                        doubleTextField(
+                          icon: Icon(MdiIcons.accountOutline),
+                          hintText: "Digite seu nome completo",
+                          shouldValidate: true,
+                          onChanged: (value) {},
+                          validator: (text) {
+                            if (text!.isEmpty) {
+                              return "Digite seu nome completo";
+                            }
+                            return null;
+                          },
+                          icon2: Icon(MdiIcons.emailOutline),
+                          hintText2: "Digite seu E-mail",
+                          shouldValidate2: true,
+                          onChanged2: (value) {},
+                          validator2: (text) {
+                            if (text!.isEmpty) {
+                              return "Digite um E-mail";
+                            }
+                            return null;
+                          },
+                        ),
+
+                        const SizedBox(height: 20),
+                        doubleTextField(
+                          icon: Icon(MdiIcons.accountOutline),
+                          hintText: "Digite seu CPF",
+                          shouldValidate: true,
+                          onChanged: (value) {},
+                          validator: (text) {
+                            if (text!.isEmpty) {
+                              return "Digite seu CPF";
+                            }
+                            return null;
+                          },
+
+                          icon2: Icon(MdiIcons.emailOutline),
+                          hintText2: "Digite seu Telefone",
+                          shouldValidate2: true,
+                          onChanged2: (value) {},
+                          validator2: (text) {
+                            if (text!.isEmpty) {
+                              return "Digite seu Telefone";
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 20),
+                        doubleTextField(
+                          icon: Icon(MdiIcons.accountOutline),
+                          hintText: "Digite seu CPF",
+                          shouldValidate: true,
+                          onChanged: (value) {},
+                          validator: (text) {
+                            if (text!.isEmpty) {
+                              return "Digite seu CPF";
+                            }
+                            return null;
+                          },
+
+                          icon2: Icon(MdiIcons.emailOutline),
+                          hintText2: "Digite seu Telefone",
+                          shouldValidate2: true,
+                          onChanged2: (value) {},
+                          validator2: (text) {
+                            if (text!.isEmpty) {
+                              return "Digite seu Telefone";
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 20),
+                        doubleTextField(
+                          icon: Icon(MdiIcons.accountOutline),
+                          hintText: "Digite seu CPF",
+                          shouldValidate: true,
+                          onChanged: (value) {},
+                          validator: (text) {
+                            if (text!.isEmpty) {
+                              return "Digite seu CPF";
+                            }
+                            return null;
+                          },
+
+                          icon2: Icon(MdiIcons.emailOutline),
+                          hintText2: "Digite seu Telefone",
+                          shouldValidate2: true,
+                          onChanged2: (value) {},
+                          validator2: (text) {
+                            if (text!.isEmpty) {
+                              return "Digite seu Telefone";
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 20),
+                        doubleTextField(
+                          icon: Icon(MdiIcons.accountOutline),
+                          hintText: "Digite seu CPF",
+                          shouldValidate: true,
+                          onChanged: (value) {},
+                          validator: (text) {
+                            if (text!.isEmpty) {
+                              return "Digite seu CPF";
+                            }
+                            return null;
+                          },
+
+                          icon2: Icon(MdiIcons.emailOutline),
+                          hintText2: "Digite seu Telefone",
+                          shouldValidate2: true,
+                          onChanged2: (value) {},
+                          validator2: (text) {
+                            if (text!.isEmpty) {
+                              return "Digite seu Telefone";
+                            }
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 20),
+                        doubleTextField(
+                          icon: Icon(MdiIcons.accountOutline),
+                          hintText: "Digite seu CPF",
+                          shouldValidate: true,
+                          onChanged: (value) {},
+                          validator: (text) {
+                            if (text!.isEmpty) {
+                              return "Digite seu CPF";
+                            }
+                            return null;
+                          },
+
+                          icon2: Icon(MdiIcons.emailOutline),
+                          hintText2: "Digite seu Telefone",
+                          shouldValidate2: true,
+                          onChanged2: (value) {},
+                          validator2: (text) {
+                            if (text!.isEmpty) {
+                              return "Digite seu Telefone";
+                            }
+                            return null;
+                          },
+                        ),
+
+                      ],
                     ),
-                    const Text(
-                      "Faça o registro de um novo usuário para utilizar o sistema.",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 15,
-                        fontWeight: FontWeight.normal,
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    Container(
-                      padding: isDesktop
-                          ? const EdgeInsets.symmetric(horizontal: 100, vertical: 20)
-                          : const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-                      child: _buildNameEmail(isDesktop),
-                    ),
-                    Container(
-                      padding: isDesktop
-                          ? const EdgeInsets.symmetric(horizontal: 100, vertical: 0)
-                          : const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                      child: _buildCPFTelefone(isDesktop),
-                    ),
-                  ],
+                  ),
                 ),
-              ),
+              ],
             ),
           ),
         ),
-        if (!isDesktop)
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            child: HeaderWidget(),
-          ),
-        
       ],
     );
   }
 
-  Widget _buildNameEmail(bool isDesktop) {
-    return isDesktop
-        ? Row(
-            children: [
-              Expanded(
-                child: TextFieldString(
-                  icon: Icon(MdiIcons.accountOutline),
-                  hintText: "Digite o nome completo",
-                  shouldValidate: true,
-                  onChanged: (value) {},
-                  validator: (text) {
-                    if (text!.isEmpty) {
-                      return "Digite o nome completo";
-                    }
-                    return null;
-                  },
-                ),
-              ),
-              const SizedBox(width: 20), // Espaçamento entre os campos no modo desktop
-              Expanded(
-                child: TextFieldString(
-                  icon: Icon(MdiIcons.emailOutline),
-                  hintText: "Digite um e-mail",
-                  shouldValidate: true,
-                  onChanged: (value) {},
-                  validator: (text) {
-                    if (text!.isEmpty) {
-                      return "Digite um e-mail";
-                    }
-                    return null;
-                  },
-                ),
-              ),
-            ],
-          )
-        : Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              TextFieldString(
-                icon: Icon(MdiIcons.accountOutline),
-                hintText: "Digite o nome completo",
-                shouldValidate: true,
-                onChanged: (value) {},
-                validator: (text) {
-                  if (text!.isEmpty) {
-                    return "Digite o nome completo";
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 20), // Espaçamento entre os campos no modo mobile
-              TextFieldString(
-                icon: Icon(MdiIcons.emailOutline),
-                hintText: "Digite um e-mail",
-                shouldValidate: true,
-                onChanged: (value) {},
-                validator: (text) {
-                  if (text!.isEmpty) {
-                    return "Digite um e-mail";
-                  }
-                  return null;
-                },
-              ),
-            ],
-          );
-  }
+  Widget doubleTextField(
+      {final TextEditingController? controller,
+      required final String hintText,
+      required final Icon icon,
+      required final bool shouldValidate,
+      final String? Function(String?)? validator,
+      final Widget? suffixIcon,
+      final Function(String)? onChanged,
+      final bool? enabled,
+      final TextEditingController? controller2,
+      required final String hintText2,
+      required final Icon icon2,
+      required final bool shouldValidate2,
+      final String? Function(String?)? validator2,
+      final Widget? suffixIcon2,
+      final Function(String)? onChanged2,
+      final bool? enabled2}) {
 
-  Widget _buildCPFTelefone(bool isDesktop) {
+    final isDesktop = Responsive.isDesktop(context);
+
     return isDesktop
         ? Row(
             children: [
               Expanded(
                 child: TextFieldString(
-                  icon: Icon(MdiIcons.phoneOutgoingOutline),
-                  hintText: "Digite o telefone",
-                  shouldValidate: true,
-                  onChanged: (value) {},
-                  validator: (text) {
-                    if (text!.isEmpty) {
-                      return "Digite o telefone";
-                    }
-                    return null;
-                  },
+                  icon: icon,
+                  hintText: hintText,
+                  shouldValidate: shouldValidate,
+                  onChanged: onChanged,
+                  validator: validator,
                 ),
               ),
-              const SizedBox(width: 20), // Espaçamento entre os campos no modo desktop
+              const SizedBox(width: 20),
               Expanded(
                 child: TextFieldString(
-                  icon: Icon(MdiIcons.cardAccountDetailsOutline),
-                  hintText: "Digite o CPF",
-                  shouldValidate: true,
-                  onChanged: (value) {},
-                  validator: (text) {
-                    if (text!.isEmpty) {
-                      return "Digite o CPF";
-                    }
-                    return null;
-                  },
-                ),
+                    icon: icon2,
+                    hintText: hintText2,
+                    shouldValidate: shouldValidate2,
+                    onChanged: onChanged2,
+                    validator: validator2),
               ),
             ],
           )
@@ -183,30 +276,19 @@ class _RegisterWidgetState extends State<RegisterWidget> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               TextFieldString(
-                icon: Icon(MdiIcons.phoneOutgoingOutline),
-                hintText: "Digite o telefone",
-                shouldValidate: true,
-                onChanged: (value) {},
-                validator: (text) {
-                  if (text!.isEmpty) {
-                    return "Digite o telefone";
-                  }
-                  return null;
-                },
+                icon: icon,
+                hintText: hintText,
+                shouldValidate: shouldValidate,
+                onChanged: onChanged,
+                validator: validator,
               ),
-              const SizedBox(height: 20), // Espaçamento entre os campos no modo mobile
+              const SizedBox(height: 20),
               TextFieldString(
-                icon: Icon(MdiIcons.cardAccountDetailsOutline),
-                hintText: "Digite o CPF",
-                shouldValidate: true,
-                onChanged: (value) {},
-                validator: (text) {
-                  if (text!.isEmpty) {
-                    return "Digite o CPF";
-                  }
-                  return null;
-                },
-              ),
+                  icon: icon2,
+                  hintText: hintText2,
+                  shouldValidate: shouldValidate2,
+                  onChanged: onChanged2,
+                  validator: validator2),
             ],
           );
   }

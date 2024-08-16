@@ -22,7 +22,9 @@ class TextFieldStringPassword extends StatefulWidget {
     required this.shouldValidate,
     required this.validator,
     this.onChanged,
-    this.enabled,
+    this.enabled, 
+    onSubmitted, 
+    textInputAction,
   });
 
   @override
