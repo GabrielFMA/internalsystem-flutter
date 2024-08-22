@@ -3,7 +3,7 @@ import 'package:internalsystem/screens/error_screen.dart';
 import 'package:internalsystem/stores/auth_store.dart';
 import 'package:internalsystem/stores/request_store.dart';
 import 'package:internalsystem/widgets/main/register_widget.dart';
-import 'package:internalsystem/widgets/main/screen_widget.dart';
+import 'package:internalsystem/widgets/main/home_widget.dart';
 import 'package:provider/provider.dart';
 
 Map<String, dynamic> _internalSystemMap = {};
@@ -34,7 +34,7 @@ Future<Widget> permissionCheck(BuildContext context, Widget screen) async {
     case const (RegisterWidget):
       return _checkPermission(screen, 'use.register');
     default:
-      return const ScreenWidget();
+      return const HomeWidget();
   }
 }
 

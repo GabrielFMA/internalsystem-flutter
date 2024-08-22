@@ -14,7 +14,7 @@ import 'package:internalsystem/stores/update_store.dart';
 import 'package:internalsystem/utils/navigation_utils.dart';
 import 'package:internalsystem/widgets/loading_screen.dart';
 import 'package:internalsystem/widgets/main/register_widget.dart';
-import 'package:internalsystem/widgets/main/screen_widget.dart';
+import 'package:internalsystem/widgets/main/home_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
@@ -68,7 +68,7 @@ class MyApp extends StatelessWidget {
                 child: const LoginScreen(),
               ),
           '/home': (_) => RouteGuard(
-                child: const MainScreen(screen: ScreenWidget()),
+                child: const MainScreen(screen: HomeWidget()),
                 isAuthenticated: (user) => user != null,
               ),
           '/register': (_) => RouteGuard(
@@ -76,7 +76,7 @@ class MyApp extends StatelessWidget {
                 isAuthenticated: (user) => user != null,
               ),
           '/settings': (_) => RouteGuard(
-                child: const MainScreen(screen: ScreenWidget()),
+                child: const MainScreen(screen: HomeWidget()),
                 isAuthenticated: (user) => user != null,
               ),
         },

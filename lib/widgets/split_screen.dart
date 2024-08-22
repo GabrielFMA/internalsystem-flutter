@@ -31,19 +31,25 @@ Widget splitScreen(BuildContext context, Widget screen, bool isLoading) {
             flex: 10,
             child: Stack(
               children: [
+              //COLOCAR HEADER AQUI!!!
+              //COLOCAR HEADER AQUI!!!
+              //COLOCAR HEADER AQUI!!!
+              //COLOCAR HEADER AQUI!!!
+              //COLOCAR HEADER AQUI!!!
+              //COLOCAR HEADER AQUI!!!
                 FutureBuilder<Widget>(
                   future: permissionCheck(context, screen),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return buildLoadingScreen(); // Exibir tela de carregamento enquanto espera
+                      return buildLoadingScreen();
                     }
                     if (snapshot.hasData) {
-                      return snapshot.data!; // Retornar o widget resultante
+                      return snapshot.data!;
                     }
                     return const ErrorScreen(
                       message: 'Ocorreu um erro',
                       returnMessage: 'Retornando para tela inicial',
-                    ); // Retornar uma tela padrão caso haja erro
+                    );
                   },
                 ),
                 if (isLoading)
