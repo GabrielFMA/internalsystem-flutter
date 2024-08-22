@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:internalsystem/constants/constants.dart';
-import 'package:internalsystem/data/side_menu_data.dart';
 import 'package:internalsystem/stores/auth_store.dart';
 import 'package:internalsystem/utils/navigation_utils.dart';
 import 'package:internalsystem/widgets/loading_screen.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-final noPerm = false;
 
 class SideMenuWidget extends StatefulWidget {
   const SideMenuWidget({super.key});
@@ -33,19 +30,9 @@ class _SideMenuWidgetState extends State<SideMenuWidget> {
     });
   }
 
-  Future<void> _setSelectedIndex(int index) async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      selectedIndex = index;
-      prefs.setInt('selectedIndex', index);
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    final data = SideMenuData();
     final currentRoute = ModalRoute.of(context)?.settings.name;
-
     return Container(
       color: menuColor,
       child: Column(
@@ -64,7 +51,7 @@ class _SideMenuWidgetState extends State<SideMenuWidget> {
             color: Colors.grey,
             height: 1,
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           buttonDefault(
             text: 'Home',
             icon: MdiIcons.home,
@@ -79,8 +66,17 @@ class _SideMenuWidgetState extends State<SideMenuWidget> {
             icon: MdiIcons.accountSupervisor,
             route: '/register',
             currentRoute: currentRoute,
-            onClick: () {
-              navigateTo("/register", context);
+            onClick: () async {
+              navigateTo('/register', context);
+            },
+          ),
+          buttonDefault(
+            text: 'Usuários',
+            icon: MdiIcons.accountMultiplePlus,
+            route: '/users',
+            currentRoute: currentRoute,
+            onClick: () async {
+              navigateTo('/home', context);
             },
           ),
           const Spacer(),
@@ -89,7 +85,7 @@ class _SideMenuWidgetState extends State<SideMenuWidget> {
             icon: MdiIcons.cog,
             route: '/settings',
             currentRoute: currentRoute,
-            onClick: () {
+            onClick: () async {
               navigateTo("/settings", context);
             },
           ),

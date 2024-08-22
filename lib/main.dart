@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -66,15 +68,15 @@ class MyApp extends StatelessWidget {
                 child: const LoginScreen(),
               ),
           '/home': (_) => RouteGuard(
-                child: MainScreen(screen: ScreenWidget()),
+                child: const MainScreen(screen: ScreenWidget()),
                 isAuthenticated: (user) => user != null,
               ),
           '/register': (_) => RouteGuard(
-                child: MainScreen(screen: RegisterWidget()),
+                child: const MainScreen(screen: RegisterWidget()),
                 isAuthenticated: (user) => user != null,
               ),
           '/settings': (_) => RouteGuard(
-                child: MainScreen(screen: ScreenWidget()),
+                child: const MainScreen(screen: ScreenWidget()),
                 isAuthenticated: (user) => user != null,
               ),
         },

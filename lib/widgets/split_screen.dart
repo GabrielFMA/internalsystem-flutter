@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:internalsystem/constants/constants.dart';
+import 'package:internalsystem/screens/error_screen.dart';
 import 'package:internalsystem/utils/responsive.dart';
+import 'package:internalsystem/utils/verification_utils.dart';
 import 'package:internalsystem/widgets/loading_screen.dart';
 import 'package:internalsystem/widgets/main/side_menu_widget.dart';
 
-Widget splitScreen(BuildContext context, dynamic screen, bool isLoading) {
+Widget splitScreen(BuildContext context, Widget screen, bool isLoading) {
   final isDesktop = Responsive.isDesktop(context);
 
   return Scaffold(
@@ -29,7 +31,21 @@ Widget splitScreen(BuildContext context, dynamic screen, bool isLoading) {
             flex: 10,
             child: Stack(
               children: [
-                screen,
+                FutureBuilder<Widget>(
+                  future: permissionCheck(context, screen),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return buildLoadingScreen(); // Exibir tela de carregamento enquanto espera
+                    }
+                    if (snapshot.hasData) {
+                      return snapshot.data!; // Retornar o widget resultante
+                    }
+                    return const ErrorScreen(
+                      message: 'Ocorreu um erro',
+                      returnMessage: 'Retornando para tela inicial',
+                    ); // Retornar uma tela padrão caso haja erro
+                  },
+                ),
                 if (isLoading)
                   Positioned.fill(
                     child: buildLoadingScreen(),

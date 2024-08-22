@@ -28,6 +28,9 @@ abstract class _AuthStore with Store {
   void setPassword(String value) => _password = value;
 
   @action
+  AuthModel? get getUser => _user;
+
+  @action
   Future<void> loginWithEmailAndPassword(
       TextErrorModel textError, Function onSuccess) async {
     try {
@@ -65,6 +68,7 @@ abstract class _AuthStore with Store {
         final data = documentSnapshot.data();
         if (data != null && data['isAdmin']) {
           _user = AuthModel(
+            id: document,
             name: data['name'],
             email: data['email'],
           );

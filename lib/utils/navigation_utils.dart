@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 
 void navigateTo(String route, BuildContext context) {
@@ -6,7 +8,8 @@ void navigateTo(String route, BuildContext context) {
   });
 }
 
-Future<void> navigateToSomeBuilder(Widget pageBuilder, BuildContext context, int time) async {
+Future<void> navigateToSomeBuilder(
+    Widget pageBuilder, BuildContext context, int time) async {
   WidgetsBinding.instance.addPostFrameCallback((_) {
     Navigator.of(context).push(
       PageRouteBuilder(

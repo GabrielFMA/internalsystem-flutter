@@ -91,12 +91,14 @@ abstract class _RequestStore with Store {
         .get();
 
     List<Map<String, dynamic>> secondaryList = [];
-    for (var doc in secondCollectionSnapshot.docs) {
-      final data = doc.data();
-      secondaryList.add({
-        "id": doc.id,
-        secondCollection: {data},
-      });
+    if (secondCollectionSnapshot.docs.isNotEmpty) {
+      for (var doc in secondCollectionSnapshot.docs) {
+        final data = doc.data();
+        secondaryList.add({
+          "id": doc.id,
+          secondCollection: data,
+        });
+      }
     }
 
     return secondaryList;

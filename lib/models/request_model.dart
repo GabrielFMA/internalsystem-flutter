@@ -4,7 +4,6 @@ class TemplateRequestModel {
   final String role = 'client';
   final bool isAdmin = false;
   final Map<String, dynamic>? address = {};
-  final Map<String, dynamic>? permissions = {};
 }
 
 class RequestModel {
