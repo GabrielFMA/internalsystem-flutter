@@ -6,40 +6,25 @@ import 'package:internalsystem/widgets/main/register_widget.dart';
 import 'package:internalsystem/widgets/main/home_widget.dart';
 import 'package:provider/provider.dart';
 
-Map<String, dynamic> _internalSystemMap = {};
-
-Future<Widget> permissionCheck(BuildContext context, Widget screen) async {
-  final userId = Provider.of<AuthStore>(context, listen: false).getUser?.id;
-  if (userId == null) {
-    return const ErrorScreen(
-      message: 'Usuário não identificado',
-      returnMessage: 'Retornando para a tela inicial',
-    );
-  }
-
-  final requestStore = Provider.of<RequestStore>(context, listen: false);
-
-  final fetchData = await requestStore.fetchSecondaryData(
-    'users',
-    'permissions',
-    userId,
-  );
-
-  _internalSystemMap = fetchData.firstWhere(
-    (map) => map['id'] == 'internalSystem',
-    orElse: () => <String, dynamic>{},
-  );
-
+Future<Widget> permissionCheck(
+    BuildContext context, Widget screen,) async {
   switch (screen.runtimeType) {
-    case const (RegisterWidget):
-      return _checkPermission(screen, 'use.register');
+    case RegisterWidget:
+      return await _checkPermission(screen, context, 'enterRegisterScreen');
     default:
       return const HomeWidget();
   }
 }
 
-Widget _checkPermission(Widget widget, String permission) {
-  if (_internalSystemMap['permissions']?[permission] ?? false) {
+Future<Widget> _checkPermission(
+    Widget widget, BuildContext context, String permission) async {
+  final authStore = Provider.of<AuthStore>(context, listen: false);
+  final requestStore = Provider.of<RequestStore>(context, listen: false);
+
+  final hasPermission = await requestStore.fetchSpecificInformation(
+      'users', 'permissions', authStore.getUser!.id!, 'internalSystem', permission);
+
+  if (hasPermission) {
     return widget;
   } else {
     return const ErrorScreen(

@@ -8,39 +8,32 @@ class RequestStore = _RequestStore with _$RequestStore;
 abstract class _RequestStore with Store {
   final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
 
-  Future<List<Map<String, dynamic>>> collectionRecovery(
-    String collection,
-    String primaryInformation,
-    String secondInformation,
-  ) async {
-    final collectionSnapshot =
-        await _firebaseFirestore.collection(collection).get();
-
-    List<Map<String, dynamic>> dataList = [];
-    for (var doc in collectionSnapshot.docs) {
-      final data = doc.data();
-      dataList.add({
-        "id": doc.id,
-        primaryInformation: data[primaryInformation],
-        secondInformation: data[secondInformation],
-      });
-    }
-    return dataList;
-  }
-
   Future<String?> fetchId(
     String collection,
+    String? secondCollection,
+    String? document,
     String field,
     String value,
   ) async {
     try {
-      final collectionSnapshot = await _firebaseFirestore
-          .collection(collection)
-          .where(field, isEqualTo: value.toLowerCase())
-          .get();
+      QuerySnapshot collectionSnapshot;
+
+      if (document == null || secondCollection == null) {
+        collectionSnapshot = await _firebaseFirestore
+            .collection(collection)
+            .where(field, isEqualTo: value.toLowerCase())
+            .get();
+      } else {
+        collectionSnapshot = await _firebaseFirestore
+            .collection(collection)
+            .doc(document)
+            .collection(secondCollection)
+            .where(field, isEqualTo: value.toLowerCase())
+            .get();
+      }
 
       if (collectionSnapshot.docs.isNotEmpty) {
-        return collectionSnapshot.docs[0].id;
+        return collectionSnapshot.docs.first.id;
       } else {
         print("Nenhum documento encontrado com $field igual a $value.");
         return null;
@@ -51,56 +44,80 @@ abstract class _RequestStore with Store {
     }
   }
 
-  Future<String?> fetchSecondaryId(
+  Future<List<Map<String, dynamic>>> fetchData(
     String collection,
-    String secondCollection,
-    String document,
-    String field,
-    String value,
+    String? secondCollection,
+    String? document,
+    List<String> information,
   ) async {
     try {
-      final collectionSnapshot = await _firebaseFirestore
-          .collection(collection)
-          .doc(document)
-          .collection(secondCollection)
-          .where(field, isEqualTo: value.toLowerCase())
-          .get();
+      List<Map<String, dynamic>> dataList = [];
+      QuerySnapshot collectionSnapshot;
+      String collectionTypeKey;
 
-      if (collectionSnapshot.docs.isNotEmpty) {
-        return collectionSnapshot.docs[0].id;
+      if (document == null && secondCollection == null) {
+        collectionSnapshot =
+            await _firebaseFirestore.collection(collection).get();
+        collectionTypeKey = 'document';
       } else {
-        print("Nenhum documento encontrado com $field igual a $value.");
-        return null;
+        collectionSnapshot = await _firebaseFirestore
+            .collection(collection)
+            .doc(document!)
+            .collection(secondCollection!)
+            .get();
+        collectionTypeKey = secondCollection;
       }
-    } catch (e) {
-      print("Erro ao buscar o documento: $e");
-      return null;
-    }
-  }
 
-  @action
-  Future<List<Map<String, dynamic>>> fetchSecondaryData(
-    String collection,
-    String secondCollection,
-    String document,
-  ) async {
-    final secondCollectionSnapshot = await _firebaseFirestore
-        .collection(collection)
-        .doc(document)
-        .collection(secondCollection)
-        .get();
+      for (var doc in collectionSnapshot.docs) {
+        final data = doc.data() as Map<String, dynamic>;
+        Map<String, dynamic> extractedData = {};
 
-    List<Map<String, dynamic>> secondaryList = [];
-    if (secondCollectionSnapshot.docs.isNotEmpty) {
-      for (var doc in secondCollectionSnapshot.docs) {
-        final data = doc.data();
-        secondaryList.add({
+        for (var key in information) {
+          extractedData[key] = data[key];
+        }
+
+        dataList.add({
           "id": doc.id,
-          secondCollection: data,
+          collectionTypeKey: extractedData,
         });
       }
-    }
 
-    return secondaryList;
+      return dataList;
+    } catch (e) {
+      print("Erro ao recuperar a coleção: $e");
+      return [];
+    }
+  }
+
+  Future<dynamic> fetchSpecificInformation(
+    String collection,
+    String? secondCollection,
+    String document,
+    String? secondDocument,
+    String field,
+  ) async {
+    try {
+      QuerySnapshot querySnapshot;
+
+      if (secondCollection == null || secondDocument == null) {
+        querySnapshot = await _firebaseFirestore
+            .collection(collection)
+            .where(field)
+            .get();
+      } else {
+        querySnapshot = await _firebaseFirestore
+            .collection(collection)
+            .doc(document)
+            .collection(secondCollection)
+            .where(field)
+            .get();
+      }
+      
+      var doc = querySnapshot.docs[0];
+      return doc[field];
+    } catch (e) {
+      print("Error fetching information: $e");
+      return null;
+    }
   }
 }
