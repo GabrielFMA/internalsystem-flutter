@@ -7,7 +7,9 @@ import 'package:internalsystem/widgets/main/home_widget.dart';
 import 'package:provider/provider.dart';
 
 Future<Widget> permissionCheck(
-    BuildContext context, Widget screen,) async {
+  BuildContext context,
+  Widget screen,
+) async {
   switch (screen.runtimeType) {
     case RegisterWidget:
       return await _checkPermission(screen, context, 'enterRegisterScreen');
@@ -22,7 +24,11 @@ Future<Widget> _checkPermission(
   final requestStore = Provider.of<RequestStore>(context, listen: false);
 
   final hasPermission = await requestStore.fetchSpecificInformation(
-      'users', 'permissions', authStore.getUser!.id!, 'internalSystem', permission);
+    'users',
+    document: authStore.getUser!.id!,
+    secondCollection: 'permissions',
+    permission,
+  );
 
   if (hasPermission) {
     return widget;

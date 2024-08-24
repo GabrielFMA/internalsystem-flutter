@@ -1,3 +1,5 @@
+// ignore_for_file: unrelated_type_equality_checks
+
 import 'package:mobx/mobx.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -10,11 +12,11 @@ abstract class _RequestStore with Store {
 
   Future<String?> fetchId(
     String collection,
+    String field,
+    String value, {
     String? secondCollection,
     String? document,
-    String field,
-    String value,
-  ) async {
+  }) async {
     try {
       QuerySnapshot collectionSnapshot;
 
@@ -45,40 +47,46 @@ abstract class _RequestStore with Store {
   }
 
   Future<List<Map<String, dynamic>>> fetchData(
-    String collection,
+    String collection, {
     String? secondCollection,
     String? document,
-    List<String> information,
-  ) async {
+    List<String>? information,
+  }) async {
     try {
       List<Map<String, dynamic>> dataList = [];
       QuerySnapshot collectionSnapshot;
-      String collectionTypeKey;
 
       if (document == null && secondCollection == null) {
         collectionSnapshot =
             await _firebaseFirestore.collection(collection).get();
-        collectionTypeKey = 'document';
-      } else {
+      } else if (document != null && secondCollection != null) {
         collectionSnapshot = await _firebaseFirestore
             .collection(collection)
-            .doc(document!)
-            .collection(secondCollection!)
+            .doc(document)
+            .collection(secondCollection)
             .get();
-        collectionTypeKey = secondCollection;
+      } else {
+        print("Parâmetros fornecidos são inconsistentes.");
+        return [];
       }
 
       for (var doc in collectionSnapshot.docs) {
         final data = doc.data() as Map<String, dynamic>;
         Map<String, dynamic> extractedData = {};
 
-        for (var key in information) {
-          extractedData[key] = data[key];
+        if (information != null) {
+          for (var key in information) {
+            if (data.containsKey(key)) {
+              extractedData[key] = data[key];
+            }
+          }
+        } else {
+          extractedData = data;
         }
 
         dataList.add({
-          "id": doc.id,
-          collectionTypeKey: extractedData,
+          "id": document ?? doc.id,
+          "data": extractedData,
         });
       }
 
@@ -91,19 +99,17 @@ abstract class _RequestStore with Store {
 
   Future<dynamic> fetchSpecificInformation(
     String collection,
+    String field, {
+    String? document,
     String? secondCollection,
-    String document,
-    String? secondDocument,
-    String field,
-  ) async {
+    List<String>? information,
+  }) async {
     try {
       QuerySnapshot querySnapshot;
 
-      if (secondCollection == null || secondDocument == null) {
-        querySnapshot = await _firebaseFirestore
-            .collection(collection)
-            .where(field)
-            .get();
+      if (secondCollection == null) {
+        querySnapshot =
+            await _firebaseFirestore.collection(collection).where(field).get();
       } else {
         querySnapshot = await _firebaseFirestore
             .collection(collection)
@@ -112,9 +118,35 @@ abstract class _RequestStore with Store {
             .where(field)
             .get();
       }
-      
-      var doc = querySnapshot.docs[0];
-      return doc[field];
+
+      var doc1 = querySnapshot.docs[1];
+      final data = doc1.data() as Map<String, dynamic>;
+      Map<String, dynamic> extractedData = {};
+      List dataList = [];
+
+      if (document != null && secondCollection != null && information != null) {
+        return querySnapshot.docs[0][field];
+      } else if (information != null && information.isNotEmpty) {
+        for (var key in information) {
+          if (data.containsKey(key)) {
+            extractedData[key] = data[key];
+          }
+        }
+
+        dataList = [
+          doc1.id,
+          extractedData,
+        ];
+
+        return dataList;
+      } else {
+        dataList = [
+          doc1.id,
+          doc1.data(),
+        ];
+
+        return dataList;
+      }
     } catch (e) {
       print("Error fetching information: $e");
       return null;

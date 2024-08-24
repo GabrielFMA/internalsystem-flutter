@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:internalsystem/constants/constants.dart';
+import 'package:internalsystem/models/request_model.dart';
 import 'package:internalsystem/stores/auth_store.dart';
+import 'package:internalsystem/stores/request_store.dart';
 import 'package:internalsystem/utils/navigation_utils.dart';
 import 'package:internalsystem/widgets/loading_screen.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -76,7 +78,13 @@ class _SideMenuWidgetState extends State<SideMenuWidget> {
             route: '/users',
             currentRoute: currentRoute,
             onClick: () async {
-              navigateTo('/home', context);
+              //final store = Provider.of<RequestStore>(context, listen: false);
+              //print(await store.fetchSpecificInformation(
+              //  'users',
+              //  'teste2@gmail.com',
+              //  information: ['email'],
+              //));
+              // print(await store.fetchData('users', information: []));
             },
           ),
           const Spacer(),
