@@ -1,12 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:internalsystem/constants/constants.dart';
-import 'package:internalsystem/models/request_model.dart';
-import 'package:internalsystem/stores/auth_store.dart';
-import 'package:internalsystem/stores/request_store.dart';
 import 'package:internalsystem/utils/navigation_utils.dart';
-import 'package:internalsystem/widgets/loading_screen.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SideMenuWidget extends StatefulWidget {
@@ -54,59 +49,40 @@ class _SideMenuWidgetState extends State<SideMenuWidget> {
             height: 1,
           ),
           const SizedBox(height: 20),
-          buttonDefault(
-            text: 'Home',
-            icon: MdiIcons.home,
-            route: '/home',
-            currentRoute: currentRoute,
-            onClick: () {
-              navigateTo("/home", context);
-            },
-          ),
-          buttonDefault(
-            text: 'Register',
-            icon: MdiIcons.accountSupervisor,
-            route: '/register',
-            currentRoute: currentRoute,
-            onClick: () async {
-              navigateTo('/register', context);
-            },
-          ),
-          buttonDefault(
-            text: 'Usuários',
-            icon: MdiIcons.accountMultiplePlus,
-            route: '/users',
-            currentRoute: currentRoute,
-            onClick: () async {
-              //final store = Provider.of<RequestStore>(context, listen: false);
-              //print(await store.fetchSpecificInformation(
-              //  'users',
-              //  'teste2@gmail.com',
-              //  information: ['email'],
-              //));
-              // print(await store.fetchData('users', information: []));
-            },
-          ),
-          const Spacer(),
-          buttonDefault(
-            text: 'Settings',
-            icon: MdiIcons.cog,
-            route: '/settings',
-            currentRoute: currentRoute,
-            onClick: () async {
-              navigateTo("/settings", context);
-            },
-          ),
-          buttonDefault(
-            text: "Sair",
-            icon: MdiIcons.logout,
-            route: '/login',
-            currentRoute: currentRoute,
-            onClick: () async {
-              await navigateToSomeBuilder(buildLoadingScreen(), context, 1000);
-              await Provider.of<AuthStore>(context, listen: false).logout();
-              Navigator.pushNamed(context, '/login');
-            },
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  buttonDefault(
+                    text: 'Home',
+                    icon: MdiIcons.home,
+                    route: '/home',
+                    currentRoute: currentRoute,
+                    onClick: () {
+                      navigateTo("/home", context);
+                    },
+                  ),
+                  buttonDefault(
+                    text: 'Register',
+                    icon: MdiIcons.accountSupervisor,
+                    route: '/register',
+                    currentRoute: currentRoute,
+                    onClick: () async {
+                      navigateTo('/register', context);
+                    },
+                  ),
+                  buttonDefault(
+                    text: 'Usuários',
+                    icon: MdiIcons.accountMultiplePlus,
+                    route: '/users',
+                    currentRoute: currentRoute,
+                    onClick: () async {
+                      // Implement your onClick logic here
+                    },
+                  ),
+                ],
+              ),
+            ),
           ),
           const SizedBox(height: 5),
         ],

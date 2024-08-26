@@ -28,9 +28,10 @@ Future<Widget> _checkPermission(
     document: authStore.getUser!.id!,
     secondCollection: 'permissions',
     permission,
+    true,
   );
 
-  if (hasPermission) {
+  if (hasPermission ?? false) {
     return widget;
   } else {
     return const ErrorScreen(

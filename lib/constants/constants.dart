@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 const backgroundColor = Color(0xFF202020);
 const menuColor = Color(0xFF242424);
+const iconHeaderColor = Colors.white;
 const selectionColor = Color(0xFFFFFFFF);
 const iconSelectionColor = Color(0xFF202020);
 const colorOneGradient = Color(0xFF1ED6FF);

@@ -4,6 +4,7 @@ import 'package:internalsystem/screens/error_screen.dart';
 import 'package:internalsystem/utils/responsive.dart';
 import 'package:internalsystem/utils/verification_utils.dart';
 import 'package:internalsystem/widgets/loading_screen.dart';
+import 'package:internalsystem/widgets/main/header_widget.dart';
 import 'package:internalsystem/widgets/main/side_menu_widget.dart';
 
 Widget splitScreen(BuildContext context, Widget screen, bool isLoading) {
@@ -31,18 +32,10 @@ Widget splitScreen(BuildContext context, Widget screen, bool isLoading) {
             flex: 10,
             child: Stack(
               children: [
-              //COLOCAR HEADER AQUI!!!
-              //COLOCAR HEADER AQUI!!!
-              //COLOCAR HEADER AQUI!!!
-              //COLOCAR HEADER AQUI!!!
-              //COLOCAR HEADER AQUI!!!
-              //COLOCAR HEADER AQUI!!!
+                HeaderWidget(),
                 FutureBuilder<Widget>(
                   future: permissionCheck(context, screen),
                   builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return buildLoadingScreen();
-                    }
                     if (snapshot.hasData) {
                       return snapshot.data!;
                     }

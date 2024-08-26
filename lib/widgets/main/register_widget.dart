@@ -98,124 +98,29 @@ class _RegisterWidgetState extends State<RegisterWidget> {
 
                         const SizedBox(height: 20),
                         doubleTextField(
-                          icon: Icon(MdiIcons.accountOutline),
-                          hintText: "Digite seu CPF",
+                          icon: Icon(MdiIcons.phoneOutline),
+                          hintText: "Digite seu o número de telefone",
                           shouldValidate: true,
                           onChanged: (value) {},
                           validator: (text) {
                             if (text!.isEmpty) {
-                              return "Digite seu CPF";
+                              return "Digite o telefone completo";
                             }
                             return null;
                           },
-
                           icon2: Icon(MdiIcons.emailOutline),
-                          hintText2: "Digite seu Telefone",
+                          hintText2: "Digite seu E-mail",
                           shouldValidate2: true,
                           onChanged2: (value) {},
                           validator2: (text) {
                             if (text!.isEmpty) {
-                              return "Digite seu Telefone";
+                              return "Digite um E-mail";
                             }
                             return null;
                           },
                         ),
-                        const SizedBox(height: 20),
-                        doubleTextField(
-                          icon: Icon(MdiIcons.accountOutline),
-                          hintText: "Digite seu CPF",
-                          shouldValidate: true,
-                          onChanged: (value) {},
-                          validator: (text) {
-                            if (text!.isEmpty) {
-                              return "Digite seu CPF";
-                            }
-                            return null;
-                          },
 
-                          icon2: Icon(MdiIcons.emailOutline),
-                          hintText2: "Digite seu Telefone",
-                          shouldValidate2: true,
-                          onChanged2: (value) {},
-                          validator2: (text) {
-                            if (text!.isEmpty) {
-                              return "Digite seu Telefone";
-                            }
-                            return null;
-                          },
-                        ),
-                        const SizedBox(height: 20),
-                        doubleTextField(
-                          icon: Icon(MdiIcons.accountOutline),
-                          hintText: "Digite seu CPF",
-                          shouldValidate: true,
-                          onChanged: (value) {},
-                          validator: (text) {
-                            if (text!.isEmpty) {
-                              return "Digite seu CPF";
-                            }
-                            return null;
-                          },
-
-                          icon2: Icon(MdiIcons.emailOutline),
-                          hintText2: "Digite seu Telefone",
-                          shouldValidate2: true,
-                          onChanged2: (value) {},
-                          validator2: (text) {
-                            if (text!.isEmpty) {
-                              return "Digite seu Telefone";
-                            }
-                            return null;
-                          },
-                        ),
-                        const SizedBox(height: 20),
-                        doubleTextField(
-                          icon: Icon(MdiIcons.accountOutline),
-                          hintText: "Digite seu CPF",
-                          shouldValidate: true,
-                          onChanged: (value) {},
-                          validator: (text) {
-                            if (text!.isEmpty) {
-                              return "Digite seu CPF";
-                            }
-                            return null;
-                          },
-
-                          icon2: Icon(MdiIcons.emailOutline),
-                          hintText2: "Digite seu Telefone",
-                          shouldValidate2: true,
-                          onChanged2: (value) {},
-                          validator2: (text) {
-                            if (text!.isEmpty) {
-                              return "Digite seu Telefone";
-                            }
-                            return null;
-                          },
-                        ),
-                        const SizedBox(height: 20),
-                        doubleTextField(
-                          icon: Icon(MdiIcons.accountOutline),
-                          hintText: "Digite seu CPF",
-                          shouldValidate: true,
-                          onChanged: (value) {},
-                          validator: (text) {
-                            if (text!.isEmpty) {
-                              return "Digite seu CPF";
-                            }
-                            return null;
-                          },
-
-                          icon2: Icon(MdiIcons.emailOutline),
-                          hintText2: "Digite seu Telefone",
-                          shouldValidate2: true,
-                          onChanged2: (value) {},
-                          validator2: (text) {
-                            if (text!.isEmpty) {
-                              return "Digite seu Telefone";
-                            }
-                            return null;
-                          },
-                        ),
+                        
 
                       ],
                     ),

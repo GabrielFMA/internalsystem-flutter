@@ -99,7 +99,8 @@ abstract class _RequestStore with Store {
 
   Future<dynamic> fetchSpecificInformation(
     String collection,
-    String field, {
+    String field,
+    dynamic value, {
     String? document,
     String? secondCollection,
     List<String>? information,
@@ -109,43 +110,47 @@ abstract class _RequestStore with Store {
 
       if (secondCollection == null) {
         querySnapshot =
-            await _firebaseFirestore.collection(collection).where(field).get();
+            await _firebaseFirestore.collection(collection)
+            .where(field, isEqualTo: value).get();
       } else {
         querySnapshot = await _firebaseFirestore
             .collection(collection)
             .doc(document)
             .collection(secondCollection)
-            .where(field)
+            .where(field, isEqualTo: value)
             .get();
       }
 
-      var doc1 = querySnapshot.docs[1];
-      final data = doc1.data() as Map<String, dynamic>;
-      Map<String, dynamic> extractedData = {};
-      List dataList = [];
+      var doc = querySnapshot.docs[0];
 
-      if (document != null && secondCollection != null && information != null) {
-        return querySnapshot.docs[0][field];
-      } else if (information != null && information.isNotEmpty) {
-        for (var key in information) {
-          if (data.containsKey(key)) {
-            extractedData[key] = data[key];
-          }
-        }
-
-        dataList = [
-          doc1.id,
-          extractedData,
-        ];
-
-        return dataList;
+      if (document != null && secondCollection != null && information == null) {
+        return doc[field];
       } else {
-        dataList = [
-          doc1.id,
-          doc1.data(),
-        ];
+        Map<String, dynamic> extractedData = {};
+        List dataList = [];
 
-        return dataList;
+        if (information != null && information.isNotEmpty) {
+          final data = doc.data() as Map<String, dynamic>;
+          for (var key in information) {
+            if (data.containsKey(key)) {
+              extractedData[key] = data[key];
+            }
+          }
+
+          dataList = [
+            doc.id,
+            extractedData,
+          ];
+
+          return dataList;
+        } else {
+          dataList = [
+            doc.id,
+            doc.data(),
+          ];
+
+          return dataList;
+        }
       }
     } catch (e) {
       print("Error fetching information: $e");
