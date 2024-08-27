@@ -11,3 +11,6 @@ const selectionTextColor = Color.fromARGB(117, 72, 187, 253);
 const textFieldColor = Color(0xFFFFFFFF);
 
 const defaultPadding = 20.0;
+
+const mobileHeader = 62.0;
+const desktopHeader = 50.0;

@@ -77,7 +77,7 @@ class _SideMenuWidgetState extends State<SideMenuWidget> {
                     route: '/users',
                     currentRoute: currentRoute,
                     onClick: () async {
-                      // Implement your onClick logic here
+                      navigateTo('/users', context);
                     },
                   ),
                 ],

@@ -3,7 +3,7 @@ import 'package:internalsystem/constants/constants.dart';
 import 'package:internalsystem/stores/auth_store.dart';
 import 'package:internalsystem/utils/navigation_utils.dart';
 import 'package:internalsystem/utils/responsive.dart';
-import 'package:internalsystem/widgets/loading_screen.dart';
+import 'package:internalsystem/widgets/main/loading_screen.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -16,7 +16,7 @@ class HeaderWidget extends StatelessWidget {
 
     return Container(
       color: menuColor,
-      height: isDesktop ? 50 : 62,
+      height: isDesktop ? desktopHeader : mobileHeader,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

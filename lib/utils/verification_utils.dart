@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:internalsystem/screens/error_screen.dart';
 import 'package:internalsystem/stores/auth_store.dart';
 import 'package:internalsystem/stores/request_store.dart';
-import 'package:internalsystem/widgets/main/register_widget.dart';
-import 'package:internalsystem/widgets/main/home_widget.dart';
+import 'package:internalsystem/widgets/register/register_widget.dart';
+import 'package:internalsystem/widgets/home/home_widget.dart';
+import 'package:internalsystem/widgets/users/users_widget.dart';
 import 'package:provider/provider.dart';
 
 Future<Widget> permissionCheck(
@@ -13,6 +14,8 @@ Future<Widget> permissionCheck(
   switch (screen.runtimeType) {
     case RegisterWidget:
       return await _checkPermission(screen, context, 'enterRegisterScreen');
+    case UsersWidget:
+      return await _checkPermission(screen, context, 'enterUsersScreen');
     default:
       return const HomeWidget();
   }

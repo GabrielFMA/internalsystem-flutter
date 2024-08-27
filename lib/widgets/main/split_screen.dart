@@ -3,7 +3,7 @@ import 'package:internalsystem/constants/constants.dart';
 import 'package:internalsystem/screens/error_screen.dart';
 import 'package:internalsystem/utils/responsive.dart';
 import 'package:internalsystem/utils/verification_utils.dart';
-import 'package:internalsystem/widgets/loading_screen.dart';
+import 'package:internalsystem/widgets/main/loading_screen.dart';
 import 'package:internalsystem/widgets/main/header_widget.dart';
 import 'package:internalsystem/widgets/main/side_menu_widget.dart';
 

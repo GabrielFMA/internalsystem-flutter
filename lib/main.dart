@@ -12,9 +12,10 @@ import 'package:internalsystem/stores/register_store.dart';
 import 'package:internalsystem/stores/request_store.dart';
 import 'package:internalsystem/stores/update_store.dart';
 import 'package:internalsystem/utils/navigation_utils.dart';
-import 'package:internalsystem/widgets/loading_screen.dart';
-import 'package:internalsystem/widgets/main/register_widget.dart';
-import 'package:internalsystem/widgets/main/home_widget.dart';
+import 'package:internalsystem/widgets/main/loading_screen.dart';
+import 'package:internalsystem/widgets/register/register_widget.dart';
+import 'package:internalsystem/widgets/home/home_widget.dart';
+import 'package:internalsystem/widgets/users/users_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
@@ -79,6 +80,10 @@ class MyApp extends StatelessWidget {
                 child: const MainScreen(screen: HomeWidget()),
                 isAuthenticated: (user) => user != null,
               ),
+          '/users': (_) => RouteGuard(
+                child: const MainScreen(screen: UsersWidget()),
+                isAuthenticated: (user) => user != null,
+              )
         },
         home: const AuthChecker(),
       ),
@@ -146,6 +151,9 @@ class RouteGuard extends StatelessWidget {
       navigateTo('/settings', context);
       return buildLoadingScreen();
     } else if (!redirectIfAuthenticated && !isAuthenticated(user)) {
+      navigateTo('/users', context);
+      return buildLoadingScreen();
+    }else if (!redirectIfAuthenticated && !isAuthenticated(user)) {
       navigateTo('/login', context);
       return buildLoadingScreen();
     } else {

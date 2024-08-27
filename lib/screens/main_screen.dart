@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:internalsystem/widgets/split_screen.dart';
+import 'package:internalsystem/widgets/main/split_screen.dart';
 
 class MainScreen extends StatelessWidget {
   final Widget screen;
