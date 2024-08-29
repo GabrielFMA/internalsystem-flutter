@@ -60,9 +60,9 @@ mixin _$AuthStore on _AuthStore, Store {
 
   @override
   Future<void> loginWithEmailAndPassword(
-      TextErrorModel textError, Function onSuccess) {
-    return _$loginWithEmailAndPasswordAsyncAction
-        .run(() => super.loginWithEmailAndPassword(textError, onSuccess));
+      TextErrorModel textError, BuildContext context, Function onSuccess) {
+    return _$loginWithEmailAndPasswordAsyncAction.run(
+        () => super.loginWithEmailAndPassword(textError, context, onSuccess));
   }
 
   late final _$logoutAsyncAction =

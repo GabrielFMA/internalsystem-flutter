@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api, avoid_print
+
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -32,8 +34,8 @@ abstract class _RegisterStore with Store {
           duplicityCheck(data, () async {
             await registerData(
                 'users', jsonDecode(response.body)['localId'], data, () async {
-              await registerSecondaryData('users', 'permissions', jsonDecode(response.body)['localId'],
-                  'internalSystem', data);
+              await registerSecondaryData('users', 'permissions',
+                  jsonDecode(response.body)['localId'], 'internalSystem', data);
               onSuccess();
             });
             print("Novo usuário registrado com sucesso.");
@@ -56,11 +58,11 @@ abstract class _RegisterStore with Store {
   ) async {
     try {
       await _firestore.collection(collection).doc(document).set(data.toMap());
-      onSuccess();
-      print('Id: $document');
+     print('Id: $document');
       print('Email: ${data.email}');
       print('Cargo: ${data.role}');
-      print('Acesso web: ${data.isAdmin}');
+
+      onSuccess();
     } catch (e) {
       print("Erro ao registrar dados do usuário: $e");
     }
@@ -80,7 +82,9 @@ abstract class _RegisterStore with Store {
           .doc(document)
           .collection(secondaryCollection)
           .doc(secondaryDocument)
-          .set(data.permissions ?? {});
+          .set(data.secondaryData ?? {});
+
+      print('Acesso web: ${data.secondaryData?['isAdmin'] ?? false}');
     } catch (e) {
       print("Erro ao registrar dados do usuário: $e");
     }
@@ -92,6 +96,7 @@ abstract class _RegisterStore with Store {
       final fieldsToCheck = {
         'name': data.name?.toLowerCase(),
         'email': data.email?.toLowerCase(),
+        'cpf': data.email?.toLowerCase(),
       };
 
       for (final entry in fieldsToCheck.entries) {

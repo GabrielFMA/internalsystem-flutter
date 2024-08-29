@@ -1,20 +1,22 @@
 class RegisterModel {
   String? name;
   String? email;
-  String? password;
+  String? cpf;
+  String? phone;
   String? role;
-  bool? isAdmin;
+  String? password;
   Map<String, dynamic>? address;
-  Map<String, dynamic>? permissions;
+  Map<String, dynamic>? secondaryData;
 
   RegisterModel({
     this.name,
     this.email,
-    this.password,
+    this.cpf,
+    this.phone,
     this.role,
-    this.isAdmin,
+    this.password,
     this.address,
-    this.permissions,
+    this.secondaryData,
   });
 
   Map<String, dynamic> toMap() {
@@ -23,10 +25,10 @@ class RegisterModel {
     final entries = [
       MapEntry('name', name?.toLowerCase()),
       MapEntry('email', email?.toLowerCase()),
+      MapEntry('cpf', cpf),
+      MapEntry('phone', phone),
       MapEntry('role', role),
-      MapEntry('isAdmin', isAdmin),
       MapEntry('address', address),
-      MapEntry('permissions', permissions),
     ];
 
     for (var entry in entries) {

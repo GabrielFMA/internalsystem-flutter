@@ -109,12 +109,14 @@ class _AuthCheckerState extends State<AuthChecker> {
     final user = FirebaseAuth.instance.currentUser;
 
     if (await Provider.of<AuthStore>(context, listen: false)
-        .checkWebAccountAccess(user?.uid)) {
+        .checkWebAccountAccess(user?.uid, context)) {
       print('Usuário logado: ${user?.uid}');
       navigateTo('/home', context);
     } else {
       FirebaseAuth.instance.signOut();
-      print('Nenhum usuário logado: ${user?.uid}');
+      print(user?.uid == null
+          ? 'Nenhum usuário logado: ${user?.uid}'
+          : 'Sem permissão para entrada desse usuário: ${user?.uid}');
       navigateTo('/login', context);
     }
   }
@@ -141,24 +143,25 @@ class RouteGuard extends StatelessWidget {
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
 
-    if (redirectIfAuthenticated && isAuthenticated(user)) {
-      navigateTo('/home', context);
-      return buildLoadingScreen();
-    } else if (redirectIfAuthenticated && isAuthenticated(user)) {
-      navigateTo('/register', context);
-      return buildLoadingScreen();
-    } else if (redirectIfAuthenticated && isAuthenticated(user)) {
-      navigateTo('/settings', context);
-      return buildLoadingScreen();
-    } else if (!redirectIfAuthenticated && !isAuthenticated(user)) {
-      navigateTo('/users', context);
-      return buildLoadingScreen();
-    }else if (!redirectIfAuthenticated && !isAuthenticated(user)) {
-      navigateTo('/login', context);
-      return buildLoadingScreen();
-    } else {
-      return child;
+    final Map<String, bool Function()> routes = {
+      //LOGADO
+      '/home': () => redirectIfAuthenticated && isAuthenticated(user),
+      '/register': () => redirectIfAuthenticated && isAuthenticated(user),
+      '/settings': () => redirectIfAuthenticated && isAuthenticated(user),
+      '/users': () => redirectIfAuthenticated && isAuthenticated(user),
+
+      //Não LOGADO
+      '/login': () => !redirectIfAuthenticated && !isAuthenticated(user),
+    };
+
+    for (final entry in routes.entries) {
+      if (entry.value()) {
+        navigateTo(entry.key, context);
+        return buildLoadingScreen();
+      }
     }
+
+    return child;
   }
 }
 

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:internalsystem/components/textfieldstring.dart';
 import 'package:internalsystem/constants/constants.dart';
 import 'package:internalsystem/utils/responsive.dart';
-import 'package:internalsystem/widgets/main/header_widget.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class RegisterWidget extends StatefulWidget {

@@ -1,4 +1,4 @@
-// ignore_for_file: unrelated_type_equality_checks
+// ignore_for_file: unrelated_type_equality_checks, library_private_types_in_public_api, avoid_print
 
 import 'package:mobx/mobx.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -109,9 +109,10 @@ abstract class _RequestStore with Store {
       QuerySnapshot querySnapshot;
 
       if (secondCollection == null) {
-        querySnapshot =
-            await _firebaseFirestore.collection(collection)
-            .where(field, isEqualTo: value).get();
+        querySnapshot = await _firebaseFirestore
+            .collection(collection)
+            .where(field, isEqualTo: value)
+            .get();
       } else {
         querySnapshot = await _firebaseFirestore
             .collection(collection)
@@ -120,9 +121,22 @@ abstract class _RequestStore with Store {
             .where(field, isEqualTo: value)
             .get();
       }
+      
+      if (querySnapshot.docs.isEmpty) {
+        dynamic defaultValue;
+        if (value is bool) {
+          defaultValue = false;
+        } else if (value is Map) {
+          defaultValue = {};
+        } else if (value is List) {
+          defaultValue = [];
+        } else {
+          defaultValue = '';
+        }
+        return defaultValue;
+      }
 
       var doc = querySnapshot.docs[0];
-
       if (document != null && secondCollection != null && information == null) {
         return doc[field];
       } else {

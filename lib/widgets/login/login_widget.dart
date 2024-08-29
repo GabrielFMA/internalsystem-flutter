@@ -3,9 +3,10 @@ import 'package:flutter/services.dart';
 import 'package:internalsystem/components/textfieldstring.dart';
 import 'package:internalsystem/components/textfieldstring_password.dart';
 import 'package:internalsystem/constants/constants.dart';
+import 'package:internalsystem/models/register_model.dart';
 import 'package:internalsystem/models/text_error_model.dart';
 import 'package:internalsystem/stores/auth_store.dart';
-import 'package:internalsystem/utils/navigation_utils.dart';
+import 'package:internalsystem/stores/register_store.dart';
 import 'package:internalsystem/utils/responsive.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
@@ -36,10 +37,25 @@ class _LoginWidgetState extends State<LoginWidget> {
         textError = TextErrorModel(error: '');
       });
       await Future.delayed(const Duration(milliseconds: 1000));
-      final store = Provider.of<AuthStore>(context, listen: false);
-      await store.loginWithEmailAndPassword(textError, () {
-        navigateTo('/home', context);
-      });
+      final store = Provider.of<RegisterStore>(context, listen: false);
+      await store.signUpWithEmailAndPassword(
+          RegisterModel(
+            name: 'Cliente',
+            email: 'cliente@gmail.com',
+            cpf: '172.409.675-30',
+            phone: '(84) 99783-1806',
+            role: 'administrador',
+            password: '123456',
+            address: {
+              'zipCode': '59035-528',
+              'address': 'Rua Santo Antônio',
+              'number': '234',
+              'neighborhood': 'Quintas',
+              'city': 'Natal',
+              'state': 'RN',
+            },
+          ),
+          () {});
 
       setState(() {
         _isProcessing = false;
