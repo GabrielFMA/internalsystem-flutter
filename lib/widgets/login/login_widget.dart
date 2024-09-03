@@ -1,12 +1,12 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:internalsystem/components/textfieldstring.dart';
 import 'package:internalsystem/components/textfieldstring_password.dart';
 import 'package:internalsystem/constants/constants.dart';
-import 'package:internalsystem/models/register_model.dart';
 import 'package:internalsystem/models/text_error_model.dart';
 import 'package:internalsystem/stores/auth_store.dart';
-import 'package:internalsystem/stores/register_store.dart';
 import 'package:internalsystem/utils/navigation_utils.dart';
 import 'package:internalsystem/utils/responsive.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';

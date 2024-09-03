@@ -13,11 +13,38 @@ class SideMenuWidget extends StatefulWidget {
 
 class _SideMenuWidgetState extends State<SideMenuWidget> {
   int selectedIndex = 0;
+  final TextEditingController _searchController = TextEditingController();
+  List<Map<String, dynamic>> _filteredMenuOptions = [];
+  final List<Map<String, dynamic>> _allMenuOptions = [
+    {
+      'text': 'Home',
+      'icon': MdiIcons.home,
+      'route': '/home',
+    },
+    {
+      'text': 'Register',
+      'icon': MdiIcons.accountSupervisor,
+      'route': '/register',
+    },
+    {
+      'text': 'Usuários',
+      'icon': MdiIcons.accountMultiplePlus,
+      'route': '/users',
+    },
+  ];
 
   @override
   void initState() {
     super.initState();
     _loadSelectedIndex();
+    _filteredMenuOptions = _allMenuOptions;
+    _searchController.addListener(_filterMenuOptions);
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
   }
 
   Future<void> _loadSelectedIndex() async {
@@ -27,9 +54,18 @@ class _SideMenuWidgetState extends State<SideMenuWidget> {
     });
   }
 
+  void _filterMenuOptions() {
+    setState(() {
+      _filteredMenuOptions = _allMenuOptions.where((option) {
+        return option['text'].toLowerCase().contains(_searchController.text.toLowerCase());
+      }).toList();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final currentRoute = ModalRoute.of(context)?.settings.name;
+
     return Container(
       color: menuColor,
       child: Column(
@@ -48,39 +84,40 @@ class _SideMenuWidgetState extends State<SideMenuWidget> {
             color: Colors.grey,
             height: 1,
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 10),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+            child: TextField(
+              controller: _searchController,
+              decoration: InputDecoration(
+                hintText: 'Buscar...',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                prefixIcon: const Icon(Icons.search),
+              ),
+            ),
+          ),
+          const SizedBox(height: 10),
+          const Divider(
+            color: Colors.grey,
+            height: 1,
+          ),
+          const SizedBox(height: 10),
           Expanded(
             child: SingleChildScrollView(
               child: Column(
-                children: [
-                  buttonDefault(
-                    text: 'Home',
-                    icon: MdiIcons.home,
-                    route: '/home',
+                children: _filteredMenuOptions.map((option) {
+                  return buttonDefault(
+                    text: option['text']!,
+                    icon: option['icon']!,
+                    route: option['route']!,
                     currentRoute: currentRoute,
                     onClick: () {
-                      navigateTo("/home", context);
+                      navigateTo(option['route']!, context);
                     },
-                  ),
-                  buttonDefault(
-                    text: 'Register',
-                    icon: MdiIcons.accountSupervisor,
-                    route: '/register',
-                    currentRoute: currentRoute,
-                    onClick: () async {
-                      navigateTo('/register', context);
-                    },
-                  ),
-                  buttonDefault(
-                    text: 'Usuários',
-                    icon: MdiIcons.accountMultiplePlus,
-                    route: '/users',
-                    currentRoute: currentRoute,
-                    onClick: () async {
-                      navigateTo('/users', context);
-                    },
-                  ),
-                ],
+                  );
+                }).toList(),
               ),
             ),
           ),
