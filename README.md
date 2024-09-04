@@ -1,6 +1,6 @@
 # Inter System
 
-Ainda sem um nome próprio, estamos desenvolvendo um sistema interno empresarial modular, com foco em grande escala. Utilizamos atualmente STORE CAR para que seja possível criar uma aplicação Mobile, também em Flutter, e utilizar este sistema como base, para mostrar as possibilidades e expansões do mesmo.
+Ainda sem um nome próprio, estamos desenvolvendo um sistema interno empresarial modular, com foco em grande escala. Utilizamos atualmente o nome STORE CAR para que seja possível criar uma aplicação Mobile, também em Flutter, e utilizar este sistema como base, para mostrar as possibilidades e expansões do mesmo.
 
 ## 🛠️ Construído com
 
