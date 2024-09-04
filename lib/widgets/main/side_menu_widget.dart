@@ -57,7 +57,9 @@ class _SideMenuWidgetState extends State<SideMenuWidget> {
   void _filterMenuOptions() {
     setState(() {
       _filteredMenuOptions = _allMenuOptions.where((option) {
-        return option['text'].toLowerCase().contains(_searchController.text.toLowerCase());
+        return option['text']
+            .toLowerCase()
+            .contains(_searchController.text.toLowerCase());
       }).toList();
     });
   }
@@ -84,26 +86,50 @@ class _SideMenuWidgetState extends State<SideMenuWidget> {
             color: Colors.grey,
             height: 1,
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 15),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-            child: TextField(
-              controller: _searchController,
-              decoration: InputDecoration(
-                hintText: 'Buscar...',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Container(
+              height: 44,
+              child: TextField(
+                controller: _searchController,
+                decoration: InputDecoration(
+                  hintText: 'Buscar...',
+                  prefixIcon: Padding(
+                    padding: EdgeInsets.only(
+                        left: 17.5,
+                        right: 15),
+                    child: Icon(MdiIcons.magnify, size: 19.5, color: Colors.white,),
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide:
+                        const BorderSide(color: textFieldColor, width: 1.5),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide:
+                        const BorderSide(color: textFieldColor, width: 1.5),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide:
+                        const BorderSide(color: Colors.white38, width: 2),
+                  ),
+                  hintStyle: TextStyle(color: Colors.grey[600]),
+                  filled: true,
+                  fillColor: Colors.transparent,
+                  contentPadding: const EdgeInsets.symmetric(
+                    vertical: 12, // Centraliza verticalmente o texto
+                    horizontal: 15, // Adiciona margem do lado esquerdo do texto
+                  ),
                 ),
-                prefixIcon: const Icon(Icons.search),
+                style: const TextStyle(color: textFieldColor),
               ),
             ),
           ),
           const SizedBox(height: 10),
-          const Divider(
-            color: Colors.grey,
-            height: 1,
-          ),
-          const SizedBox(height: 10),
+          
           Expanded(
             child: SingleChildScrollView(
               child: Column(
