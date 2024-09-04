@@ -1,16 +1,19 @@
-# internalsystem
+# Inter System
 
-A new Flutter project.
+Ainda sem um nome próprio, estamos desenvolvendo um sistema interno empresarial modular, com foco em grande escala. Utilizamos atualmente STORE CAR para que seja possível criar uma aplicação Mobile, também em Flutter, e utilizar este sistema como base, para mostrar as possibilidades e expansões do mesmo.
 
-## Getting Started
+## 🛠️ Construído com
 
-This project is a starting point for a Flutter application.
+* [Flutter](https://flutter.dev/) - O framework utilizado
+* [Firebase](https://firebase.google.com/) - Banco de Dados
 
-A few resources to get you started if this is your first Flutter project:
+## 📌 Versão
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Atualmente em ínicio de desenvolvimento sem uma versão fixa.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## ✒️ Autores
+
+[Tiago Ribolli](https://gist.github.com/ribollitiago) e [Gabriel Figueiredo](https://gist.github.com/GabrielFMA)
+
+---
+⌨️ por [Tiago Ribolli](https://gist.github.com/ribollitiago) 😊
