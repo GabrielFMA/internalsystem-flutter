@@ -144,9 +144,9 @@ class _RegisterWidgetState extends State<RegisterWidget> {
                             confirmPasswordHintText: "Confirme sua senha",
                             confirmPasswordIcon: MdiIcons.lockOutline,
                             confirmPasswordVisibilityIcon:
-                                MdiIcons.eyeOffOutline,
-                            confirmPasswordNotVisibilityIcon:
                                 MdiIcons.eyeOutline,
+                            confirmPasswordNotVisibilityIcon:
+                                MdiIcons.eyeOffOutline,
                             shouldValidateConfirmPassword: true,
                             onConfirmPasswordChanged: (value) {},
                             confirmPasswordValidator: (text) {
