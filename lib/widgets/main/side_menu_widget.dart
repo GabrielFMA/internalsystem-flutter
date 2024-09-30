@@ -140,7 +140,9 @@ class _SideMenuWidgetState extends State<SideMenuWidget> {
                     route: option['route']!,
                     currentRoute: currentRoute,
                     onClick: () {
-                      navigateTo(option['route']!, context);
+                      if (option['route'] != currentRoute) {
+                        navigateTo(option['route']!, context);
+                      }
                     },
                   );
                 }).toList(),
