@@ -81,7 +81,7 @@ class _SideMenuWidgetState extends State<SideMenuWidget> {
                 decoration: InputDecoration(
                   hintText: 'Buscar...',
                   prefixIcon: Padding(
-                    padding: EdgeInsets.only(
+                    padding: const EdgeInsets.only(
                         left: 17.5,
                         right: 15),
                     child: Icon(MdiIcons.magnify, size: 19.5, color: Colors.white,),

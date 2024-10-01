@@ -5,7 +5,7 @@ class SideMenuData {
     {
       'text': 'Home',
       'icon': MdiIcons.home,
-      'route': '/home',
+      'route': '/home'
     },
     {
       'text': 'Register',
