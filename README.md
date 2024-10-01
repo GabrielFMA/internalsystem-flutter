@@ -16,4 +16,4 @@ Atualmente em ínicio de desenvolvimento sem uma versão fixa.
 [Tiago Ribolli](https://gist.github.com/ribollitiago) e [Gabriel Figueiredo](https://gist.github.com/GabrielFMA)
 
 ---
-⌨️ por [Tiago Ribolli](https://gist.github.com/ribollitiago) 😊
+⌨️ por [Tiago Ribolli](https://gist.github.com/ribollitiago)
