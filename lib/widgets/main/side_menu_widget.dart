@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:internalsystem/constants/constants.dart';
+import 'package:internalsystem/data/side_menu_data.dart';
 import 'package:internalsystem/utils/navigation_utils.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -15,29 +16,13 @@ class _SideMenuWidgetState extends State<SideMenuWidget> {
   int selectedIndex = 0;
   final TextEditingController _searchController = TextEditingController();
   List<Map<String, dynamic>> _filteredMenuOptions = [];
-  final List<Map<String, dynamic>> _allMenuOptions = [
-    {
-      'text': 'Home',
-      'icon': MdiIcons.home,
-      'route': '/home',
-    },
-    {
-      'text': 'Register',
-      'icon': MdiIcons.accountSupervisor,
-      'route': '/register',
-    },
-    {
-      'text': 'Usuários',
-      'icon': MdiIcons.accountMultiplePlus,
-      'route': '/users',
-    },
-  ];
+  
 
   @override
   void initState() {
     super.initState();
     _loadSelectedIndex();
-    _filteredMenuOptions = _allMenuOptions;
+    _filteredMenuOptions = SideMenuData().allMenuOptions;
     _searchController.addListener(_filterMenuOptions);
   }
 
@@ -56,7 +41,7 @@ class _SideMenuWidgetState extends State<SideMenuWidget> {
 
   void _filterMenuOptions() {
     setState(() {
-      _filteredMenuOptions = _allMenuOptions.where((option) {
+      _filteredMenuOptions = SideMenuData().allMenuOptions.where((option) {
         return option['text']
             .toLowerCase()
             .contains(_searchController.text.toLowerCase());
