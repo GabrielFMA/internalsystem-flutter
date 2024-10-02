@@ -32,9 +32,9 @@ Widget splitScreen(BuildContext context, Widget screen, bool isLoading) {
             flex: 10,
             child: Stack(
               children: [
-                HeaderWidget(),
+                const HeaderWidget(),
                 FutureBuilder<Widget>(
-                  future: permissionCheck(context, screen),
+                  future: checkPermissionForScreen(context, screen),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       return snapshot.data!;

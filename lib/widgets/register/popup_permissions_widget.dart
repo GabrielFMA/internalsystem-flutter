@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:internalsystem/constants/constants.dart';
-import 'package:internalsystem/utils/responsive.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class PermissionsCheckbox extends StatefulWidget {

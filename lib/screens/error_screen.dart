@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:internalsystem/constants/constants.dart';
+import 'package:internalsystem/utils/navigation_utils.dart';
 
 class ErrorScreen extends StatefulWidget {
   final String message;
@@ -22,7 +23,7 @@ class _ErrorScreenState extends State<ErrorScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Future.delayed(const Duration(milliseconds: 1000), () {
         if (mounted) {
-          Navigator.of(context).pushReplacementNamed('/home');
+          navigateTo('/home', context);
         }
       });
     });
