@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:internalsystem/constants/constants.dart';
-import 'package:internalsystem/screens/error_screen.dart';
 import 'package:internalsystem/utils/responsive.dart';
 import 'package:internalsystem/utils/verification_utils.dart';
 import 'package:internalsystem/widgets/main/loading_screen.dart';
@@ -39,10 +38,7 @@ Widget splitScreen(BuildContext context, Widget screen, bool isLoading) {
                     if (snapshot.hasData) {
                       return snapshot.data!;
                     }
-                    return const ErrorScreen(
-                      message: 'Ocorreu um erro',
-                      returnMessage: 'Retornando para tela inicial',
-                    );
+                    return buildLoadingScreen();
                   },
                 ),
                 if (isLoading)

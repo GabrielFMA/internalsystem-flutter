@@ -15,4 +15,6 @@ class Responsive {
   static bool isDesktop(BuildContext context) =>
       MediaQuery.of(context).size.width >= 1100;
 
+  static bool isFormVerticalLow(BuildContext context) =>
+      MediaQuery.of(context).size.height >= 720;
 }
