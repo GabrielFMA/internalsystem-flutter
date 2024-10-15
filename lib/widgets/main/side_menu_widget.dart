@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:internalsystem/constants/constants.dart';
 import 'package:internalsystem/data/side_menu_data.dart';
 import 'package:internalsystem/utils/navigation_utils.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:internalsystem/components/search_textfield.dart'; // Importa o componente de busca
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SideMenuWidget extends StatefulWidget {
@@ -14,22 +14,14 @@ class SideMenuWidget extends StatefulWidget {
 
 class _SideMenuWidgetState extends State<SideMenuWidget> {
   int selectedIndex = 0;
-  final TextEditingController _searchController = TextEditingController();
+  String _searchQuery = ''; // Variável para armazenar a pesquisa
   List<Map<String, dynamic>> _filteredMenuOptions = [];
-  
 
   @override
   void initState() {
     super.initState();
     _loadSelectedIndex();
     _filteredMenuOptions = SideMenuData().allMenuOptions;
-    _searchController.addListener(_filterMenuOptions);
-  }
-
-  @override
-  void dispose() {
-    _searchController.dispose();
-    super.dispose();
   }
 
   Future<void> _loadSelectedIndex() async {
@@ -39,12 +31,13 @@ class _SideMenuWidgetState extends State<SideMenuWidget> {
     });
   }
 
-  void _filterMenuOptions() {
+  void _filterMenuOptions(String query) {
     setState(() {
+      _searchQuery = query;
       _filteredMenuOptions = SideMenuData().allMenuOptions.where((option) {
         return option['text']
             .toLowerCase()
-            .contains(_searchController.text.toLowerCase());
+            .contains(_searchQuery.toLowerCase());
       }).toList();
     });
   }
@@ -72,49 +65,17 @@ class _SideMenuWidgetState extends State<SideMenuWidget> {
             height: 1,
           ),
           const SizedBox(height: 15),
+
+          // Usa o componente de pesquisa
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: Container(
-              height: 44,
-              child: TextField(
-                controller: _searchController,
-                decoration: InputDecoration(
-                  hintText: 'Buscar...',
-                  prefixIcon: Padding(
-                    padding: const EdgeInsets.only(
-                        left: 17.5,
-                        right: 15),
-                    child: Icon(MdiIcons.magnify, size: 19.5, color: Colors.white,),
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide:
-                        const BorderSide(color: textFieldColor, width: 1.5),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide:
-                        const BorderSide(color: textFieldColor, width: 1.5),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    borderSide:
-                        const BorderSide(color: Colors.white38, width: 2),
-                  ),
-                  hintStyle: TextStyle(color: Colors.grey[600]),
-                  filled: true,
-                  fillColor: Colors.transparent,
-                  contentPadding: const EdgeInsets.symmetric(
-                    vertical: 12, // Centraliza verticalmente o texto
-                    horizontal: 15, // Adiciona margem do lado esquerdo do texto
-                  ),
-                ),
-                style: const TextStyle(color: textFieldColor),
-              ),
+            child: SearchTextField(
+              onChanged: _filterMenuOptions, // Chama a função de filtro
             ),
           ),
           const SizedBox(height: 10),
-          
+
+          // Exibe as opções filtradas no menu
           Expanded(
             child: SingleChildScrollView(
               child: Column(

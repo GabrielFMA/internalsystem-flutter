@@ -4,51 +4,53 @@ import 'package:internalsystem/widgets/users/users_widget.dart';
 class PermissionsData {
   final List<Map<String, dynamic>> permissionsUsers = [
     {
-      'title': 'Retirar o acesso de usuários ao Sistema Interno',
+      'title': 'Remover acesso Web',
       'description': 'Dá o poder ao usuário de retirar o acesso de usuários do Sistema Interno',
+      'level': 3,
       'permission': 'removeUserAcessWeb',
     },
     {
-      'title': 'Restringe o acesso de usuários ao Sistema Interno',
-      'description': 'Dá o poder ao usuário de Restringir o acesso de usuários do Sistema Interno',
-      'permission': 'limitUserAcessWeb',
+      'title': 'Remover acesso App',
+      'description': 'Dá o poder ao usuário de retirar o acesso de usuários do Aplicativo',
+      'level': 3,
+      'permission': 'removeUserAcessApp',
     },
     {
-      'title': 'Restringe o acesso de usuários ao Aplicativo',
-      'description': 'Dá o poder ao usuário de Restringir o acesso de usuários do Aplicativo',
-      'permission': 'limitUserAcessApp',
-    },
-    {
-      'title': 'Editar o email de usuários do Sistema Interno',
+      'title': 'Editar email Web',
       'description': 'Dá o poder ao usuário de editar o emails de Usuários do Sistema Interno.',
+      'level': 3,
       'permission': 'editUserEmailWeb',
     },
     {
-      'title': 'Editar o email de usuários do Aplicativo',
+      'title': 'Editar email App',
       'description': 'Dá o poder ao usuário de editar o emails de Usuários do Aplicativo.',
+      'level': 3,
       'permission': 'editUserEmailApp',
     }, 
   ];
 
   final List<Map<String, dynamic>> permissionsRoutes = [
     {
-      'title': 'Entrar na tela de Usuários',
+      'title': 'Entrar tela Usuários',
       'description': 'Dá acesso ao usuário o poder de entrar na tela Usuários.',
       'permission': 'enterUsersScreen',
+      'level': 1,
       'screen': UsersWidget,
     },
     {
-      'title': 'Entrar na tela de Registro',
+      'title': 'Entrar tela Registro',
       'description': 'Dá acesso ao usuário o poder de entrar na tela Register.',
       'permission': 'enterRegisterScreen',
+      'level': 2,
       'screen': RegisterWidget,
     },
   ];
 
   final List<Map<String, dynamic>> permissionsAdmin = [
     {
-      'title': 'Dá o acesso de usuários ao Sistema Interno',
+      'title': 'Acessar Sistema Interno',
       'description': 'Dá acesso ao usuário de entrar no Sistema Interno',
+      'level': 0,
       'permission': 'isAdmin',
     },
   ];

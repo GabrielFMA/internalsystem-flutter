@@ -6,6 +6,8 @@ import 'package:internalsystem/utils/responsive.dart';
 import 'package:internalsystem/widgets/register/popup_permissions_widget.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
+final _formKey = GlobalKey<FormState>();
+
 class RegisterWidget extends StatefulWidget {
   const RegisterWidget({super.key});
 
@@ -14,7 +16,6 @@ class RegisterWidget extends StatefulWidget {
 }
 
 class _RegisterWidgetState extends State<RegisterWidget> {
-  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {

@@ -1,10 +1,11 @@
 // ignore_for_file: library_private_types_in_public_api, avoid_print
 
 import 'package:flutter/material.dart';
+import 'package:internalsystem/components/search_textfield.dart';
 import 'package:internalsystem/constants/constants.dart';
 import 'package:internalsystem/utils/responsive.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:internalsystem/data/permissions_data.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class PopUpPermissionsWidget extends StatefulWidget {
   const PopUpPermissionsWidget({super.key});
@@ -16,21 +17,6 @@ class PopUpPermissionsWidget extends StatefulWidget {
 class _PopUpPermissionsWidgetState extends State<PopUpPermissionsWidget> {
   int _selectedButton = 1;
   String _searchQuery = '';
-
-  final List<String> _permissionsUser = PermissionsData()
-      .permissionsUsers
-      .map((permission) => permission['title'] as String)
-      .toList();
-
-  final List<String> _permissionsRoutes = PermissionsData()
-      .permissionsRoutes
-      .map((permission) => permission['title'] as String)
-      .toList();
-
-  final List<String> _permissionsAdmin = PermissionsData()
-      .permissionsAdmin
-      .map((permission) => permission['title'] as String)
-      .toList();
 
   final Map<String, bool> _permissionsUserStatus = {};
   final Map<String, bool> _permissionsRoutesStatus = {};
@@ -101,38 +87,7 @@ class _PopUpPermissionsWidgetState extends State<PopUpPermissionsWidget> {
               ),
             ),
             const SizedBox(height: 15),
-            TextField(
-              decoration: InputDecoration(
-                hintText: 'Buscar...',
-                prefixIcon: Padding(
-                  padding: const EdgeInsets.only(left: 17.5, right: 15),
-                  child: Icon(
-                    MdiIcons.magnify,
-                    size: 19.5,
-                    color: Colors.white,
-                  ),
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: const BorderSide(color: textFieldColor, width: 1.5),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: const BorderSide(color: textFieldColor, width: 1.5),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: const BorderSide(color: Colors.white38, width: 1.5),
-                ),
-                hintStyle: TextStyle(color: Colors.grey[600]),
-                filled: true,
-                fillColor: Colors.transparent,
-                contentPadding: const EdgeInsets.symmetric(
-                  vertical: 12,
-                  horizontal: 15,
-                ),
-              ),
-              style: const TextStyle(color: textFieldColor),
+            SearchTextField(
               onChanged: (value) {
                 setState(() {
                   _searchQuery = value;
@@ -144,11 +99,11 @@ class _PopUpPermissionsWidgetState extends State<PopUpPermissionsWidget> {
               alignment: Alignment.centerLeft,
               child: Text(
                 'Selecione as permissões de "$selectedFilterText"',
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style:
+                    const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
             ),
             const SizedBox(height: 15),
-            // Display checkboxes based on selected filter
             Expanded(
               child: _buildPermissionsList(selectedFilterText),
             ),
@@ -183,42 +138,59 @@ class _PopUpPermissionsWidgetState extends State<PopUpPermissionsWidget> {
   }
 
   Widget _buildPermissionsList(String selectedFilter) {
-    List<String> permissions;
-    Map<String, bool> permissionsStatus;
+  List<Map<String, dynamic>> permissions;
+  Map<String, bool> permissionsStatus;
 
-    if (selectedFilter == 'Usuários') {
-      permissions = _permissionsUser;
-      permissionsStatus = _permissionsUserStatus;
-    } else if (selectedFilter == 'Rotas') {
-      permissions = _permissionsRoutes;
-      permissionsStatus = _permissionsRoutesStatus;
-    } else {
-      permissions = _permissionsAdmin;
-      permissionsStatus = _permissionsAdminStatus;
-    }
-
-    final filteredPermissions = permissions.where((permission) {
-      return permission.toLowerCase().contains(_searchQuery.toLowerCase());
-    }).toList();
-
-    return ListView.builder(
-      itemCount: filteredPermissions.length,
-      itemBuilder: (context, index) {
-        return CheckboxListTile(
-          title: Text(filteredPermissions[index]),
-          value: permissionsStatus[filteredPermissions[index]] ?? false,
-          onChanged: (value) {
-            setState(() {
-              permissionsStatus[filteredPermissions[index]] = value!;
-            });
-          },
-          activeColor: Colors.white,
-        );
-      },
-    );
+  if (selectedFilter == 'Usuários') {
+    permissions = PermissionsData().permissionsUsers;
+    permissionsStatus = _permissionsUserStatus;
+  } else if (selectedFilter == 'Rotas') {
+    permissions = PermissionsData().permissionsRoutes;
+    permissionsStatus = _permissionsRoutesStatus;
+  } else {
+    permissions = PermissionsData().permissionsAdmin;
+    permissionsStatus = _permissionsAdminStatus;
   }
 
-  Widget _buildPermissionButton(BuildContext context, int buttonIndex, String text) {
+  final filteredPermissions = permissions.where((permission) {
+    return permission['title']
+        .toLowerCase()
+        .contains(_searchQuery.toLowerCase());
+  }).toList();
+
+  return ListView.builder(
+    itemCount: filteredPermissions.length,
+    itemBuilder: (context, index) {
+      final permission = filteredPermissions[index];
+      final permissionTitle = permission['title'];
+      final permissionLevel = permission['level']; 
+
+      return CheckboxListTile(
+        title: Row(
+          children: [
+            Icon(
+              MdiIcons.alertBox,
+              color: colorIcon(permissionLevel),
+              size: 26,
+            ),
+            const SizedBox(width: 10),
+            Text(permissionTitle),
+          ],
+        ),
+        value: permissionsStatus[permissionTitle] ?? false,
+        onChanged: (value) {
+          setState(() {
+            permissionsStatus[permissionTitle] = value!;
+          });
+        },
+        activeColor: Colors.white,
+      );
+    },
+  );
+}
+
+  Widget _buildPermissionButton(
+      BuildContext context, int buttonIndex, String text) {
     final isMobile = Responsive.isDesktop(context);
     final bool isSelected = _selectedButton == buttonIndex;
 
@@ -266,9 +238,12 @@ void showDialogPermissions(BuildContext context) {
           permission['title']: permission['permission'],
       };
 
-      final matchedPermissions = selectedPermissions.map((selectedTitle) {
-        return permissionMap[selectedTitle];
-      }).where((permission) => permission != null).toList();
+      final matchedPermissions = selectedPermissions
+          .map((selectedTitle) {
+            return permissionMap[selectedTitle];
+          })
+          .where((permission) => permission != null)
+          .toList();
 
       print('Permissões correspondentes: $matchedPermissions');
     }
