@@ -22,15 +22,15 @@ class _SearchTextFieldState extends State<SearchTextField> {
         ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(color: Colors.grey, width: 1.5),
+          borderSide: const BorderSide(color: Colors.white, width: 1),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(color: Colors.grey, width: 1.5),
+          borderSide: const BorderSide(color: Colors.white, width: 1),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(color: Colors.white38, width: 2),
+          borderSide: const BorderSide(color: Colors.white38, width: 1.5),
         ),
         hintStyle: TextStyle(color: Colors.grey[600]),
         filled: true,

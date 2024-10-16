@@ -1,4 +1,5 @@
 class RegisterModel {
+  int? id;
   String? name;
   String? email;
   String? cpf;
@@ -9,6 +10,7 @@ class RegisterModel {
   Map<String, dynamic>? secondaryData;
 
   RegisterModel({
+    this.id,
     this.name,
     this.email,
     this.cpf,
@@ -23,6 +25,7 @@ class RegisterModel {
     final Map<String, dynamic> result = {};
 
     final entries = [
+      MapEntry('id', id),
       MapEntry('name', name?.toLowerCase()),
       MapEntry('email', email?.toLowerCase()),
       MapEntry('cpf', cpf),

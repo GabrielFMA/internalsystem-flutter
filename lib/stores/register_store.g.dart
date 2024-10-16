@@ -15,9 +15,9 @@ mixin _$RegisterStore on _RegisterStore, Store {
 
   @override
   Future<void> signUpWithEmailAndPassword(
-      RegisterModel data, Function onSuccess) {
+      RegisterModel data, Function onSuccess, BuildContext context) {
     return _$signUpWithEmailAndPasswordAsyncAction
-        .run(() => super.signUpWithEmailAndPassword(data, onSuccess));
+        .run(() => super.signUpWithEmailAndPassword(data, onSuccess, context));
   }
 
   late final _$registerDataAsyncAction =

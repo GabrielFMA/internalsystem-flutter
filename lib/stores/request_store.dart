@@ -85,7 +85,7 @@ abstract class _RequestStore with Store {
         }
 
         dataList.add({
-          "id": document ?? doc.id,
+          "uid": document ?? doc.id,
           "data": extractedData,
         });
       }

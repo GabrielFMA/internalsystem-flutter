@@ -1,5 +1,5 @@
 import 'package:internalsystem/widgets/register/register_widget.dart';
-import 'package:internalsystem/widgets/users/users_widget.dart';
+import 'package:internalsystem/widgets/users/user_widget.dart';
 
 class PermissionsData {
   final List<Map<String, dynamic>> permissionsUsers = [
@@ -35,7 +35,7 @@ class PermissionsData {
       'description': 'Dá acesso ao usuário o poder de entrar na tela Usuários.',
       'permission': 'enterUsersScreen',
       'level': 1,
-      'screen': UsersWidget,
+      'screen': UserWidget,
     },
     {
       'title': 'Entrar tela Registro',

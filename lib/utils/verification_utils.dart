@@ -22,12 +22,18 @@ Future<Widget> checkPermissionForScreen(
 
 String _getPermissionForScreen(Widget screen) {
   for (var route in PermissionsData().permissionsRoutes) {
-    if ('$screen' == '${route['screen']}') {
+    print(screen.runtimeType);
+    print(route['screen']);
+    print(route['permission']);
+
+    if (screen.runtimeType == route['screen']) {
+      print(route['permission']);
       return route['permission'];
     }
   }
   return 'notPermission';
 }
+
 
 Future<bool> _getUserPermission(
   BuildContext context,

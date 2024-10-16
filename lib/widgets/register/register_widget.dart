@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:internalsystem/components/double_textfield.dart';
 import 'package:internalsystem/constants/constants.dart';
+import 'package:internalsystem/models/register_model.dart';
+import 'package:internalsystem/stores/register_store.dart';
 import 'package:internalsystem/utils/navigation_utils.dart';
 import 'package:internalsystem/utils/responsive.dart';
 import 'package:internalsystem/widgets/register/popup_permissions_widget.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:provider/provider.dart';
 
 final _formKey = GlobalKey<FormState>();
 
@@ -16,9 +19,10 @@ class RegisterWidget extends StatefulWidget {
 }
 
 class _RegisterWidgetState extends State<RegisterWidget> {
-
   @override
   Widget build(BuildContext context) {
+    final store = Provider.of<RegisterStore>(context, listen: false);
+
     final isDesktop = Responsive.isDesktop(context);
     final isDesktopLow = Responsive.isDesktopLow(context);
     final size = MediaQuery.of(context).size;
@@ -150,8 +154,7 @@ class _RegisterWidgetState extends State<RegisterWidget> {
                             confirmPasswordController: TextEditingController(),
                             confirmPasswordHintText: "Confirme sua senha",
                             confirmPasswordIcon: MdiIcons.lockOutline,
-                            confirmPasswordVisibilityIcon:
-                                MdiIcons.eyeOutline,
+                            confirmPasswordVisibilityIcon: MdiIcons.eyeOutline,
                             confirmPasswordNotVisibilityIcon:
                                 MdiIcons.eyeOffOutline,
                             shouldValidateConfirmPassword: true,
@@ -210,7 +213,18 @@ class _RegisterWidgetState extends State<RegisterWidget> {
               width: double.infinity,
               child: TextButton(
                 onPressed: () {
-                  navigateTo('/home', context);
+                  RegisterModel reg;
+                  reg = RegisterModel(
+                      name: "Tiago Ribolli",
+                      email: "ribollitiago@gmail.com",
+                      cpf: "46800130877",
+                      password: "123456",
+                      phone: "19994141650",
+                      role: "PUTO");
+
+                  store.signUpWithEmailAndPassword(reg, () {
+                    navigateTo('/home', context);
+                  }, context);
                 },
                 style: TextButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 25),

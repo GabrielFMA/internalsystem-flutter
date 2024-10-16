@@ -82,15 +82,15 @@ class _TextFieldStringPasswordState extends State<TextFieldStringPassword> {
         ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(45),
-          borderSide: const BorderSide(color: textFieldColor, width: 1.5),
+          borderSide: const BorderSide(color: textFieldColor, width: 1),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(45),
-          borderSide: const BorderSide(color: textFieldColor, width: 1.5),
+          borderSide: const BorderSide(color: textFieldColor, width: 1),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(45),
-          borderSide: const BorderSide(color: Colors.white38, width: 2),
+          borderSide: const BorderSide(color: Colors.white38, width: 1.5),
         ),
         hintText: widget.hintText,
         hintStyle: TextStyle(color: Colors.grey[600]),

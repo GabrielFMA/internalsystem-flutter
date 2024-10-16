@@ -3,9 +3,12 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:internalsystem/models/register_model.dart';
+import 'package:internalsystem/stores/request_store.dart';
 import 'package:mobx/mobx.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 
 part 'register_store.g.dart';
 
@@ -18,7 +21,7 @@ abstract class _RegisterStore with Store {
 
   @action
   Future<void> signUpWithEmailAndPassword(
-      RegisterModel data, Function onSuccess) async {
+      RegisterModel data, Function onSuccess, BuildContext context) async {
     try {
       final response = await http.post(
         Uri.parse(_url),
@@ -32,6 +35,7 @@ abstract class _RegisterStore with Store {
       if (jsonDecode(response.body).containsKey('idToken')) {
         await zipCodeVerification(data, () async {
           duplicityCheck(data, () async {
+            data.id = await verificateId(context);
             await registerData(
                 'users', jsonDecode(response.body)['localId'], data, () async {
               await registerSecondaryData('users', 'permissions',
@@ -49,6 +53,24 @@ abstract class _RegisterStore with Store {
     }
   }
 
+  Future<int> verificateId(BuildContext context) async {
+    final store = Provider.of<RequestStore>(context, listen: false);
+
+    // Buscando todos os usuários
+    final existingUsers = await store.fetchData('users', information: ['id']);
+
+    // Verifica se existingUsers não é nulo e contém elementos
+    if (existingUsers != null && existingUsers.isNotEmpty) {
+      final maxId = existingUsers
+          .map(
+              (user) => user['data']['id'] as int) // Acessa o ID dentro de data
+          .reduce((a, b) => a > b ? a : b);
+      return maxId + 1; // Retorna o maior ID + 1
+    }
+
+    return 0; // Se não houver usuários, retorna 0
+  }
+
   @action
   Future<void> registerData(
     String collection,
@@ -58,7 +80,7 @@ abstract class _RegisterStore with Store {
   ) async {
     try {
       await _firestore.collection(collection).doc(document).set(data.toMap());
-     print('Id: $document');
+      print('Id: $document');
       print('Email: ${data.email}');
       print('Cargo: ${data.role}');
 
@@ -96,7 +118,7 @@ abstract class _RegisterStore with Store {
       final fieldsToCheck = {
         'name': data.name?.toLowerCase(),
         'email': data.email?.toLowerCase(),
-        'cpf': data.email?.toLowerCase(),
+        'cpf': data.cpf?.toLowerCase(),
       };
 
       for (final entry in fieldsToCheck.entries) {

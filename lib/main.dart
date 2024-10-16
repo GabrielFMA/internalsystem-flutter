@@ -15,7 +15,7 @@ import 'package:internalsystem/utils/navigation_utils.dart';
 import 'package:internalsystem/widgets/main/loading_screen.dart';
 import 'package:internalsystem/widgets/register/register_widget.dart';
 import 'package:internalsystem/widgets/home/home_widget.dart';
-import 'package:internalsystem/widgets/users/users_widget.dart';
+import 'package:internalsystem/widgets/users/user_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
@@ -81,7 +81,7 @@ class MyApp extends StatelessWidget {
                 isAuthenticated: (user) => user != null,
               ),
           '/users': (_) => RouteGuard(
-                child: const MainScreen(screen: UsersWidget()),
+                child: const MainScreen(screen: UserWidget()),
                 isAuthenticated: (user) => user != null,
               )
         },
