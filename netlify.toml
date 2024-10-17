@@ -1,5 +1,5 @@
 [build]
-  publish = "build/web"
+  publish = "custom-build-dir"
   command = "bash ./build.sh"
 
 [context.production.environment]
