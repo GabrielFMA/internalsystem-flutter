@@ -1,6 +1,6 @@
 [build]
   publish = "build/web"
-  command = "bash ./scripts/build.sh"
+  command = "bash ./build.sh"
 
 [context.production.environment]
   PUB_ENVIRONMENT = "production"
