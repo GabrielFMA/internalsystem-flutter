@@ -42,7 +42,11 @@ class _UserWidgetState extends State<UserWidget> {
     });
 
     final usersToShow = filteredUsers.where((user) {
-      return user['data']['role'] == _selectedRole;
+      if (_selectedRole == 'cliente') {
+        return user['data']['role'] == 'cliente';
+      } else {
+        return user['data']['role'] != 'cliente';
+      }
     }).toList();
 
     return Padding(
@@ -53,7 +57,7 @@ class _UserWidgetState extends State<UserWidget> {
         children: [
           // Parte superior fixa
           _buildHeader(),
-          
+
           // Parte rolável com a lista de usuários
           Expanded(
             child: ListView(
@@ -72,7 +76,8 @@ class _UserWidgetState extends State<UserWidget> {
 
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.symmetric(horizontal: isDesktop ? 50 : 15, vertical: 12),
+      padding:
+          EdgeInsets.symmetric(horizontal: isDesktop ? 50 : 15, vertical: 12),
       color: Colors.grey[900],
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -162,8 +167,10 @@ class _UserWidgetState extends State<UserWidget> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ListView.builder(
-          shrinkWrap: true, // Permite que o ListView expanda com base em seu conteúdo
-          physics: const NeverScrollableScrollPhysics(), // Desabilita o scroll do ListView interno
+          shrinkWrap:
+              true, // Permite que o ListView expanda com base em seu conteúdo
+          physics:
+              const NeverScrollableScrollPhysics(), // Desabilita o scroll do ListView interno
           itemCount: users.length,
           itemBuilder: (context, index) {
             final userData = users[index]['data'];
