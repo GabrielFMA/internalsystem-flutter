@@ -1,5 +1,3 @@
-// ignore_for_file: library_private_types_in_public_api, avoid_print
-
 import 'package:flutter/material.dart';
 import 'package:internalsystem/components/search_textfield.dart';
 import 'package:internalsystem/constants/constants.dart';
@@ -54,8 +52,8 @@ class _PopUpPermissionsWidgetState extends State<PopUpPermissionsWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final isMobile = Responsive.isDesktop(context);
-    String admin = isMobile ? "Administrativo" : "Admin";
+    final isMobile = Responsive.isMobile(context); // Verifica se é mobile
+    String admin = isMobile ? "Admin" : "Administrativo";
 
     String selectedFilterText;
     if (_selectedButton == 1) {
@@ -76,13 +74,23 @@ class _PopUpPermissionsWidgetState extends State<PopUpPermissionsWidget> {
           children: [
             Center(
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment:
+                    MainAxisAlignment.spaceBetween, // Para espaçar os botões
                 children: [
-                  _buildPermissionButton(context, 1, "Usuários"),
+                  Expanded(
+                    child: _buildPermissionButton(
+                        context, 1, "Usuários", MdiIcons.accountMultiple),
+                  ),
                   SizedBox(width: isMobile ? 20 : 5),
-                  _buildPermissionButton(context, 2, "Rotas"),
+                  Expanded(
+                    child: _buildPermissionButton(
+                        context, 2, "Rotas", MdiIcons.arrowDecision),
+                  ),
                   SizedBox(width: isMobile ? 20 : 5),
-                  _buildPermissionButton(context, 3, admin),
+                  Expanded(
+                    child: _buildPermissionButton(
+                        context, 3, admin, MdiIcons.security),
+                  ),
                 ],
               ),
             ),
@@ -138,60 +146,63 @@ class _PopUpPermissionsWidgetState extends State<PopUpPermissionsWidget> {
   }
 
   Widget _buildPermissionsList(String selectedFilter) {
-  List<Map<String, dynamic>> permissions;
-  Map<String, bool> permissionsStatus;
+    final isMobile = Responsive.isMobile(context);
+    List<Map<String, dynamic>> permissions;
+    Map<String, bool> permissionsStatus;
 
-  if (selectedFilter == 'Usuários') {
-    permissions = PermissionsData().permissionsUsers;
-    permissionsStatus = _permissionsUserStatus;
-  } else if (selectedFilter == 'Rotas') {
-    permissions = PermissionsData().permissionsRoutes;
-    permissionsStatus = _permissionsRoutesStatus;
-  } else {
-    permissions = PermissionsData().permissionsAdmin;
-    permissionsStatus = _permissionsAdminStatus;
+    if (selectedFilter == 'Usuários') {
+      permissions = PermissionsData().permissionsUsers;
+      permissionsStatus = _permissionsUserStatus;
+    } else if (selectedFilter == 'Rotas') {
+      permissions = PermissionsData().permissionsRoutes;
+      permissionsStatus = _permissionsRoutesStatus;
+    } else {
+      permissions = PermissionsData().permissionsAdmin;
+      permissionsStatus = _permissionsAdminStatus;
+    }
+
+    final filteredPermissions = permissions.where((permission) {
+      return permission['title']
+          .toLowerCase()
+          .contains(_searchQuery.toLowerCase());
+    }).toList();
+
+    return ListView.builder(
+      itemCount: filteredPermissions.length,
+      itemBuilder: (context, index) {
+        final permission = filteredPermissions[index];
+        final permissionTitle = permission['title'];
+        final permissionLevel = permission['level'];
+
+        return CheckboxListTile(
+          contentPadding:
+              EdgeInsets.symmetric(horizontal: isMobile ? 0 : 10.0),
+          title: Row(
+            children: [
+              Icon(
+                MdiIcons.alertBox,
+                color: colorIcon(permissionLevel),
+                size: 26,
+              ),
+              SizedBox(width: isMobile ? 0 : 10.0),
+              Text(permissionTitle),
+            ],
+          ),
+          value: permissionsStatus[permissionTitle] ?? false,
+          onChanged: (value) {
+            setState(() {
+              permissionsStatus[permissionTitle] = value!;
+            });
+          },
+          activeColor: Colors.white,
+        );
+      },
+    );
   }
 
-  final filteredPermissions = permissions.where((permission) {
-    return permission['title']
-        .toLowerCase()
-        .contains(_searchQuery.toLowerCase());
-  }).toList();
-
-  return ListView.builder(
-    itemCount: filteredPermissions.length,
-    itemBuilder: (context, index) {
-      final permission = filteredPermissions[index];
-      final permissionTitle = permission['title'];
-      final permissionLevel = permission['level']; 
-
-      return CheckboxListTile(
-        title: Row(
-          children: [
-            Icon(
-              MdiIcons.alertBox,
-              color: colorIcon(permissionLevel),
-              size: 26,
-            ),
-            const SizedBox(width: 10),
-            Text(permissionTitle),
-          ],
-        ),
-        value: permissionsStatus[permissionTitle] ?? false,
-        onChanged: (value) {
-          setState(() {
-            permissionsStatus[permissionTitle] = value!;
-          });
-        },
-        activeColor: Colors.white,
-      );
-    },
-  );
-}
-
   Widget _buildPermissionButton(
-      BuildContext context, int buttonIndex, String text) {
-    final isMobile = Responsive.isDesktop(context);
+      BuildContext context, int buttonIndex, String text, IconData icon) {
+    final isMobile = Responsive.isMobile(context); // Verifica se está em mobile
     final bool isSelected = _selectedButton == buttonIndex;
 
     return TextButton(
@@ -201,19 +212,26 @@ class _PopUpPermissionsWidgetState extends State<PopUpPermissionsWidget> {
       style: TextButton.styleFrom(
         backgroundColor: isSelected ? Colors.white : backgroundColor,
         padding: const EdgeInsets.all(16),
-        fixedSize: Size(isMobile ? 152 : 117, 44),
+        fixedSize:
+            Size(isMobile ? double.infinity : 117, 44), // Tamanho responsivo
         foregroundColor: Colors.white,
         side: const BorderSide(color: Colors.white, width: 1.5),
       ),
       child: Center(
-        child: Text(
-          text,
-          style: TextStyle(
-            color: isSelected ? backgroundColor : Colors.white,
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
-          ),
-        ),
+        child: isMobile
+            ? Icon(
+                icon, // Exibe o ícone se for mobile
+                color: isSelected ? backgroundColor : Colors.white,
+                size: 24,
+              )
+            : Text(
+                text,
+                style: TextStyle(
+                  color: isSelected ? backgroundColor : Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
       ),
     );
   }

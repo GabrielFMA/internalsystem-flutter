@@ -12,10 +12,17 @@ class MainScreen extends StatelessWidget {
   Future<List<Map<String, dynamic>>?> _loadData(BuildContext context) async {
     if (screen is UserWidget) {
       final store = Provider.of<RequestStore>(context, listen: false);
-      return await store.fetchData('users', information: ['name', 'email', 'phone', 'cpf', 'id', 'role']);
-    } else {
-      await Future.delayed(const Duration(seconds: 1));
+      return await store.fetchData('users', information: [
+        'address',
+        'cpf',
+        'email',
+        'id',
+        'name',
+        'phone',
+        'role'
+      ]);
     }
+    await Future.delayed(const Duration(seconds: 1));
     return null;
   }
 

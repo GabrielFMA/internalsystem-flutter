@@ -41,13 +41,7 @@ class _RegisterWidgetState extends State<RegisterWidget> {
                   Form(
                     key: _formKey,
                     child: Container(
-                      padding: isDesktop
-                          ? EdgeInsets.symmetric(
-                              horizontal: isDesktopLow
-                                  ? size.width * 0.07
-                                  : size.width * 0.13,
-                              vertical: 0)
-                          : const EdgeInsets.symmetric(horizontal: 20),
+                      padding: EdgeInsets.symmetric(horizontal: isDesktop ? 50 : 15),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -72,7 +66,7 @@ class _RegisterWidgetState extends State<RegisterWidget> {
                               ),
                             ),
                           ),
-                          const SizedBox(height: 30),
+                          const SizedBox(height: 20),
                           const Text(
                             "Dados Pessoais",
                             style: TextStyle(
@@ -107,7 +101,7 @@ class _RegisterWidgetState extends State<RegisterWidget> {
                             },
                           ),
 
-                          const SizedBox(height: 20),
+                          const SizedBox(height: 10),
 
                           DoubleTextfield().doubleTextField(
                             context: context,
@@ -132,7 +126,7 @@ class _RegisterWidgetState extends State<RegisterWidget> {
                               return null;
                             },
                           ),
-                          const SizedBox(height: 20),
+                          const SizedBox(height: 10),
 
                           DoubleTextfield().doublePasswordTextField(
                             context: context,
@@ -166,7 +160,7 @@ class _RegisterWidgetState extends State<RegisterWidget> {
                               return null;
                             },
                           ),
-                          const SizedBox(height: 20),
+                          const SizedBox(height: 10),
 
                           //PERMISSIONS BUTTON
                           SizedBox(
@@ -177,10 +171,10 @@ class _RegisterWidgetState extends State<RegisterWidget> {
                               },
                               style: TextButton.styleFrom(
                                 padding:
-                                    const EdgeInsets.symmetric(vertical: 25),
+                                    const EdgeInsets.symmetric(vertical: 22),
                                 backgroundColor: Colors.transparent,
                                 side: const BorderSide(
-                                    color: textFieldColor, width: 1.5),
+                                    color: textFieldColor, width: 1),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(45),
                                 ),
@@ -203,31 +197,14 @@ class _RegisterWidgetState extends State<RegisterWidget> {
           ),
           const SizedBox(height: 15),
           Padding(
-            padding: isDesktop
-                ? EdgeInsets.symmetric(
-                    horizontal:
-                        isDesktopLow ? size.width * 0.07 : size.width * 0.13,
-                    vertical: 0)
-                : const EdgeInsets.symmetric(horizontal: 20),
+            padding: EdgeInsets.symmetric(horizontal: isDesktop ? 50 : 15),
             child: SizedBox(
               width: double.infinity,
               child: TextButton(
-                onPressed: () {
-                  RegisterModel reg;
-                  reg = RegisterModel(
-                      name: "Tiago Ribolli",
-                      email: "ribollitiago@gmail.com",
-                      cpf: "46800130877",
-                      password: "123456",
-                      phone: "19994141650",
-                      role: "PUTO");
-
-                  store.signUpWithEmailAndPassword(reg, () {
-                    navigateTo('/home', context);
-                  }, context);
+                onPressed: () async {
                 },
                 style: TextButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 25),
+                  padding: const EdgeInsets.symmetric(vertical: 22),
                   backgroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(45),

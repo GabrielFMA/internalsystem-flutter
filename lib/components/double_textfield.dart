@@ -38,7 +38,7 @@ class DoubleTextfield{
                   validator: validator,
                 ),
               ),
-              const SizedBox(width: 20),
+              const SizedBox(width: 10),
               Expanded(
                 child: TextFieldString(
                     icon: icon2,
@@ -59,7 +59,7 @@ class DoubleTextfield{
                 onChanged: onChanged,
                 validator: validator,
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
               TextFieldString(
                   icon: icon2,
                   hintText: hintText2,
@@ -109,7 +109,7 @@ class DoubleTextfield{
                   enabled: passwordEnabled,
                 ),
               ),
-              const SizedBox(width: 20),
+              const SizedBox(width: 10),
               Expanded(
                 child: TextFieldStringPassword(
                   controller: confirmPasswordController,
@@ -139,7 +139,7 @@ class DoubleTextfield{
                 onChanged: onPasswordChanged,
                 enabled: passwordEnabled,
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
               TextFieldStringPassword(
                 controller: confirmPasswordController,
                 icon: confirmPasswordIcon,

@@ -63,15 +63,15 @@ class _TextFieldStringPasswordState extends State<TextFieldStringPassword> {
       validator: widget.shouldValidate ? widget.validator : null,
       decoration: InputDecoration(
         prefixIcon: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Icon(widget.icon, color: textFieldColor),
+          padding: const EdgeInsets.symmetric(horizontal: 15),
+          child: Icon(widget.icon, color: textFieldColor, size: 19,),
         ),
         suffixIcon: Padding(
           padding: const EdgeInsets.only(right: 14),
           child: IconButton(
             icon: Icon(
               _isObscure ? widget.iconVisibility : widget.iconNotVisibility,
-              color: textFieldColor,
+              color: textFieldColor, size: 19,
             ),
             onPressed: () {
               setState(() {
@@ -81,22 +81,22 @@ class _TextFieldStringPasswordState extends State<TextFieldStringPassword> {
           ),
         ),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(45),
+          borderRadius: BorderRadius.circular(8),
           borderSide: const BorderSide(color: textFieldColor, width: 1),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(45),
+          borderRadius: BorderRadius.circular(8),
           borderSide: const BorderSide(color: textFieldColor, width: 1),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(45),
+          borderRadius: BorderRadius.circular(8),
           borderSide: const BorderSide(color: Colors.white38, width: 1.5),
         ),
         hintText: widget.hintText,
         hintStyle: TextStyle(color: Colors.grey[600]),
         filled: true,
         fillColor: Colors.transparent,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
       ),
       style: const TextStyle(color: textFieldColor),
     );
