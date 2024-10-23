@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:internalsystem/data/permissions_data.dart';
 import 'package:internalsystem/screens/error_screen.dart';
 import 'package:internalsystem/stores/auth_store.dart';
-import 'package:internalsystem/stores/request_store.dart';
 import 'package:internalsystem/widgets/home/home_widget.dart';
 import 'package:provider/provider.dart';
 
@@ -34,19 +33,11 @@ String _getPermissionForScreen(Widget screen) {
   return 'notPermission';
 }
 
-
 Future<bool> _getUserPermission(
   BuildContext context,
   String permission,
 ) async {
   final authStore = Provider.of<AuthStore>(context, listen: false);
-  final requestStore = Provider.of<RequestStore>(context, listen: false);
 
-  return await requestStore.fetchSpecificInformation(
-    'users',
-    document: authStore.getUser!.id!,
-    secondCollection: 'permissions',
-    permission,
-    true,
-  );
+  return authStore.getUser!.permissions?[permission];
 }

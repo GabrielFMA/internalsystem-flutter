@@ -35,8 +35,8 @@ abstract class _AuthStore with Store {
   AuthModel? get getUser => _user;
 
   @action
-  Future<void> loginWithEmailAndPassword(TextErrorModel textError, BuildContext context, 
-      Function onSuccess) async {
+  Future<void> loginWithEmailAndPassword(TextErrorModel textError,
+      BuildContext context, Function onSuccess) async {
     try {
       final userCredential = await _firebaseAuth.signInWithEmailAndPassword(
         email: _email,
@@ -62,16 +62,17 @@ abstract class _AuthStore with Store {
   }
 
   Future<bool> checkWebAccountAccess(
-      String? document, BuildContext context) async {
+    String? document,
+    BuildContext context,
+  ) async {
+    if (document == null) return false;
+
     try {
-      final hasPermission =
-          await Provider.of<RequestStore>(context, listen: false)
-              .fetchSpecificInformation(
+      final List<Map> permissions =
+          await Provider.of<RequestStore>(context, listen: false).fetchData(
         'users',
         document: document,
         secondCollection: 'permissions',
-        'isAdmin',
-        true,
       );
 
       final documentSnapshot = await FirebaseFirestore.instance
@@ -79,21 +80,26 @@ abstract class _AuthStore with Store {
           .doc(document)
           .get();
 
-      if (documentSnapshot.exists) {
-        final data = documentSnapshot.data();
-        if (data != null && hasPermission) {
-          _user = AuthModel(
-            id: document,
-            name: data['name'],
-            email: data['email'],
-          );
-          return true;
-        }
+      if (permissions.isEmpty ||
+          !(permissions[0]['data']['isAdmin'] ?? false) ||
+          !documentSnapshot.exists) {
+        return false;
+      }
+
+      final data = documentSnapshot.data();
+      if (data != null) {
+        _user = AuthModel(
+          id: document,
+          name: data['name'] ?? 'Nome não disponível',
+          email: data['email'] ?? 'Email não disponível',
+          permissions: permissions[0]['data'],
+        );
+        return true;
       }
     } catch (e) {
       print('Erro ao acessar o Firestore: $e');
-      return false;
     }
+
     return false;
   }
 
