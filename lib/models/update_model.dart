@@ -3,6 +3,7 @@ class UpdateModel {
   String? email;
   String? role;
   bool? isAdmin;
+  Map<String, dynamic>? permissions;
   Map<String, dynamic>? address;
 
   UpdateModel({
@@ -10,6 +11,7 @@ class UpdateModel {
     this.email,
     this.role,
     this.isAdmin,
+    this.permissions,
     this.address,
   });
 
@@ -21,6 +23,7 @@ class UpdateModel {
       MapEntry('email', email?.toLowerCase()),
       MapEntry('role', role),
       MapEntry('isAdmin', isAdmin),
+      MapEntry('permissions', permissions),
       MapEntry('address', address),
     ];
 

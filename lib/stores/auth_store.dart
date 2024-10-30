@@ -2,11 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:internalsystem/models/text_error_model.dart';
-import 'package:internalsystem/stores/request_store.dart';
 import 'package:internalsystem/utils/error_messages.dart';
 import 'package:mobx/mobx.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:provider/provider.dart';
 import '../models/auth_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -68,31 +66,26 @@ abstract class _AuthStore with Store {
     if (document == null) return false;
 
     try {
-      final List<Map> permissions =
-          await Provider.of<RequestStore>(context, listen: false).fetchData(
-        'users',
-        document: document,
-        secondCollection: 'permissions',
-      );
-
       final documentSnapshot = await FirebaseFirestore.instance
           .collection('users')
           .doc(document)
           .get();
 
-      if (permissions.isEmpty ||
-          !(permissions[0]['data']['isAdmin'] ?? false) ||
-          !documentSnapshot.exists) {
+      if (!documentSnapshot.exists) {
         return false;
       }
 
       final data = documentSnapshot.data();
       if (data != null) {
+        if (!data['permissions']['isAdmin']) {
+          return false;
+        }
+
         _user = AuthModel(
           id: document,
           name: data['name'] ?? 'Nome não disponível',
           email: data['email'] ?? 'Email não disponível',
-          permissions: permissions[0]['data'],
+          permissions: data['permissions'],
         );
         return true;
       }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:internalsystem/constants/constants.dart';
+import 'package:internalsystem/screens/error_screen.dart';
 import 'package:internalsystem/utils/responsive.dart';
 import 'package:internalsystem/utils/verification_utils.dart';
 import 'package:internalsystem/widgets/main/loading_screen.dart';
@@ -38,13 +39,16 @@ Widget splitScreen(BuildContext context, Widget screen, bool isLoading,
                   future: checkPermissionForScreen(context, screen),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
-                      if (screen is UserWidget) {
+                      if (screen is UserWidget &&
+                          snapshot.data is! ErrorScreen) {
                         return UserWidget(users: data ?? []);
-                      } else {
-                        return snapshot.data!;
                       }
+                      return snapshot.data!;
                     }
-                    return buildLoadingScreen();
+                    return const ErrorScreen(
+                      message: 'Erro na tela',
+                      returnMessage: 'Retornando para a tela inicial',
+                    );
                   },
                 ),
                 if (isLoading)

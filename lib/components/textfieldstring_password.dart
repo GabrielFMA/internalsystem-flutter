@@ -67,7 +67,7 @@ class _TextFieldStringPasswordState extends State<TextFieldStringPassword> {
           child: Icon(widget.icon, color: textFieldColor, size: 19,),
         ),
         suffixIcon: Padding(
-          padding: const EdgeInsets.only(right: 14),
+          padding: const EdgeInsets.only(right: 8),
           child: IconButton(
             icon: Icon(
               _isObscure ? widget.iconVisibility : widget.iconNotVisibility,

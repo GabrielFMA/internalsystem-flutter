@@ -6,6 +6,7 @@ class RegisterModel {
   String? phone;
   String? role;
   String? password;
+  Map<String, dynamic>? permissions;
   Map<String, dynamic>? address;
   Map<String, dynamic>? secondaryData;
 
@@ -17,6 +18,7 @@ class RegisterModel {
     this.phone,
     this.role,
     this.password,
+    this.permissions,
     this.address,
     this.secondaryData,
   });
@@ -31,6 +33,7 @@ class RegisterModel {
       MapEntry('cpf', cpf),
       MapEntry('phone', phone),
       MapEntry('role', role),
+      MapEntry('permissions', permissions),
       MapEntry('address', address),
     ];
 

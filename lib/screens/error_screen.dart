@@ -23,7 +23,9 @@ class _ErrorScreenState extends State<ErrorScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Future.delayed(const Duration(milliseconds: 1000), () {
         if (mounted) {
-          navigateTo('/home', context);
+          setState(() {
+            navigateTo('/home', context);
+          });
         }
       });
     });
