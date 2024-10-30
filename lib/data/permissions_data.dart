@@ -5,28 +5,33 @@ class PermissionsData {
   final List<Map<String, dynamic>> permissionsUsers = [
     {
       'title': 'Remover acesso Web',
-      'description': 'Dá o poder ao usuário de retirar o acesso de usuários do Sistema Interno',
+      'description':
+          'Dá o poder ao usuário de retirar o acesso de usuários do Sistema Interno',
       'level': 3,
       'permission': 'removeUserAcessWeb',
     },
     {
       'title': 'Remover acesso App',
-      'description': 'Dá o poder ao usuário de retirar o acesso de usuários do Aplicativo',
+      'description':
+          'Dá o poder ao usuário de retirar o acesso de usuários do Aplicativo',
       'level': 3,
       'permission': 'removeUserAcessApp',
     },
     {
       'title': 'Editar email Web',
-      'description': 'Dá o poder ao usuário de editar o emails de Usuários do Sistema Interno.',
+      'description':
+          'Dá o poder ao usuário de editar o emails de Usuários do Sistema Interno.',
       'level': 3,
       'permission': 'editUserEmailWeb',
     },
     {
       'title': 'Editar email App',
-      'description': 'Dá o poder ao usuário de editar o emails de Usuários do Aplicativo.',
+      'description':
+          'Dá o poder ao usuário de editar o emails de Usuários do Aplicativo.',
       'level': 3,
       'permission': 'editUserEmailApp',
-    }, 
+    },
+    
   ];
 
   final List<Map<String, dynamic>> permissionsRoutes = [
@@ -54,5 +59,28 @@ class PermissionsData {
       'permission': 'isAdmin',
     },
   ];
-}
 
+  Map<String, dynamic>? getPermissionByTitle(String category, String title) {
+    List<Map<String, dynamic>> permissions;
+
+    switch (category) {
+      case 'Usuários':
+        permissions = permissionsUsers;
+        break;
+      case 'Rotas':
+        permissions = permissionsRoutes;
+        break;
+      case 'Administrativo':
+        permissions = permissionsAdmin;
+        break;
+      default:
+        return null;
+    }
+
+    // Busca a permissão pelo título
+    return permissions.firstWhere(
+      (permission) => permission['title'] == title,
+      orElse: () => {}, 
+    );
+  }
+}
