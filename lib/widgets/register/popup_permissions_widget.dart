@@ -12,13 +12,46 @@ class PopUpPermissionsWidget extends StatefulWidget {
   _PopUpPermissionsWidgetState createState() => _PopUpPermissionsWidgetState();
 }
 
+final Map<String, bool> globalPermissionsUserStatus = {};
+final Map<String, bool> globalPermissionsRoutesStatus = {};
+final Map<String, bool> globalPermissionsAdminStatus = {};
+
 class _PopUpPermissionsWidgetState extends State<PopUpPermissionsWidget> {
   int _selectedButton = 1;
   String _searchQuery = '';
 
-  final Map<String, bool> _permissionsUserStatus = {};
-  final Map<String, bool> _permissionsRoutesStatus = {};
-  final Map<String, bool> _permissionsAdminStatus = {};
+  void _initializePermissionsStatus() {
+    final allPermissions = {
+      'Usuários': globalPermissionsUserStatus,
+      'Rotas': globalPermissionsRoutesStatus,
+      'Administrativo': globalPermissionsAdminStatus,
+    };
+
+    for (var entry in allPermissions.entries) {
+      List<Map<String, dynamic>> permissionsList;
+
+      switch (entry.key) {
+        case 'Usuários':
+          permissionsList = PermissionsData().permissionsUsers;
+          break;
+        case 'Rotas':
+          permissionsList = PermissionsData().permissionsRoutes;
+          break;
+        default:
+          permissionsList = PermissionsData().permissionsAdmin;
+      }
+
+      for (var permission in permissionsList) {
+        entry.value.putIfAbsent(permission['title'], () => false);
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _initializePermissionsStatus(); 
+  }
 
   void _onButtonPressed(int buttonIndex) {
     setState(() {
@@ -26,33 +59,34 @@ class _PopUpPermissionsWidgetState extends State<PopUpPermissionsWidget> {
     });
   }
 
-  List<String> _getAllSelectedPermissions() {
-    List<String> selectedPermissions = [];
+  void _printSelectedPermissions() {
+  final allPermissions = {
+    'Usuários': globalPermissionsUserStatus,
+    'Rotas': globalPermissionsRoutesStatus,
+    'Administrativo': globalPermissionsAdminStatus,
+  };
 
-    _permissionsUserStatus.forEach((permission, isSelected) {
+  final selectedPermissions = [];
+
+  allPermissions.forEach((category, permissionsStatus) {
+    permissionsStatus.forEach((permissionTitle, isSelected) {
       if (isSelected) {
-        selectedPermissions.add(permission);
+        // Encontrar a permissão específica em PermissionsData
+        final permissionDetail = PermissionsData().getPermissionByTitle(category, permissionTitle);
+        if (permissionDetail != null) {
+          selectedPermissions.add(permissionDetail['permission']);
+        }
       }
     });
+  });
 
-    _permissionsRoutesStatus.forEach((permission, isSelected) {
-      if (isSelected) {
-        selectedPermissions.add(permission);
-      }
-    });
+  print('Permissões selecionadas: $selectedPermissions');
+}
 
-    _permissionsAdminStatus.forEach((permission, isSelected) {
-      if (isSelected) {
-        selectedPermissions.add(permission);
-      }
-    });
-
-    return selectedPermissions;
-  }
 
   @override
   Widget build(BuildContext context) {
-    final isMobile = Responsive.isMobile(context); // Verifica se é mobile
+    final isMobile = Responsive.isMobile(context);
     String admin = isMobile ? "Admin" : "Administrativo";
 
     String selectedFilterText;
@@ -74,8 +108,7 @@ class _PopUpPermissionsWidgetState extends State<PopUpPermissionsWidget> {
           children: [
             Center(
               child: Row(
-                mainAxisAlignment:
-                    MainAxisAlignment.spaceBetween, // Para espaçar os botões
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(
                     child: _buildPermissionButton(
@@ -107,8 +140,7 @@ class _PopUpPermissionsWidgetState extends State<PopUpPermissionsWidget> {
               alignment: Alignment.centerLeft,
               child: Text(
                 'Selecione as permissões de "$selectedFilterText"',
-                style:
-                    const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
             ),
             const SizedBox(height: 15),
@@ -122,7 +154,8 @@ class _PopUpPermissionsWidgetState extends State<PopUpPermissionsWidget> {
         Center(
           child: TextButton(
             onPressed: () {
-              Navigator.of(context).pop(_getAllSelectedPermissions());
+              _printSelectedPermissions();
+              Navigator.of(context).pop();
             },
             style: TextButton.styleFrom(
               backgroundColor: Colors.white,
@@ -152,13 +185,13 @@ class _PopUpPermissionsWidgetState extends State<PopUpPermissionsWidget> {
 
     if (selectedFilter == 'Usuários') {
       permissions = PermissionsData().permissionsUsers;
-      permissionsStatus = _permissionsUserStatus;
+      permissionsStatus = globalPermissionsUserStatus;
     } else if (selectedFilter == 'Rotas') {
       permissions = PermissionsData().permissionsRoutes;
-      permissionsStatus = _permissionsRoutesStatus;
+      permissionsStatus = globalPermissionsRoutesStatus;
     } else {
       permissions = PermissionsData().permissionsAdmin;
-      permissionsStatus = _permissionsAdminStatus;
+      permissionsStatus = globalPermissionsAdminStatus;
     }
 
     final filteredPermissions = permissions.where((permission) {
@@ -202,7 +235,7 @@ class _PopUpPermissionsWidgetState extends State<PopUpPermissionsWidget> {
 
   Widget _buildPermissionButton(
       BuildContext context, int buttonIndex, String text, IconData icon) {
-    final isMobile = Responsive.isMobile(context); // Verifica se está em mobile
+    final isMobile = Responsive.isMobile(context);
     final bool isSelected = _selectedButton == buttonIndex;
 
     return TextButton(
@@ -212,15 +245,14 @@ class _PopUpPermissionsWidgetState extends State<PopUpPermissionsWidget> {
       style: TextButton.styleFrom(
         backgroundColor: isSelected ? Colors.white : backgroundColor,
         padding: const EdgeInsets.all(16),
-        fixedSize:
-            Size(isMobile ? double.infinity : 117, 44), // Tamanho responsivo
+        fixedSize: Size(isMobile ? double.infinity : 117, 44),
         foregroundColor: Colors.white,
         side: const BorderSide(color: Colors.white, width: 1.5),
       ),
       child: Center(
         child: isMobile
             ? Icon(
-                icon, // Exibe o ícone se for mobile
+                icon,
                 color: isSelected ? backgroundColor : Colors.white,
                 size: 24,
               )
@@ -238,7 +270,7 @@ class _PopUpPermissionsWidgetState extends State<PopUpPermissionsWidget> {
 }
 
 void showDialogPermissions(BuildContext context) {
-  showDialog<List<String>>(
+  showDialog(
     context: context,
     builder: (BuildContext context) {
       return const PopUpPermissionsWidget();
@@ -267,3 +299,4 @@ void showDialogPermissions(BuildContext context) {
     }
   });
 }
+

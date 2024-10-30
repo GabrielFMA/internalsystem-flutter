@@ -20,8 +20,7 @@ class _UserWidgetState extends State<UserWidget> {
   @override
   Widget build(BuildContext context) {
     final isDesktop = Responsive.isDesktop(context);
-    final size = MediaQuery.of(context).size;
-
+    
     final filteredUsers = widget.users.where((user) {
       final name = user['data']['name']?.toLowerCase() ?? '';
       final email = user['data']['email']?.toLowerCase() ?? '';

@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:internalsystem/components/double_textfield.dart';
 import 'package:internalsystem/constants/constants.dart';
-import 'package:internalsystem/models/register_model.dart';
 import 'package:internalsystem/stores/register_store.dart';
-import 'package:internalsystem/utils/navigation_utils.dart';
 import 'package:internalsystem/utils/responsive.dart';
 import 'package:internalsystem/widgets/register/popup_permissions_widget.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -24,8 +22,6 @@ class _RegisterWidgetState extends State<RegisterWidget> {
     final store = Provider.of<RegisterStore>(context, listen: false);
 
     final isDesktop = Responsive.isDesktop(context);
-    final isDesktopLow = Responsive.isDesktopLow(context);
-    final size = MediaQuery.of(context).size;
 
     return Padding(
       padding: isDesktop
@@ -106,7 +102,7 @@ class _RegisterWidgetState extends State<RegisterWidget> {
                           DoubleTextfield().doubleTextField(
                             context: context,
                             icon: Icon(MdiIcons.phoneOutline),
-                            hintText: "Digite seu o número de telefone",
+                            hintText: "Digite seu número de telefone",
                             shouldValidate: true,
                             onChanged: (value) {},
                             validator: (text) {
