@@ -5,7 +5,7 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:internalsystem/models/register_model.dart';
-import 'package:internalsystem/stores/request_store.dart';
+import 'package:internalsystem/store/request_store.dart';
 import 'package:mobx/mobx.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
@@ -38,8 +38,6 @@ abstract class _RegisterStore with Store {
             data.id = await verificateId(context);
             await registerData(
                 'users', jsonDecode(response.body)['localId'], data, () async {
-              await registerSecondaryData('users', 'permissions',
-                  jsonDecode(response.body)['localId'], 'internalSystem', data);
               onSuccess();
             });
             print("Novo usuário registrado com sucesso.");
@@ -56,19 +54,17 @@ abstract class _RegisterStore with Store {
   Future<int> verificateId(BuildContext context) async {
     final store = Provider.of<RequestStore>(context, listen: false);
 
-    // Buscando todos os usuários
     final existingUsers = await store.fetchData('users', information: ['id']);
 
-    // Verifica se existingUsers não é nulo e contém elementos
-    if (existingUsers != null && existingUsers.isNotEmpty) {
+    if (existingUsers.isNotEmpty) {
       final maxId = existingUsers
           .map(
-              (user) => user['data']['id'] as int) // Acessa o ID dentro de data
+              (user) => user['data']['id'] as int)
           .reduce((a, b) => a > b ? a : b);
-      return maxId + 1; // Retorna o maior ID + 1
+      return maxId + 1; 
     }
 
-    return 0; // Se não houver usuários, retorna 0
+    return 0;
   }
 
   @action
@@ -83,6 +79,7 @@ abstract class _RegisterStore with Store {
       print('Id: $document');
       print('Email: ${data.email}');
       print('Cargo: ${data.role}');
+      print('isAdmin: ${data.permissions?['isAdmin']}');
 
       onSuccess();
     } catch (e) {
@@ -106,7 +103,6 @@ abstract class _RegisterStore with Store {
           .doc(secondaryDocument)
           .set(data.secondaryData ?? {});
 
-      print('Acesso web: ${data.secondaryData?['isAdmin'] ?? false}');
     } catch (e) {
       print("Erro ao registrar dados do usuário: $e");
     }

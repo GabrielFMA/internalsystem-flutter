@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:internalsystem/stores/request_store.dart';
+import 'package:internalsystem/store/request_store.dart';
 import 'package:internalsystem/widgets/main/split_screen.dart';
 import 'package:internalsystem/widgets/users/user_widget.dart';
 import 'package:provider/provider.dart';

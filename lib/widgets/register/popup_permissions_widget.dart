@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:internalsystem/components/search_textfield.dart';
 import 'package:internalsystem/constants/constants.dart';
+import 'package:internalsystem/models/register_model.dart';
 import 'package:internalsystem/utils/responsive.dart';
 import 'package:internalsystem/data/permissions_data.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class PopUpPermissionsWidget extends StatefulWidget {
-  const PopUpPermissionsWidget({super.key});
+  final RegisterModel registerModel;
+
+  const PopUpPermissionsWidget(this.registerModel, {super.key});
 
   @override
   _PopUpPermissionsWidgetState createState() => _PopUpPermissionsWidgetState();
@@ -15,6 +18,7 @@ class PopUpPermissionsWidget extends StatefulWidget {
 final Map<String, bool> globalPermissionsUserStatus = {};
 final Map<String, bool> globalPermissionsRoutesStatus = {};
 final Map<String, bool> globalPermissionsAdminStatus = {};
+Map<String, bool> mapPermissions = {};
 
 class _PopUpPermissionsWidgetState extends State<PopUpPermissionsWidget> {
   int _selectedButton = 1;
@@ -50,7 +54,7 @@ class _PopUpPermissionsWidgetState extends State<PopUpPermissionsWidget> {
   @override
   void initState() {
     super.initState();
-    _initializePermissionsStatus(); 
+    _initializePermissionsStatus();
   }
 
   void _onButtonPressed(int buttonIndex) {
@@ -60,29 +64,32 @@ class _PopUpPermissionsWidgetState extends State<PopUpPermissionsWidget> {
   }
 
   void _printSelectedPermissions() {
-  final allPermissions = {
-    'Usuários': globalPermissionsUserStatus,
-    'Rotas': globalPermissionsRoutesStatus,
-    'Administrativo': globalPermissionsAdminStatus,
-  };
+    final allPermissions = {
+      'Usuários': globalPermissionsUserStatus,
+      'Rotas': globalPermissionsRoutesStatus,
+      'Administrativo': globalPermissionsAdminStatus,
+    };
 
-  final selectedPermissions = [];
+    final selectedPermissions = [];
 
-  allPermissions.forEach((category, permissionsStatus) {
-    permissionsStatus.forEach((permissionTitle, isSelected) {
-      if (isSelected) {
-        // Encontrar a permissão específica em PermissionsData
-        final permissionDetail = PermissionsData().getPermissionByTitle(category, permissionTitle);
-        if (permissionDetail != null) {
-          selectedPermissions.add(permissionDetail['permission']);
+    allPermissions.forEach((category, permissionsStatus) {
+      permissionsStatus.forEach((permissionTitle, isSelected) {
+        if (isSelected) {
+          // Encontrar a permissão específica em PermissionsData
+          final permissionDetail =
+              PermissionsData().getPermissionByTitle(category, permissionTitle);
+          if (permissionDetail != null) {
+            selectedPermissions.add(permissionDetail['permission']);
+          }
         }
-      }
+      });
     });
-  });
 
-  print('Permissões selecionadas: $selectedPermissions');
-}
-
+    widget.registerModel.permissions = Map.fromIterable(
+      selectedPermissions,
+      value: (item) => true,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -140,7 +147,8 @@ class _PopUpPermissionsWidgetState extends State<PopUpPermissionsWidget> {
               alignment: Alignment.centerLeft,
               child: Text(
                 'Selecione as permissões de "$selectedFilterText"',
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style:
+                    const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
             ),
             const SizedBox(height: 15),
@@ -208,8 +216,7 @@ class _PopUpPermissionsWidgetState extends State<PopUpPermissionsWidget> {
         final permissionLevel = permission['level'];
 
         return CheckboxListTile(
-          contentPadding:
-              EdgeInsets.symmetric(horizontal: isMobile ? 0 : 10.0),
+          contentPadding: EdgeInsets.symmetric(horizontal: isMobile ? 0 : 10.0),
           title: Row(
             children: [
               Icon(
@@ -269,34 +276,11 @@ class _PopUpPermissionsWidgetState extends State<PopUpPermissionsWidget> {
   }
 }
 
-void showDialogPermissions(BuildContext context) {
+void showDialogPermissions(RegisterModel registerModel, BuildContext context) {
   showDialog(
     context: context,
     builder: (BuildContext context) {
-      return const PopUpPermissionsWidget();
+      return PopUpPermissionsWidget(registerModel);
     },
-  ).then((selectedPermissions) {
-    if (selectedPermissions != null) {
-      final allPermissions = [
-        ...PermissionsData().permissionsUsers,
-        ...PermissionsData().permissionsRoutes,
-        ...PermissionsData().permissionsAdmin,
-      ];
-
-      final permissionMap = {
-        for (var permission in allPermissions)
-          permission['title']: permission['permission'],
-      };
-
-      final matchedPermissions = selectedPermissions
-          .map((selectedTitle) {
-            return permissionMap[selectedTitle];
-          })
-          .where((permission) => permission != null)
-          .toList();
-
-      print('Permissões correspondentes: $matchedPermissions');
-    }
-  });
+  );
 }
-

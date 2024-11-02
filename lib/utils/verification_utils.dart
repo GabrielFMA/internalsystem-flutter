@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:internalsystem/data/permissions_data.dart';
 import 'package:internalsystem/screens/error_screen.dart';
-import 'package:internalsystem/stores/auth_store.dart';
+import 'package:internalsystem/store/auth_store.dart';
 import 'package:internalsystem/widgets/home/home_widget.dart';
 import 'package:provider/provider.dart';
 

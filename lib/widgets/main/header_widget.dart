@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:internalsystem/constants/constants.dart';
-import 'package:internalsystem/stores/auth_store.dart';
+import 'package:internalsystem/store/auth_store.dart';
 import 'package:internalsystem/utils/navigation_utils.dart';
 import 'package:internalsystem/utils/responsive.dart';
 import 'package:internalsystem/widgets/main/loading_screen.dart';

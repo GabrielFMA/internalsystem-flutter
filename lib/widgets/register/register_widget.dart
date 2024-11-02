@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:internalsystem/components/double_textfield.dart';
 import 'package:internalsystem/constants/constants.dart';
-import 'package:internalsystem/stores/register_store.dart';
+import 'package:internalsystem/store/register_store.dart';
+import 'package:internalsystem/utils/navigation_utils.dart';
 import 'package:internalsystem/utils/responsive.dart';
 import 'package:internalsystem/widgets/register/popup_permissions_widget.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:internalsystem/models/register_model.dart';
 
 final _formKey = GlobalKey<FormState>();
 
@@ -17,11 +19,20 @@ class RegisterWidget extends StatefulWidget {
 }
 
 class _RegisterWidgetState extends State<RegisterWidget> {
+  // Controllers para os campos do formulário
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _cpfController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     final store = Provider.of<RegisterStore>(context, listen: false);
-
     final isDesktop = Responsive.isDesktop(context);
+    var registerModel = RegisterModel();
 
     return Padding(
       padding: isDesktop
@@ -37,7 +48,8 @@ class _RegisterWidgetState extends State<RegisterWidget> {
                   Form(
                     key: _formKey,
                     child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: isDesktop ? 50 : 15),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: isDesktop ? 50 : 15),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -73,60 +85,72 @@ class _RegisterWidgetState extends State<RegisterWidget> {
                           ),
                           const SizedBox(height: 20),
 
+                          // DoubleTextfield para Nome e Email
                           DoubleTextfield().doubleTextField(
                             context: context,
                             icon: Icon(MdiIcons.accountOutline),
                             hintText: "Digite seu nome completo",
                             shouldValidate: true,
+                            controller: _nameController,
                             onChanged: (value) {},
                             validator: (text) {
                               if (text!.isEmpty) {
                                 return "Digite seu nome completo";
                               }
+                              registerModel.name = text;
                               return null;
                             },
                             icon2: Icon(MdiIcons.emailOutline),
                             hintText2: "Digite seu E-mail",
                             shouldValidate2: true,
+                            controller2: _emailController,
                             onChanged2: (value) {},
                             validator2: (text) {
                               if (text!.isEmpty) {
                                 return "Digite um E-mail";
                               }
+                              registerModel.email = text;
                               return null;
                             },
                           ),
 
                           const SizedBox(height: 10),
 
+                          // DoubleTextfield para Telefone e CPF
                           DoubleTextfield().doubleTextField(
                             context: context,
                             icon: Icon(MdiIcons.phoneOutline),
                             hintText: "Digite seu número de telefone",
                             shouldValidate: true,
+                            controller: _phoneController,
                             onChanged: (value) {},
                             validator: (text) {
                               if (text!.isEmpty) {
                                 return "Digite o telefone completo";
                               }
+                              registerModel.phone = text;
                               return null;
                             },
                             icon2: Icon(MdiIcons.cardAccountDetailsOutline),
                             hintText2: "Digite um CPF",
                             shouldValidate2: true,
+                            controller2: _cpfController,
                             onChanged2: (value) {},
                             validator2: (text) {
                               if (text!.isEmpty) {
                                 return "Digite um CPF";
                               }
+                              registerModel.cpf = text;
                               return null;
                             },
                           ),
+
                           const SizedBox(height: 10),
 
+                          // DoubleTextfield para Senha e Confirmar Senha
                           DoubleTextfield().doublePasswordTextField(
                             context: context,
-                            passwordController: TextEditingController(),
+                            passwordController: _passwordController,
                             passwordHintText: "Digite sua senha",
                             passwordIcon: MdiIcons.lockOutline,
                             passwordVisibilityIcon: MdiIcons.eyeOutline,
@@ -139,9 +163,11 @@ class _RegisterWidgetState extends State<RegisterWidget> {
                               } else if (text.length < 6) {
                                 return "A senha deve ter pelo menos 6 caracteres";
                               }
+                              registerModel.password = text;
                               return null;
                             },
-                            confirmPasswordController: TextEditingController(),
+                            confirmPasswordController:
+                                _confirmPasswordController,
                             confirmPasswordHintText: "Confirme sua senha",
                             confirmPasswordIcon: MdiIcons.lockOutline,
                             confirmPasswordVisibilityIcon: MdiIcons.eyeOutline,
@@ -153,17 +179,21 @@ class _RegisterWidgetState extends State<RegisterWidget> {
                               if (text!.isEmpty) {
                                 return "Confirme sua senha";
                               }
+                              if (registerModel.password != text) {
+                                return "As senhas devem ser iguais";
+                              }
                               return null;
                             },
                           ),
+
                           const SizedBox(height: 10),
 
-                          //PERMISSIONS BUTTON
+                          // Botão de Permissões
                           SizedBox(
                             width: double.infinity,
                             child: TextButton(
                               onPressed: () {
-                                showDialogPermissions(context);
+                                showDialogPermissions(registerModel, context);
                               },
                               style: TextButton.styleFrom(
                                 padding:
@@ -197,7 +227,13 @@ class _RegisterWidgetState extends State<RegisterWidget> {
             child: SizedBox(
               width: double.infinity,
               child: TextButton(
-                onPressed: () async {
+                onPressed: () {
+                  // Validação do formulário
+                  if (_formKey.currentState!.validate()) {
+                    store.signUpWithEmailAndPassword(registerModel, () {
+                      navigateTo('/home', context);
+                    }, context);
+                  }
                 },
                 style: TextButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 22),
@@ -221,5 +257,17 @@ class _RegisterWidgetState extends State<RegisterWidget> {
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    // Liberando os controllers ao destruir o widget
+    _nameController.dispose();
+    _emailController.dispose();
+    _phoneController.dispose();
+    _cpfController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
   }
 }
