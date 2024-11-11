@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:internalsystem/components/textfieldstring.dart';
 import 'package:internalsystem/components/textfieldstring_password.dart';
 import 'package:internalsystem/constants/constants.dart';
+import 'package:internalsystem/models/auth_model.dart';
 import 'package:internalsystem/models/text_error_model.dart';
 import 'package:internalsystem/store/auth_store.dart';
 import 'package:internalsystem/utils/navigation_utils.dart';
@@ -30,6 +31,7 @@ class _LoginWidgetState extends State<LoginWidget> {
   final _formKey = GlobalKey<FormState>();
   bool _isProcessing = false;
   TextErrorModel textError = TextErrorModel(error: '');
+  var authModel = AuthModel();
 
   void _onButtonPressed() async {
     if (_formKey.currentState!.validate() && !_isProcessing) {
@@ -39,7 +41,7 @@ class _LoginWidgetState extends State<LoginWidget> {
       });
       await Future.delayed(const Duration(milliseconds: 1000));
       final store = Provider.of<AuthStore>(context, listen: false);
-      await store.loginWithEmailAndPassword(textError, context, () {
+      await store.loginWithEmailAndPassword(authModel, textError, context, () {
         navigateTo('/home', context);
       });
 
@@ -97,9 +99,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                           shouldValidate: true,
                           textInputAction: TextInputAction.next,
                           onChanged: (value) {
-                            final store =
-                                Provider.of<AuthStore>(context, listen: false);
-                            store.setEmail(value);
+                            authModel.email = value;
                           },
                           validator: (text) {
                             if (text!.isEmpty) {
@@ -118,9 +118,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                           shouldValidate: true,
                           textInputAction: TextInputAction.done,
                           onChanged: (value) {
-                            final store =
-                                Provider.of<AuthStore>(context, listen: false);
-                            store.setPassword(value);
+                            authModel.password = value;
                           },
                           validator: (text) {
                             if (text!.isEmpty) {

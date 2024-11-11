@@ -1,8 +1,9 @@
 {
   "project_info": {
     "project_number": "891640062852",
+    "firebase_url": "https://internal-system-flutter-default-rtdb.firebaseio.com",
     "project_id": "internal-system-flutter",
-    "storage_bucket": "internal-system-flutter.appspot.com"
+    "storage_bucket": "internal-system-flutter.firebasestorage.app"
   },
   "client": [
     {
@@ -10,6 +11,25 @@
         "mobilesdk_app_id": "1:891640062852:android:4a22297a755bc5da40b3d1",
         "android_client_info": {
           "package_name": "com.internalsystem.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAUfc2Oz8JxrflhlwX3Txwahuel0bxSD4s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:891640062852:android:6787155fc3afe7a440b3d1",
+        "android_client_info": {
+          "package_name": "com.internalsystem.web"
         }
       },
       "oauth_client": [],

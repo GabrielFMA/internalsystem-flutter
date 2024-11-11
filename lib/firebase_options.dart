@@ -46,7 +46,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '891640062852',
     projectId: 'internal-system-flutter',
     authDomain: 'internal-system-flutter.firebaseapp.com',
-    storageBucket: 'internal-system-flutter.appspot.com',
+    databaseURL: 'https://internal-system-flutter-default-rtdb.firebaseio.com',
+    storageBucket: 'internal-system-flutter.firebasestorage.app',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
@@ -54,7 +55,8 @@ class DefaultFirebaseOptions {
     appId: '1:891640062852:ios:2eeae4e600ed39b940b3d1',
     messagingSenderId: '891640062852',
     projectId: 'internal-system-flutter',
-    storageBucket: 'internal-system-flutter.appspot.com',
+    databaseURL: 'https://internal-system-flutter-default-rtdb.firebaseio.com',
+    storageBucket: 'internal-system-flutter.firebasestorage.app',
     iosBundleId: 'com.example.internalsystem',
   );
 
@@ -63,16 +65,18 @@ class DefaultFirebaseOptions {
     appId: '1:891640062852:ios:2eeae4e600ed39b940b3d1',
     messagingSenderId: '891640062852',
     projectId: 'internal-system-flutter',
-    storageBucket: 'internal-system-flutter.appspot.com',
+    databaseURL: 'https://internal-system-flutter-default-rtdb.firebaseio.com',
+    storageBucket: 'internal-system-flutter.firebasestorage.app',
     iosBundleId: 'com.example.internalsystem',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyAUfc2Oz8JxrflhlwX3Txwahuel0bxSD4s',
-    appId: '1:891640062852:android:4a22297a755bc5da40b3d1',
+    appId: '1:891640062852:android:6787155fc3afe7a440b3d1',
     messagingSenderId: '891640062852',
     projectId: 'internal-system-flutter',
-    storageBucket: 'internal-system-flutter.appspot.com',
+    databaseURL: 'https://internal-system-flutter-default-rtdb.firebaseio.com',
+    storageBucket: 'internal-system-flutter.firebasestorage.app',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
@@ -81,7 +85,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '891640062852',
     projectId: 'internal-system-flutter',
     authDomain: 'internal-system-flutter.firebaseapp.com',
-    storageBucket: 'internal-system-flutter.appspot.com',
+    databaseURL: 'https://internal-system-flutter-default-rtdb.firebaseio.com',
+    storageBucket: 'internal-system-flutter.firebasestorage.app',
   );
 
 }

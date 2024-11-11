@@ -5,6 +5,7 @@ import 'package:internalsystem/utils/responsive.dart';
 
 class UserWidget extends StatefulWidget {
   final List<Map<String, dynamic>> users;
+
   const UserWidget({super.key, this.users = const []});
 
   @override
@@ -20,18 +21,18 @@ class _UserWidgetState extends State<UserWidget> {
   @override
   Widget build(BuildContext context) {
     final isDesktop = Responsive.isDesktop(context);
-    
+
     final filteredUsers = widget.users.where((user) {
-      final name = user['data']['name']?.toLowerCase() ?? '';
-      final email = user['data']['email']?.toLowerCase() ?? '';
+      final name = user['name']?.toLowerCase() ?? '';
+      final email = user['email']?.toLowerCase() ?? '';
       return name.contains(_searchQuery.toLowerCase()) ||
           email.contains(_searchQuery.toLowerCase());
     }).toList();
 
-    // Ordenando a lista com base no campo e direção
+    // Ordenação dos usuários
     filteredUsers.sort((a, b) {
-      final aValue = a['data'][_sortBy] ?? '';
-      final bValue = b['data'][_sortBy] ?? '';
+      final aValue = a[_sortBy] ?? '';
+      final bValue = b[_sortBy] ?? '';
 
       if (_isAscending) {
         return aValue.compareTo(bValue);
@@ -41,10 +42,10 @@ class _UserWidgetState extends State<UserWidget> {
     });
 
     final usersToShow = filteredUsers.where((user) {
-      if (_selectedRole == 'cliente') {
-        return user['data']['role'] == 'cliente';
+      if (_selectedRole.toLowerCase() == 'cliente') {
+        return user['role'].toLowerCase() == 'cliente';
       } else {
-        return user['data']['role'] != 'cliente';
+        return user['role'].toLowerCase() != 'cliente';
       }
     }).toList();
 
@@ -54,10 +55,7 @@ class _UserWidgetState extends State<UserWidget> {
           : const EdgeInsets.only(top: mobileHeader),
       child: Column(
         children: [
-          // Parte superior fixa
           _buildHeader(),
-
-          // Parte rolável com a lista de usuários
           Expanded(
             child: ListView(
               children: [
@@ -166,13 +164,11 @@ class _UserWidgetState extends State<UserWidget> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ListView.builder(
-          shrinkWrap:
-              true, // Permite que o ListView expanda com base em seu conteúdo
-          physics:
-              const NeverScrollableScrollPhysics(), // Desabilita o scroll do ListView interno
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
           itemCount: users.length,
           itemBuilder: (context, index) {
-            final userData = users[index]['data'];
+            final userData = users[index];
             return _buildUserCard(userData);
           },
         ),

@@ -8,8 +8,7 @@ import 'package:internalsystem/widgets/main/header_widget.dart';
 import 'package:internalsystem/widgets/main/side_menu_widget.dart';
 import 'package:internalsystem/widgets/users/user_widget.dart';
 
-Widget splitScreen(BuildContext context, Widget screen, bool isLoading,
-    {List<Map<String, dynamic>>? data}) {
+Widget splitScreen(BuildContext context, Widget screen, bool isLoading, {required List<Map<String, dynamic>> data}) {
   final isDesktop = Responsive.isDesktop(context);
 
   return Scaffold(
@@ -41,7 +40,7 @@ Widget splitScreen(BuildContext context, Widget screen, bool isLoading,
                     if (snapshot.hasData) {
                       if (screen is UserWidget &&
                           snapshot.data is! ErrorScreen) {
-                        return UserWidget(users: data ?? []);
+                        return UserWidget(users: data);
                       }
                       return snapshot.data!;
                     }

@@ -19,7 +19,6 @@ class RegisterWidget extends StatefulWidget {
 }
 
 class _RegisterWidgetState extends State<RegisterWidget> {
-  // Controllers para os campos do formulário
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
@@ -228,11 +227,11 @@ class _RegisterWidgetState extends State<RegisterWidget> {
               width: double.infinity,
               child: TextButton(
                 onPressed: () {
-                  // Validação do formulário
                   if (_formKey.currentState!.validate()) {
-                    store.signUpWithEmailAndPassword(registerModel, () {
+                    store.signUpWithEmailAndPassword(registerModel, context,
+                        () {
                       navigateTo('/home', context);
-                    }, context);
+                    });
                   }
                 },
                 style: TextButton.styleFrom(

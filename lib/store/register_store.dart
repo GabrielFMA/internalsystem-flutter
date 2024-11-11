@@ -1,8 +1,11 @@
+
+
 // ignore_for_file: library_private_types_in_public_api, avoid_print
 
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:internalsystem/models/register_model.dart';
 import 'package:internalsystem/store/request_store.dart';
@@ -14,14 +17,17 @@ part 'register_store.g.dart';
 
 class RegisterStore = _RegisterStore with _$RegisterStore;
 
+void _log(String message) {
+  print("[RegisterStore] $message");
+}
+
 abstract class _RegisterStore with Store {
   static const _url =
-      'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyAE8KFKXcg1ATVd6l-G9P7BHKrfXt--QZ8';
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+      'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDn7WXMzqT6kj_PgFC800zLgLsjSjXQpio';
 
   @action
   Future<void> signUpWithEmailAndPassword(
-      RegisterModel data, Function onSuccess, BuildContext context) async {
+      RegisterModel data, BuildContext context, Function onSuccess) async {
     try {
       final response = await http.post(
         Uri.parse(_url),
@@ -35,36 +41,19 @@ abstract class _RegisterStore with Store {
       if (jsonDecode(response.body).containsKey('idToken')) {
         await zipCodeVerification(data, () async {
           duplicityCheck(data, () async {
-            data.id = await verificateId(context);
             await registerData(
-                'users', jsonDecode(response.body)['localId'], data, () async {
+                'users', jsonDecode(response.body)['localId'], data, context, () async {
+              _log("Novo usuário registrado com sucesso.");
               onSuccess();
             });
-            print("Novo usuário registrado com sucesso.");
           });
         });
       } else {
-        print("Token de autenticação não encontrado.");
+        _log("Token de autenticação não encontrado.");
       }
     } catch (e) {
-      print("Erro ao registrar usuário: $e");
+      _log("Erro ao registrar usuário: $e");
     }
-  }
-
-  Future<int> verificateId(BuildContext context) async {
-    final store = Provider.of<RequestStore>(context, listen: false);
-
-    final existingUsers = await store.fetchData('users', information: ['id']);
-
-    if (existingUsers.isNotEmpty) {
-      final maxId = existingUsers
-          .map(
-              (user) => user['data']['id'] as int)
-          .reduce((a, b) => a > b ? a : b);
-      return maxId + 1; 
-    }
-
-    return 0;
   }
 
   @action
@@ -72,39 +61,28 @@ abstract class _RegisterStore with Store {
     String collection,
     String document,
     RegisterModel data,
+    BuildContext context,
     Function onSuccess,
   ) async {
     try {
-      await _firestore.collection(collection).doc(document).set(data.toMap());
-      print('Id: $document');
-      print('Email: ${data.email}');
-      print('Cargo: ${data.role}');
-      print('isAdmin: ${data.permissions?['isAdmin']}');
+      final dbRef = FirebaseDatabase.instance.ref();
+      final store =
+          Provider.of<RequestStore>(context, listen: false);
 
+      await store.fetchData('users', information: ['id']);
+      
+      if (store.fetchedData != []) {
+        final maxId = store.fetchedData
+            .map((user) => user['id'] as int)
+            .reduce((a, b) => a > b ? a : b);
+        data.id = maxId + 1;
+      }
+      dbRef.child(collection).child(document).set(data.toMap());
+
+      _log("${data.toMap()}");
       onSuccess();
     } catch (e) {
-      print("Erro ao registrar dados do usuário: $e");
-    }
-  }
-
-  @action
-  Future<void> registerSecondaryData(
-    String collection,
-    String secondaryCollection,
-    String document,
-    String secondaryDocument,
-    RegisterModel data,
-  ) async {
-    try {
-      await _firestore
-          .collection(collection)
-          .doc(document)
-          .collection(secondaryCollection)
-          .doc(secondaryDocument)
-          .set(data.secondaryData ?? {});
-
-    } catch (e) {
-      print("Erro ao registrar dados do usuário: $e");
+      _log("Erro ao registrar dados do usuário: $e");
     }
   }
 
@@ -126,13 +104,13 @@ abstract class _RegisterStore with Store {
             .get();
 
         if (querySnapshot.docs.isNotEmpty) {
-          print('Duplicidade encontrada para o campo ${entry.key}.');
+          _log('Duplicidade encontrada para o campo ${entry.key}.');
           return;
         }
       }
       onSuccess();
     } catch (e) {
-      print('Erro ao verificar duplicidade: $e');
+      _log('Erro ao verificar duplicidade: $e');
     }
   }
 
@@ -143,7 +121,7 @@ abstract class _RegisterStore with Store {
       //Temporario
       if (data.address?['zipCode'] == null ||
           data.address?['zipCode'].isEmpty) {
-        print('Nenhum CEP foi fornecido!');
+        _log('Nenhum CEP foi fornecido!');
         onSuccess();
         return;
       }
@@ -153,29 +131,27 @@ abstract class _RegisterStore with Store {
           "https://viacep.com.br/ws/${data.address?['zipCode']}/json/"));
 
       if (rsp.body.isEmpty) {
-        print('Nenhuma informação foi encontrada!');
+        _log('Nenhuma informação foi encontrada!');
         return;
       }
 
       if (rsp.body.contains('"erro": true')) {
-        print('CEP não encontrado!');
+        _log('CEP não encontrado!');
         return;
       }
 
       final responseData = json.decode(rsp.body);
-      data = RegisterModel(
-        address: {
-          'zipCode': responseData['cep'],
-          'street': responseData['logradouro'],
-          'district': responseData['bairro'],
-          'city': responseData['localidade'],
-          'state': responseData['uf'],
-        },
-      );
+      data.address = {
+        'zipCode': responseData['cep'],
+        'street': responseData['logradouro'],
+        'district': responseData['bairro'],
+        'city': responseData['localidade'],
+        'state': responseData['uf'],
+      };
 
       onSuccess();
     } catch (error) {
-      print('Erro ao buscar CEP: $error');
+      _log('Erro ao buscar CEP: $error');
     }
   }
 }

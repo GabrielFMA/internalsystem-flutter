@@ -24,45 +24,14 @@ mixin _$AuthStore on _AuthStore, Store {
     });
   }
 
-  late final _$_emailAtom = Atom(name: '_AuthStore._email', context: context);
-
-  @override
-  String get _email {
-    _$_emailAtom.reportRead();
-    return super._email;
-  }
-
-  @override
-  set _email(String value) {
-    _$_emailAtom.reportWrite(value, super._email, () {
-      super._email = value;
-    });
-  }
-
-  late final _$_passwordAtom =
-      Atom(name: '_AuthStore._password', context: context);
-
-  @override
-  String get _password {
-    _$_passwordAtom.reportRead();
-    return super._password;
-  }
-
-  @override
-  set _password(String value) {
-    _$_passwordAtom.reportWrite(value, super._password, () {
-      super._password = value;
-    });
-  }
-
   late final _$loginWithEmailAndPasswordAsyncAction =
       AsyncAction('_AuthStore.loginWithEmailAndPassword', context: context);
 
   @override
-  Future<void> loginWithEmailAndPassword(
+  Future<void> loginWithEmailAndPassword(AuthModel data,
       TextErrorModel textError, BuildContext context, Function onSuccess) {
-    return _$loginWithEmailAndPasswordAsyncAction.run(
-        () => super.loginWithEmailAndPassword(textError, context, onSuccess));
+    return _$loginWithEmailAndPasswordAsyncAction.run(() =>
+        super.loginWithEmailAndPassword(data, textError, context, onSuccess));
   }
 
   late final _$logoutAsyncAction =
@@ -71,31 +40,6 @@ mixin _$AuthStore on _AuthStore, Store {
   @override
   Future<void> logout() {
     return _$logoutAsyncAction.run(() => super.logout());
-  }
-
-  late final _$_AuthStoreActionController =
-      ActionController(name: '_AuthStore', context: context);
-
-  @override
-  void setEmail(String value) {
-    final _$actionInfo =
-        _$_AuthStoreActionController.startAction(name: '_AuthStore.setEmail');
-    try {
-      return super.setEmail(value);
-    } finally {
-      _$_AuthStoreActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  void setPassword(String value) {
-    final _$actionInfo = _$_AuthStoreActionController.startAction(
-        name: '_AuthStore.setPassword');
-    try {
-      return super.setPassword(value);
-    } finally {
-      _$_AuthStoreActionController.endAction(_$actionInfo);
-    }
   }
 
   @override

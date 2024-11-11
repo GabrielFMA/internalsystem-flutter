@@ -1,0 +1,12 @@
+{
+  "rules": {
+    ".read": "true",  // Permite leitura pública
+    ".write": "true", // Permite gravação pública
+    "usuarios": {
+      "$uid": {
+        ".read": "true",  // Permite leitura pública no caminho /usuarios
+        ".write": "true"  // Permite gravação pública no caminho /usuarios
+      }
+    }
+  }
+}

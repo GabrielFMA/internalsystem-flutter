@@ -15,9 +15,9 @@ mixin _$RegisterStore on _RegisterStore, Store {
 
   @override
   Future<void> signUpWithEmailAndPassword(
-      RegisterModel data, Function onSuccess, BuildContext context) {
+      RegisterModel data, BuildContext context, Function onSuccess) {
     return _$signUpWithEmailAndPasswordAsyncAction
-        .run(() => super.signUpWithEmailAndPassword(data, onSuccess, context));
+        .run(() => super.signUpWithEmailAndPassword(data, context, onSuccess));
   }
 
   late final _$registerDataAsyncAction =
@@ -25,24 +25,9 @@ mixin _$RegisterStore on _RegisterStore, Store {
 
   @override
   Future<void> registerData(String collection, String document,
-      RegisterModel data, Function onSuccess) {
-    return _$registerDataAsyncAction
-        .run(() => super.registerData(collection, document, data, onSuccess));
-  }
-
-  late final _$registerSecondaryDataAsyncAction =
-      AsyncAction('_RegisterStore.registerSecondaryData', context: context);
-
-  @override
-  Future<void> registerSecondaryData(
-      String collection,
-      String secondaryCollection,
-      String document,
-      String secondaryDocument,
-      RegisterModel data) {
-    return _$registerSecondaryDataAsyncAction.run(() => super
-        .registerSecondaryData(collection, secondaryCollection, document,
-            secondaryDocument, data));
+      RegisterModel data, BuildContext context, Function onSuccess) {
+    return _$registerDataAsyncAction.run(() =>
+        super.registerData(collection, document, data, context, onSuccess));
   }
 
   late final _$duplicityCheckAsyncAction =

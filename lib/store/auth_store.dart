@@ -1,48 +1,41 @@
 // ignore_for_file: library_private_types_in_public_api, avoid_print
 
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:internalsystem/models/text_error_model.dart';
 import 'package:internalsystem/utils/error_messages.dart';
 import 'package:mobx/mobx.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../models/auth_model.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 part 'auth_store.g.dart';
 
 class AuthStore = _AuthStore with _$AuthStore;
 
 abstract class _AuthStore with Store {
-  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-
   @observable
   AuthModel? _user;
 
-  @observable
-  String _email = '';
-
-  @observable
-  String _password = '';
-
-  @action
-  void setEmail(String value) => _email = value;
-
-  @action
-  void setPassword(String value) => _password = value;
+  void _log(String message) {
+    print("[AuthStore] $message");
+  }
 
   AuthModel? get getUser => _user;
 
   @action
-  Future<void> loginWithEmailAndPassword(TextErrorModel textError,
+  Future<void> loginWithEmailAndPassword(AuthModel data, TextErrorModel textError,
       BuildContext context, Function onSuccess) async {
     try {
-      final userCredential = await _firebaseAuth.signInWithEmailAndPassword(
-        email: _email,
-        password: _password,
+      if (data.email == null || data.password == null) return;
+
+      final userCredential =
+          await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: data.email!,
+        password: data.password!,
       );
 
       if (await checkWebAccountAccess(userCredential.user?.uid, context)) {
-        print('Usuario: ${userCredential.user?.uid}');
+        _log('Usuário: ${userCredential.user?.uid}');
         print(_user?.name);
         print(_user?.email);
         onSuccess();
@@ -52,7 +45,7 @@ abstract class _AuthStore with Store {
             ErrorMessages.getErrorMessage('user-without-permission');
       }
     } on FirebaseAuthException catch (e) {
-      print(e.code);
+      _log(e.code);
       textError.error = ErrorMessages.getErrorMessage(e.code);
     } catch (e) {
       textError.error = 'Ocorreu um erro inesperado: ${e.toString()}';
@@ -60,37 +53,33 @@ abstract class _AuthStore with Store {
   }
 
   Future<bool> checkWebAccountAccess(
-    String? document,
+    String? uid,
     BuildContext context,
   ) async {
-    if (document == null) return false;
+    if (uid == null) return false;
 
     try {
-      final documentSnapshot = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(document)
+      final snapshot = await FirebaseDatabase.instance
+          .ref()
+          .child('users')
+          .child(uid)
           .get();
+      if (!snapshot.exists) return false;
 
-      if (!documentSnapshot.exists) {
-        return false;
-      }
+      final data = snapshot.value as Map<dynamic, dynamic>;
 
-      final data = documentSnapshot.data();
-      if (data != null) {
-        if (!data['permissions']['isAdmin']) {
-          return false;
-        }
+      if (!data['permissions']['isAdmin']) return false;
 
-        _user = AuthModel(
-          id: document,
-          name: data['name'] ?? 'Nome não disponível',
-          email: data['email'] ?? 'Email não disponível',
-          permissions: data['permissions'],
-        );
-        return true;
-      }
+      _user = AuthModel(
+        id: uid,
+        name: data['name'] ?? 'Nome não disponível',
+        email: data['email'] ?? 'Email não disponível',
+        permissions: data['permissions'],
+      );
+
+      return true;
     } catch (e) {
-      print('Erro ao acessar o Firestore: $e');
+      _log('Erro ao acessar o Firestore: $e');
     }
 
     return false;
@@ -99,10 +88,10 @@ abstract class _AuthStore with Store {
   @action
   Future<void> logout() async {
     try {
-      await _firebaseAuth.signOut();
+      await FirebaseAuth.instance.signOut();
       _user = null;
     } catch (e) {
-      print('Error logging out: $e');
+      _log('Error logging out: $e');
     }
   }
 }

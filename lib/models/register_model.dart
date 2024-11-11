@@ -10,19 +10,6 @@ class RegisterModel {
   Map<String, dynamic>? address;
   Map<String, dynamic>? secondaryData;
 
-  RegisterModel({
-    this.id,
-    this.name,
-    this.email,
-    this.cpf,
-    this.phone,
-    this.role,
-    this.password,
-    this.permissions,
-    this.address,
-    this.secondaryData,
-  });
-
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> result = {};
 
