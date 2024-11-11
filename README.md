@@ -12,12 +12,12 @@ Ainda sem um nome próprio, estamos desenvolvendo um sistema interno empresarial
 
 ## Banco de dados Firebase
 
-Foi utilizado o Realtime Database do Firebase para registrar e gerenciar os dados da aplicação. O Realtime Database é um banco de dados NoSQL em tempo real baseado em JSON, que permite o armazenamento e sincronização de dados entre clientes e o servidor em tempo real. Cada alteração no banco de dados é automaticamente sincronizada com todos os clientes conectados, o que é ideal para aplicações que demandam atualizações instantâneas e consistência de dados em tempo real.
+Foi utilizado o [Realtime Database](https://firebase.google.com/docs/database) do Firebase para registrar e gerenciar os dados da aplicação. O Realtime Database é um banco de dados NoSQL em tempo real baseado em JSON, que permite o armazenamento e sincronização de dados entre clientes e o servidor em tempo real. Cada alteração no banco de dados é automaticamente sincronizada com todos os clientes conectados, o que é ideal para aplicações que demandam atualizações instantâneas e consistência de dados em tempo real.
 
 ### Funcionamento
 
 1. **Obtenção do UID:**
-   - Ao registrar um novo usuário, o sistema resgata o token uid gerado pelo Firebase Authentication, que serve como chave principal para o registro desse usuário no banco de dados.
+   - Ao registrar um novo usuário, o sistema resgata o token uid gerado pelo [Firebase Authentication](https://firebase.google.com/docs/auth), que serve como chave principal para o registro desse usuário no banco de dados.
 
 2. **Estrutura de Dados**:
    - Dentro do nó de cada `uid`, um mapa é criado para armazenar as informações do usuário. Este mapa inclui:
@@ -62,6 +62,7 @@ Foi utilizado o Realtime Database do Firebase para registrar e gerenciar os dado
   }
 }
 ```
+
 ## Organização e Gerenciamento de Estado com MobX
 
 Para manter o código organizado e escalável, este projeto utiliza o [MobX](https://pub.dev/packages/mobx) como base para gerenciamento de estado. O MobX é uma biblioteca que permite a implementação de um padrão de programação reativa, facilitando o gerenciamento de estados complexos de maneira previsível e fluida. 
