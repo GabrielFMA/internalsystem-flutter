@@ -24,8 +24,8 @@ mixin _$RegisterStore on _RegisterStore, Store {
       AsyncAction('_RegisterStore.registerData', context: context);
 
   @override
-  Future<void> registerData(String collection, String document,
-      RegisterModel data, BuildContext context, Function onSuccess) {
+  Future<void> registerData(String collection, String document, dynamic data,
+      BuildContext context, Function onSuccess) {
     return _$registerDataAsyncAction.run(() =>
         super.registerData(collection, document, data, context, onSuccess));
   }

@@ -42,10 +42,14 @@ class _UserWidgetState extends State<UserWidget> {
     });
 
     final usersToShow = filteredUsers.where((user) {
-      if (_selectedRole.toLowerCase() == 'cliente') {
-        return user['role'].toLowerCase() == 'cliente';
+      if (user['role'] != null) {
+        if (_selectedRole.toLowerCase() == 'cliente') {
+          return user['role'].toLowerCase() == 'cliente';
+        } else {
+          return user['role'].toLowerCase() != 'cliente';
+        }
       } else {
-        return user['role'].toLowerCase() != 'cliente';
+        return false; 
       }
     }).toList();
 

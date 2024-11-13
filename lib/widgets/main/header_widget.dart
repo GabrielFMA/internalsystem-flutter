@@ -4,6 +4,7 @@ import 'package:internalsystem/store/auth_store.dart';
 import 'package:internalsystem/utils/navigation_utils.dart';
 import 'package:internalsystem/utils/responsive.dart';
 import 'package:internalsystem/widgets/main/loading_screen.dart';
+import 'package:internalsystem/widgets/popup/popup_confirm.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -68,7 +69,6 @@ class HeaderWidget extends StatelessWidget {
                   value: "config",
                   height: 40,
                   child: Row(
-                    
                     children: [
                       const SizedBox(width: 10),
                       Icon(MdiIcons.cog, size: 18),
@@ -89,13 +89,19 @@ class HeaderWidget extends StatelessWidget {
                 PopupMenuItem(
                   value: "leave",
                   onTap: () async {
-                    await navigateToSomeBuilder(
-                        buildLoadingScreen(), context, 1000);
-                    await Provider.of<AuthStore>(context, listen: false)
-                        .logout();
-                    Navigator.pushNamed(context, '/login');
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return PopUpConfirm(() async {
+                            await Provider.of<AuthStore>(context, listen: false)
+                                .logout();
+                            Navigator.pop(context);
+                            
+                            buildLoadingScreen();
+                            await Navigator.pushNamed(context, '/login');
+                          }, 'Sair', 'Deseja sair do sistema?', 'Sim', 'Não');
+                        });                    
                   },
-                  
                   height: 40,
                   child: Row(
                     children: [

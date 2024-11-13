@@ -4,6 +4,7 @@ import 'package:internalsystem/constants/constants.dart';
 import 'package:internalsystem/store/register_store.dart';
 import 'package:internalsystem/utils/navigation_utils.dart';
 import 'package:internalsystem/utils/responsive.dart';
+import 'package:internalsystem/widgets/popup/popup_confirm.dart';
 import 'package:internalsystem/widgets/register/popup_permissions_widget.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
@@ -27,11 +28,13 @@ class _RegisterWidgetState extends State<RegisterWidget> {
   final TextEditingController _confirmPasswordController =
       TextEditingController();
 
+  late RegisterStore store;
+
   @override
   Widget build(BuildContext context) {
-    final store = Provider.of<RegisterStore>(context, listen: false);
     final isDesktop = Responsive.isDesktop(context);
     var registerModel = RegisterModel();
+    store = Provider.of<RegisterStore>(context, listen: false);
 
     return Padding(
       padding: isDesktop
@@ -96,7 +99,7 @@ class _RegisterWidgetState extends State<RegisterWidget> {
                               if (text!.isEmpty) {
                                 return "Digite seu nome completo";
                               }
-                              registerModel.name = text;
+                              registerModel.name = text.toLowerCase();
                               return null;
                             },
                             icon2: Icon(MdiIcons.emailOutline),
@@ -108,7 +111,7 @@ class _RegisterWidgetState extends State<RegisterWidget> {
                               if (text!.isEmpty) {
                                 return "Digite um E-mail";
                               }
-                              registerModel.email = text;
+                              registerModel.email = text.toLowerCase();
                               return null;
                             },
                           ),
@@ -226,12 +229,26 @@ class _RegisterWidgetState extends State<RegisterWidget> {
             child: SizedBox(
               width: double.infinity,
               child: TextButton(
-                onPressed: () {
+                onPressed: () async {
                   if (_formKey.currentState!.validate()) {
-                    store.signUpWithEmailAndPassword(registerModel, context,
-                        () {
-                      navigateTo('/home', context);
-                    });
+                    await showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return PopUpConfirm(() async {
+                          await store.signUpWithEmailAndPassword(
+                              registerModel, context, () {
+                            setState(() {
+                              _formKey.currentState?.reset();
+                            });
+
+                            Navigator.pop(context);
+                            navigateTo('/home', context);
+                          });
+                          
+                        }, 'Cadastrar Usuário', 'Confirme as informações antes:\n\nNome: ${registerModel.name} \nEmail: ${registerModel.email} \nTelefone: ${registerModel.phone} \nCPF: ${registerModel.cpf}',
+                            'Confirmar', 'Cancelar');
+                      },
+                    );
                   }
                 },
                 style: TextButton.styleFrom(
@@ -256,17 +273,5 @@ class _RegisterWidgetState extends State<RegisterWidget> {
         ],
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    // Liberando os controllers ao destruir o widget
-    _nameController.dispose();
-    _emailController.dispose();
-    _phoneController.dispose();
-    _cpfController.dispose();
-    _passwordController.dispose();
-    _confirmPasswordController.dispose();
-    super.dispose();
   }
 }
