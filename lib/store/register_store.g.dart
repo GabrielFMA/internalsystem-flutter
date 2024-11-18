@@ -14,38 +14,10 @@ mixin _$RegisterStore on _RegisterStore, Store {
       context: context);
 
   @override
-  Future<void> signUpWithEmailAndPassword(
-      RegisterModel data, BuildContext context, Function onSuccess) {
-    return _$signUpWithEmailAndPasswordAsyncAction
-        .run(() => super.signUpWithEmailAndPassword(data, context, onSuccess));
-  }
-
-  late final _$registerDataAsyncAction =
-      AsyncAction('_RegisterStore.registerData', context: context);
-
-  @override
-  Future<void> registerData(String collection, String document, dynamic data,
-      BuildContext context, Function onSuccess) {
-    return _$registerDataAsyncAction.run(() =>
-        super.registerData(collection, document, data, context, onSuccess));
-  }
-
-  late final _$duplicityCheckAsyncAction =
-      AsyncAction('_RegisterStore.duplicityCheck', context: context);
-
-  @override
-  Future<void> duplicityCheck(RegisterModel data, Function onSuccess) {
-    return _$duplicityCheckAsyncAction
-        .run(() => super.duplicityCheck(data, onSuccess));
-  }
-
-  late final _$zipCodeVerificationAsyncAction =
-      AsyncAction('_RegisterStore.zipCodeVerification', context: context);
-
-  @override
-  Future<void> zipCodeVerification(RegisterModel data, Function onSuccess) {
-    return _$zipCodeVerificationAsyncAction
-        .run(() => super.zipCodeVerification(data, onSuccess));
+  Future<void> signUpWithEmailAndPassword(RegisterModel data,
+      TextErrorModel textError, BuildContext context, Function onSuccess) {
+    return _$signUpWithEmailAndPasswordAsyncAction.run(() =>
+        super.signUpWithEmailAndPassword(data, textError, context, onSuccess));
   }
 
   @override

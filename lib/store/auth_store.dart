@@ -23,8 +23,11 @@ abstract class _AuthStore with Store {
   AuthModel? get getUser => _user;
 
   @action
-  Future<void> loginWithEmailAndPassword(AuthModel data, TextErrorModel textError,
-      BuildContext context, Function onSuccess) async {
+  Future<void> loginWithEmailAndPassword(
+      AuthModel data,
+      TextErrorModel textError,
+      BuildContext context,
+      Function onSuccess) async {
     try {
       if (data.email == null || data.password == null) return;
 
@@ -59,11 +62,8 @@ abstract class _AuthStore with Store {
     if (uid == null) return false;
 
     try {
-      final snapshot = await FirebaseDatabase.instance
-          .ref()
-          .child('users')
-          .child(uid)
-          .get();
+      final snapshot =
+          await FirebaseDatabase.instance.ref().child('users').child(uid).get();
       if (!snapshot.exists) return false;
 
       final data = snapshot.value as Map<dynamic, dynamic>;

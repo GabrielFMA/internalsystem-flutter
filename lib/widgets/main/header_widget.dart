@@ -35,7 +35,7 @@ class HeaderWidget extends StatelessWidget {
             ),
           const Spacer(),
           Container(
-            margin: EdgeInsets.only(right: 20),
+            margin: const EdgeInsets.only(right: 20),
             child: PopupMenuButton<String>(
               icon: Icon(
                 MdiIcons.account,
@@ -89,18 +89,24 @@ class HeaderWidget extends StatelessWidget {
                 PopupMenuItem(
                   value: "leave",
                   onTap: () async {
-                    showDialog(
+                    await showDialog(
                         context: context,
                         builder: (BuildContext context) {
-                          return PopUpConfirm(() async {
-                            await Provider.of<AuthStore>(context, listen: false)
-                                .logout();
-                            Navigator.pop(context);
-                            
-                            buildLoadingScreen();
-                            await Navigator.pushNamed(context, '/login');
-                          }, 'Sair', 'Deseja sair do sistema?', 'Sim', 'Não');
-                        });                    
+                          return PopUpConfirm(
+                            () async {
+                              await navigateToSomeBuilder(
+                                  buildLoadingScreen(), context, 1000);
+                              await Provider.of<AuthStore>(context,
+                                      listen: false)
+                                  .logout();
+                              await Navigator.pushNamed(context, '/login');
+                            },
+                            'Sair',
+                            'Deseja sair do sistema?',
+                            'Sim',
+                            'Não',
+                          );
+                        });
                   },
                   height: 40,
                   child: Row(

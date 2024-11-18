@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:internalsystem/components/double_textfield.dart';
 import 'package:internalsystem/constants/constants.dart';
+import 'package:internalsystem/models/text_error_model.dart';
 import 'package:internalsystem/store/register_store.dart';
+import 'package:internalsystem/utils/error_messages.dart';
 import 'package:internalsystem/utils/navigation_utils.dart';
 import 'package:internalsystem/utils/responsive.dart';
+import 'package:internalsystem/widgets/main/loading_screen.dart';
 import 'package:internalsystem/widgets/popup/popup_confirm.dart';
 import 'package:internalsystem/widgets/register/popup_permissions_widget.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -29,6 +32,8 @@ class _RegisterWidgetState extends State<RegisterWidget> {
       TextEditingController();
 
   late RegisterStore store;
+  var _textError = TextErrorModel(error: '');
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -223,6 +228,8 @@ class _RegisterWidgetState extends State<RegisterWidget> {
               ),
             ),
           ),
+          customLoadingOrErrorWidget(
+              isLoading: _isLoading, textError: _textError),
           const SizedBox(height: 15),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: isDesktop ? 50 : 15),
@@ -231,22 +238,33 @@ class _RegisterWidgetState extends State<RegisterWidget> {
               child: TextButton(
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
+                    BuildContext contextSignUp = context;
                     await showDialog(
                       context: context,
                       builder: (BuildContext context) {
-                        return PopUpConfirm(() async {
-                          await store.signUpWithEmailAndPassword(
-                              registerModel, context, () {
+                        return PopUpConfirm(
+                          () async {
                             setState(() {
-                              _formKey.currentState?.reset();
+                              _isLoading = true;
+                              _textError = TextErrorModel(error: '');
                             });
-
-                            Navigator.pop(context);
-                            navigateTo('/home', context);
-                          });
-                          
-                        }, 'Cadastrar Usuário', 'Confirme as informações antes:\n\nNome: ${registerModel.name} \nEmail: ${registerModel.email} \nTelefone: ${registerModel.phone} \nCPF: ${registerModel.cpf}',
-                            'Confirmar', 'Cancelar');
+                            await store.signUpWithEmailAndPassword(
+                                registerModel, _textError, contextSignUp,
+                                () async {
+                              await navigateToSomeBuilder(
+                                  buildLoadingScreen(), contextSignUp, 1000);
+                              navigateTo('/home', contextSignUp);
+                            });
+                            setState(() {
+                              Navigator.pop(context);
+                              _isLoading = false;
+                            });
+                          },
+                          'Cadastrar Usuário',
+                          'Confirme as informações antes:\n\nNome: ${registerModel.name} \nEmail: ${registerModel.email} \nTelefone: ${registerModel.phone} \nCPF: ${registerModel.cpf}',
+                          'Confirmar',
+                          'Cancelar',
+                        );
                       },
                     );
                   }

@@ -8,6 +8,7 @@ import 'package:internalsystem/constants/constants.dart';
 import 'package:internalsystem/models/auth_model.dart';
 import 'package:internalsystem/models/text_error_model.dart';
 import 'package:internalsystem/store/auth_store.dart';
+import 'package:internalsystem/utils/error_messages.dart';
 import 'package:internalsystem/utils/navigation_utils.dart';
 import 'package:internalsystem/utils/responsive.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -29,9 +30,9 @@ class LoginWidget extends StatefulWidget {
 
 class _LoginWidgetState extends State<LoginWidget> {
   final _formKey = GlobalKey<FormState>();
-  bool _isProcessing = false;
-  TextErrorModel textError = TextErrorModel(error: '');
+  var textError = TextErrorModel(error: '');
   var authModel = AuthModel();
+  bool _isProcessing = false;
 
   void _onButtonPressed() async {
     if (_formKey.currentState!.validate() && !_isProcessing) {
@@ -168,23 +169,8 @@ class _LoginWidgetState extends State<LoginWidget> {
                           ],
                         ),
                         const SizedBox(height: 20),
-                        SizedBox(
-                          height: 40,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              _isProcessing
-                                  ? const CircularProgressIndicator(
-                                      backgroundColor: Colors.transparent,
-                                      color: colorOneGradient,
-                                    )
-                                  : Text(
-                                      textError.error,
-                                      style: const TextStyle(color: Colors.red),
-                                    )
-                            ],
-                          ),
-                        ),
+                        customLoadingOrErrorWidget(
+                            isLoading: _isProcessing, textError: textError),
                       ],
                     ),
                   ),
