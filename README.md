@@ -10,6 +10,12 @@ Ainda sem um nome próprio, estamos desenvolvendo um sistema interno empresarial
 * [Firebase](https://firebase.google.com/) - Banco de Dados
 * [MobX](https://mobx.pub/) - Gerenciamento de estado reativo
 
+## Organização e Gerenciamento de Estado com MobX
+
+Para manter o código organizado e escalável, este projeto utiliza o [MobX](https://pub.dev/packages/mobx) como base para gerenciamento de estado. O MobX é uma biblioteca que permite a implementação de um padrão de programação reativa, facilitando o gerenciamento de estados complexos de maneira previsível e fluida. 
+
+Com o MobX, foi possível separar e organizar o código em **stores** (repositórios de estado), que armazenam o estado da aplicação e permitem uma sincronização em tempo real das mudanças de estado com a interface do usuário. Esse modelo reativo simplifica o acompanhamento de estados em diferentes telas e componentes, proporcionando uma arquitetura mais modular e fácil de manter.
+
 ## Banco de dados Firebase
 
 Foi utilizado o [Realtime Database](https://firebase.google.com/docs/database) do Firebase para registrar e gerenciar os dados da aplicação. O Realtime Database é um banco de dados NoSQL em tempo real baseado em JSON, que permite o armazenamento e sincronização de dados entre clientes e o servidor em tempo real. Cada alteração no banco de dados é automaticamente sincronizada com todos os clientes conectados, o que é ideal para aplicações que demandam atualizações instantâneas e consistência de dados em tempo real.
@@ -62,12 +68,6 @@ Foi utilizado o [Realtime Database](https://firebase.google.com/docs/database) d
   }
 }
 ```
-
-## Organização e Gerenciamento de Estado com MobX
-
-Para manter o código organizado e escalável, este projeto utiliza o [MobX](https://pub.dev/packages/mobx) como base para gerenciamento de estado. O MobX é uma biblioteca que permite a implementação de um padrão de programação reativa, facilitando o gerenciamento de estados complexos de maneira previsível e fluida. 
-
-Com o MobX, foi possível separar e organizar o código em **stores** (repositórios de estado), que armazenam o estado da aplicação e permitem uma sincronização em tempo real das mudanças de estado com a interface do usuário. Esse modelo reativo simplifica o acompanhamento de estados em diferentes telas e componentes, proporcionando uma arquitetura mais modular e fácil de manter.
 
 ## 📌 Versão
 
