@@ -1,12 +1,13 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:internalsystem/components/search_textfield.dart';
 import 'package:internalsystem/constants/constants.dart';
+import 'package:internalsystem/store/request_store.dart';
 import 'package:internalsystem/utils/responsive.dart';
+import 'package:provider/provider.dart';
 
 class UserWidget extends StatefulWidget {
-  final List<Map<String, dynamic>> users;
-
-  const UserWidget({super.key, this.users = const []});
+  const UserWidget({super.key});
 
   @override
   State<UserWidget> createState() => _UserWidgetState();
@@ -17,36 +18,52 @@ class _UserWidgetState extends State<UserWidget> {
   String _selectedRole = 'funcionario';
   String _sortBy = 'name';
   bool _isAscending = true;
+  late List<Map<String, dynamic>> _users;
+  late Timer _timer;
+
+  @override
+  void initState() {
+    final requestStore = Provider.of<RequestStore>(context, listen: false);
+    super.initState();
+    _users = requestStore.fetchedData;
+    _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
+      setState(() {
+        _users = _getUpdatedUsers(requestStore);
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
+
+  List<Map<String, dynamic>> _getUpdatedUsers(requestStore) {
+    return requestStore.fetchedData;
+  }
 
   @override
   Widget build(BuildContext context) {
     final isDesktop = Responsive.isDesktop(context);
 
-    final filteredUsers = widget.users.where((user) {
+    final filteredUsers = _users.where((user) {
       final name = user['name']?.toLowerCase() ?? '';
       final email = user['email']?.toLowerCase() ?? '';
       return name.contains(_searchQuery.toLowerCase()) ||
           email.contains(_searchQuery.toLowerCase());
     }).toList();
 
-    // Ordenação dos usuários
     filteredUsers.sort((a, b) {
       final aValue = a[_sortBy] ?? '';
       final bValue = b[_sortBy] ?? '';
-
-      if (_isAscending) {
-        return aValue.compareTo(bValue);
-      } else {
-        return bValue.compareTo(aValue);
-      }
+      return _isAscending ? aValue.compareTo(bValue) : bValue.compareTo(aValue);
     });
 
     final usersToShow = filteredUsers.where((user) {
-      if (_selectedRole.toLowerCase() == 'cliente') {
-        return (user['role']?.toLowerCase() ?? 'cliente') == 'cliente';
-      } else {
-        return (user['role']?.toLowerCase() ?? 'cliente') != 'cliente';
-      }
+      return (_selectedRole.toLowerCase() == 'cliente'
+          ? (user['role']?.toLowerCase() ?? 'cliente') == 'cliente'
+          : (user['role']?.toLowerCase() ?? 'cliente') != 'cliente');
     }).toList();
 
     return Padding(
@@ -58,9 +75,7 @@ class _UserWidgetState extends State<UserWidget> {
           _buildHeader(),
           Expanded(
             child: ListView(
-              children: [
-                _buildUserColumn(usersToShow),
-              ],
+              children: [_buildUserColumn(usersToShow)],
             ),
           ),
         ],
@@ -168,8 +183,7 @@ class _UserWidgetState extends State<UserWidget> {
           physics: const NeverScrollableScrollPhysics(),
           itemCount: users.length,
           itemBuilder: (context, index) {
-            final userData = users[index];
-            return _buildUserCard(userData);
+            return _buildUserCard(users[index]);
           },
         ),
       ],

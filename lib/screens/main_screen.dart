@@ -7,12 +7,12 @@ import 'package:provider/provider.dart';
 class MainScreen extends StatelessWidget {
   final Widget screen;
 
-  const MainScreen({Key? key, required this.screen}) : super(key: key);
+  const MainScreen({super.key, required this.screen});
 
-  Future<List<Map<String, dynamic>>?> _loadData(BuildContext context) async {
+  Future<void> _loadData(BuildContext context) async {
     if (screen is UserWidget) {
       final store = Provider.of<RequestStore>(context, listen: false);
-      await store.fetchData('users', information: [
+      store.startListeningToData('users', information: [
         'address',
         'cpf',
         'email',
@@ -21,31 +21,19 @@ class MainScreen extends StatelessWidget {
         'phone',
         'role'
       ]);
-      return store.fetchedData;
+      print(store.fetchedData);
     }
     await Future.delayed(const Duration(seconds: 1));
-    return null;
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<Map<String, dynamic>>?>(
+    return FutureBuilder<void>(
       future: _loadData(context),
       builder: (context, snapshot) {
         bool isLoading = snapshot.connectionState == ConnectionState.waiting;
 
-        if (snapshot.hasError) {
-          return Scaffold(
-            body: Center(child: Text('Error loading data: ${snapshot.error}')),
-          );
-        }
-
-        return splitScreen(
-          context,
-          screen,
-          isLoading,
-          data: snapshot.data ?? [],
-        );
+        return splitScreen(context, screen, isLoading);
       },
     );
   }

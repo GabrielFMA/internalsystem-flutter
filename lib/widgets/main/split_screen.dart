@@ -6,9 +6,8 @@ import 'package:internalsystem/utils/verification_utils.dart';
 import 'package:internalsystem/widgets/main/loading_screen.dart';
 import 'package:internalsystem/widgets/main/header_widget.dart';
 import 'package:internalsystem/widgets/main/side_menu_widget.dart';
-import 'package:internalsystem/widgets/users/user_widget.dart';
 
-Widget splitScreen(BuildContext context, Widget screen, bool isLoading, {required List<Map<String, dynamic>> data}) {
+Widget splitScreen(BuildContext context, Widget screen, bool isLoading) {
   final isDesktop = Responsive.isDesktop(context);
 
   return Scaffold(
@@ -38,10 +37,6 @@ Widget splitScreen(BuildContext context, Widget screen, bool isLoading, {require
                   future: checkPermissionForScreen(context, screen),
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
-                      if (screen is UserWidget &&
-                          snapshot.data is! ErrorScreen) {
-                        return UserWidget(users: data);
-                      }
                       return snapshot.data!;
                     }
                     return const ErrorScreen(

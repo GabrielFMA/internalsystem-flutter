@@ -24,6 +24,22 @@ mixin _$AuthStore on _AuthStore, Store {
     });
   }
 
+  late final _$isUserUpdatedAtom =
+      Atom(name: '_AuthStore.isUserUpdated', context: context);
+
+  @override
+  bool get isUserUpdated {
+    _$isUserUpdatedAtom.reportRead();
+    return super.isUserUpdated;
+  }
+
+  @override
+  set isUserUpdated(bool value) {
+    _$isUserUpdatedAtom.reportWrite(value, super.isUserUpdated, () {
+      super.isUserUpdated = value;
+    });
+  }
+
   late final _$loginWithEmailAndPasswordAsyncAction =
       AsyncAction('_AuthStore.loginWithEmailAndPassword', context: context);
 
@@ -38,14 +54,14 @@ mixin _$AuthStore on _AuthStore, Store {
       AsyncAction('_AuthStore.logout', context: context);
 
   @override
-  Future<void> logout() {
-    return _$logoutAsyncAction.run(() => super.logout());
+  Future<void> logout(BuildContext context) {
+    return _$logoutAsyncAction.run(() => super.logout(context));
   }
 
   @override
   String toString() {
     return '''
-
+isUserUpdated: ${isUserUpdated}
     ''';
   }
 }

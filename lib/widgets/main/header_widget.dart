@@ -98,7 +98,7 @@ class HeaderWidget extends StatelessWidget {
                                   buildLoadingScreen(), context, 1000);
                               await Provider.of<AuthStore>(context,
                                       listen: false)
-                                  .logout();
+                                  .logout(context);
                               await Navigator.pushNamed(context, '/login');
                             },
                             'Sair',
