@@ -71,7 +71,7 @@ Foi utilizado o [Realtime Database](https://firebase.google.com/docs/database) d
 
 ## 📌 Versão
 
-Atualmente em ínicio de desenvolvimento sem uma versão fixa.
+Projeto atualmente congelado pois vai ser transferido para Angular.
 
 ## ✒️ Autores
 
