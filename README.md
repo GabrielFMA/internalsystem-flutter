@@ -71,7 +71,7 @@ Foi utilizado o [Realtime Database](https://firebase.google.com/docs/database) d
 
 ## 📌 Versão
 
-Projeto atualmente congelado pois vai ser transferido para Angular.
+Projeto atualmente congelado pois vai ser transferido para Angular. [Novo Repositório](https://github.com/ribollitiago/web-system)
 
 ## ✒️ Autores
 
